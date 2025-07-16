@@ -1,0 +1,10 @@
+**/.git/
+!/.git/
+
+data_gitea
+
+data_jenkins
+
+data_postgres
+
+workdir

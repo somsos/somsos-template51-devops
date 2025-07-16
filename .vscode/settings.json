@@ -1,0 +1,7 @@
+{
+    "files.readonlyFromPermissions": true,
+    "files.readonlyInclude": {
+        "**/backDep/**": true,
+        "**/frontDep/**": true,
+    }
+}
