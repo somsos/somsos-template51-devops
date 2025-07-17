@@ -2,10 +2,9 @@
 
 ## ToDo
 
-Re-start service when is already up, because the re-build I undestand already
-happens because whn something changes re-builds.
-But when is already up do not re-start, so that might make the changes are not deploy.
-So change to a command that restart or detect if is running and if it's running stop
+Separate the deploy in two scripts, one just to download the devops project
+and start the deploy script using the docker compose.
+keep JenkinsScript.sh almost the same but now without the cloning of devops
 
 
 ## Requirements

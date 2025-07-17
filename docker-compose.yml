@@ -13,7 +13,7 @@ networks:
 services:
 
   db:
-    container_name: ${DB_CONTAINER_NAME}
+    container_name: ${DB_SERVICE_NAME}
     image: postgres:17.2-alpine3.21
     command: ["postgres", "-c", "log_statement=all"]
     restart: unless-stopped
@@ -37,7 +37,7 @@ services:
 
 
   back:
-    container_name: ${BACK_CONTAINER_NAME}
+    container_name: ${BACK_SERVICE_NAME}
     build: ./back
     image: ${BACK_IMAGE_NAME}
     restart: unless-stopped
@@ -56,7 +56,7 @@ services:
 
 
   front:
-    container_name: ${FRONT_CONTAINER_NAME}
+    container_name: ${FRONT_SERVICE_NAME}
     build: ./front
     image: ${FRONT_IMAGE_NAME}
     restart: unless-stopped

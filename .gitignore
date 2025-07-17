@@ -3,6 +3,10 @@
 data_gitea
 data_jenkins
 data_postgres
-workdir
+
+workdir/**
+!workdir/start.sh
+
 test-a
 test-b
+
