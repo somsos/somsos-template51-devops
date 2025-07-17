@@ -99,7 +99,7 @@ function setup_container {
 
 start_container_if_not_running $DB_SERVICE_NAME
 
-if [ "$$1" == "template51-backend" ]; then
+if [ "$1" == "template51-backend" ]; then
 
   clone_repo $BACK_REPO $BACK_SERVICE_NAME
 
@@ -107,7 +107,7 @@ if [ "$$1" == "template51-backend" ]; then
 
   setup_container $BACK_SERVICE_NAME
   
-elif [ "$$1" == "template51-frontend" ]; then
+elif [ "$1" == "template51-frontend" ]; then
   
   clone_repo $FRONT_REPO $FRONT_SERVICE_NAME
 
