@@ -6,7 +6,6 @@ Separate the deploy in two scripts, one just to download the devops project
 and start the deploy script using the docker compose.
 keep JenkinsScript.sh almost the same but now without the cloning of devops
 
-
 ## Requirements
 
 ### Jenkins plugins
@@ -20,8 +19,16 @@ Install the plugins
 
 1. Create a freestyle job
 2. Check Generic Webhook Trigger
-3. Add token (same as webhook): 71c27113071788c2f7874f58a584d1138a003693
-4. In Post content parameters, configure:
+3. Add in POST token parameter: name: "TRIGGERING_REPO" expression: "$.repository.name"
+4. Add token (same as webhook): 71c27113071788c2f7874f58a584d1138a003693
+5. In build steps add "Execute shell" and peste the contant of start.sh 
+    (comment the declaration of TRIGGERING_REPO)
+6. (Optional) You can trigger the web hook manually like this
+
+```shell
+curl -X POST --data '{"repository": { "name": "Hi-There" }}' \
+    http://localhost:3001/generic-webhook-trigger/invoke?token=71c27113071788c2f7874f58a584d1138a003693
+```
 
 ## Pitfalls
 

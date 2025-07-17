@@ -11,7 +11,7 @@ set +a
 # triggered the web-hook, that way know what project to build and deploy.
 : "${1:?Variable 1 is not set, is .env file loaded?}"
 
-echo "ENVIRONMENT: $BRANCH"
+echo -e "\n\nENVIRONMENT: $BRANCH"
 echo "REPO: $1"
 
 # Declaration

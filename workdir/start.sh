@@ -2,7 +2,7 @@
 set -e
 
 # Request (testing this variable is created by "Generic Webhook Trigger plugin" when gets the webhook request)
-TRIGGERING_REPO='template51-frontend'
+TRIGGERING_REPO='template51-backend'
 
 
 # This scripts run in jenkins, the rea
@@ -15,7 +15,7 @@ DATE="$(date +"%Y-%m-%d_%H.%M.%S")"
 
 DEVOPS_DIR="devops_$DATE"
 
-DEVOPS_REPO='ssh://git@localhost:222/mario1/template51_devops.git'
+DEVOPS_REPO='ssh://git@localhost:22/mario1/template51_devops.git'
 
 
 
