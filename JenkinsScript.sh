@@ -2,26 +2,18 @@
 #set -e
 
 set -a
-source .env
+source ../.env
 set +a
 
 # Request
 TRIGGERING_REPO='template51-backend'
 
 # Declaration
-
+DATE="$(date +"%Y-%m-%d_%H.%M.%S")"
 
 # names
-DEVOPS_REPO='ssh://git@localhost:222/mario1/template51_devops.git'
-DEVOPS_DIR="devops_temp"
 
-BACK_NAME='testa'
-BACK_REPO='ssh://git@localhost:222/mario1/TestA.git'
-
-FRONT_NAME='testb'
-FRONT_REPO='ssh://git@localhost:222/mario1/TestA.git'
-
-DATE="$(date +"%Y-%m-%d_%H:%M:%S")"
+DEVOPS_DIR="devops_$DATE"
 LOG_FILE="JenkinsScript-$DATE.log"
 
 
@@ -30,23 +22,80 @@ CLONE_COMMAND="git clone  --depth=1 --single-branch --branch $BRANCH"
 
 
 function print_logs {
-  echo "aaaa $1"
   if [ $1 -ne 0 ]; then
-    echo -e "$2 FAILED\n"
+    echo -e "$2 FAILED\n=========Error logs start============="
     cat $LOG_FILE
-    echo -e "\n"
-    remove_files
+    echo -e "=========Error logs finish=============\n"
+    post_process
     exit $1
   fi
   echo -e "$2 Succeeded"
 }
 
-function remove_files {
-  rm -rf ./$BACK_NAME
-
-  rm -rf ./$DEVOPS_DIR
-
+function post_process {
+  #rm -rf ./$BACK_SERVICE_NAME 1> /dev/null && echo "deleted $BACK_SERVICE_NAME"
+  #rm -rf ./$FRONT_SERVICE_NAME 1> /dev/null && echo "deleted $FRONT_SERVICE_NAME"
+  #rm -rf ./$DEVOPS_DIR 1> /dev/null && echo "deleted $DEVOPS_DIR"
+  mv $LOG_FILE $DEVOPS_DIR/logs.log
+  echo "END";
 }
+
+function clone_repo {
+  echo -e "\nCloning ${2#*/}"
+  echo "$CLONE_COMMAND $1 $2" >> $LOG_FILE
+  $CLONE_COMMAND $1 $2 &>> $LOG_FILE
+  echo -e "\n\n" >> $LOG_FILE
+  print_logs $? "Cloning ${2#*/}"
+}
+
+function build_image {
+  echo -e "\nBuilding image: $1:$VERSION"
+  echo -e "\n\ndocker compose -f $DEVOPS_DIR/docker-compose.yml build $1" >> $LOG_FILE 
+  docker compose -f $DEVOPS_DIR/docker-compose.yml build $1 &>> $LOG_FILE 
+  print_logs $? "Building image: $1:$VERSION"
+}
+
+
+
+# $1: service name
+function stop_container_if_running {
+  docker ps -a --format="{{.Names}}" | grep $1
+  if [ $? -eq 0 ]; then
+    echo -e "\nStopping $1 container"
+    echo -e "\n\ndocker compose -f $DEVOPS_DIR/docker-compose.yml down $1" >> $LOG_FILE
+    docker compose -f $DEVOPS_DIR/docker-compose.yml down $1 &>> $LOG_FILE
+    echo -e "Stopping $1 container Succeeded\n"
+  fi
+}
+
+
+
+# $1: service name
+function start_container_if_not_running {
+  docker ps -a --format="{{.Names}}" | grep $1
+  if [ $? -ne 0 ]; then
+    echo -e "\nStarting $1 container"
+    echo -e "\n\ndocker compose -f $DEVOPS_DIR/docker-compose.yml up -d $1" >> $LOG_FILE
+    docker compose -f $DEVOPS_DIR/docker-compose.yml up -d $1 &>> $LOG_FILE
+    echo -e "Starting $1 container Succeeded\n"
+  fi
+}
+
+
+# $1: service name
+function setup_container {
+  stop_container_if_running $1
+
+  echo -e "\nSetting up $1"
+  echo -e "\n\ndocker compose -f $DEVOPS_DIR/docker-compose.yml up -d $1" >> $LOG_FILE  
+
+  docker compose -f $DEVOPS_DIR/docker-compose.yml up -d $1 &>> $LOG_FILE 
+  print_logs $? "Setting up $1"
+}
+
+
+
+
 
 # Executions
 
@@ -54,44 +103,29 @@ echo "ENVIRONMENT: $BRANCH"
 
 eval "$(ssh-agent -s)"
 
-echo "$CLONE_COMMAND $DEVOPS_REPO $DEVOPS_DIR" &>> $LOG_FILE
-echo -e "\n cloning $DEVOPS_DIR"
-$CLONE_COMMAND $DEVOPS_REPO $DEVOPS_DIR &>> $LOG_FILE 
-print_logs $? "Cloning $DEVOPS_DIR"
+clone_repo $DEVOPS_REPO $DEVOPS_DIR
 
-cd $DEVOPS_DIR
+start_container_if_not_running $DB_SERVICE_NAME
 
 if [ "$TRIGGERING_REPO" == "template51-backend" ]; then
 
+  clone_repo $BACK_REPO $DEVOPS_DIR/$BACK_SERVICE_NAME
 
-  echo -e "\nCloning $BACK_NAME"
-  $CLONE_COMMAND $BACK_REPO $BACK_NAME &>> $LOG_FILE 
-  print_logs $? "Cloning $BACK_NAME"
+  build_image $BACK_SERVICE_NAME
 
-
-  echo -e "\nBuilding image: $BACK_NAME:$VERSION"
-  docker compose build aa$BACK_NAME &>> $LOG_FILE 
-  print_logs $? "Building image: $BACK_NAME:$VERSION"
-
-
-  echo -e "\nSetting up $BACK_NAME"
-  docker compose up -d $BACK_NAME &>> $LOG_FILE 
-  print_logs $? "Setting up $BACK_NAME"
-  
-  echo -e "\nRemoving folder $BACK_NAME"
-  
+  setup_container $BACK_SERVICE_NAME
   
 elif [ "$TRIGGERING_REPO" == "template51-frontend" ]; then
   
-  $CLONE_COMMAND $FRONT_FOLDER
+  clone_repo $FRONT_REPO $DEVOPS_DIR/$FRONT_SERVICE_NAME
 
-  echo "LATER"
-  exit 1
+  build_image $FRONT_SERVICE_NAME
 
+  setup_container $FRONT_SERVICE_NAME
 
-  
 else 
-  echo "unknown"
+  echo "unknown repo"
+  exit 1
 fi
 
-remove_files
+post_process

@@ -1,10 +1,8 @@
 **/.git/
 !/.git/
-
 data_gitea
-
 data_jenkins
-
 data_postgres
-
 workdir
+test-a
+test-b

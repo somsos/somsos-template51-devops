@@ -38,7 +38,7 @@ services:
 
   back:
     container_name: ${BACK_CONTAINER_NAME}
-    build: ./backDep
+    build: ./back
     image: ${BACK_IMAGE_NAME}
     restart: unless-stopped
     ports:
@@ -54,9 +54,10 @@ services:
       retries: 5
 
 
+
   front:
     container_name: ${FRONT_CONTAINER_NAME}
-    build: ./frontDep
+    build: ./front
     image: ${FRONT_IMAGE_NAME}
     restart: unless-stopped
     ports:
@@ -95,13 +96,13 @@ services:
 
 
 
+  #CAREFUL: Might give file permissions error if does run: "sudo chown -R 1000:1000 ./data_jenkins"
   jenkins:
     container_name: jenkins
     build:
       context: .
       dockerfile: jenkins-with-docker.dockerfile
     privileged: true
-    restart: unless-stopped
     ports:
       - "${JENKINS_PORT}:8080"
     volumes:
@@ -116,23 +117,3 @@ services:
       net51:
         ipv4_address: ${JENKINS_IP}
 
-
-  testa:
-    container_name: testa
-    build: ./testa
-    image: testa:1
-    ports:
-      - "4001:80"
-    networks:
-      net51:
-        ipv4_address: 173.100.1.177
-
-  testb:
-    container_name: testb
-    build: ./testb
-    image: testb:1
-    ports:
-      - "4002:80"
-    networks:
-      net51:
-        ipv4_address: 173.100.1.178
