@@ -114,7 +114,7 @@ services:
 # main folder where it wil be all the generated content of jenkins
       - ./data_jenkins:/var/jenkins_home
 # We give access to docker host to jenkins container and sync time
-      - .secrets/ssh:/root/.ssh:ro
+      - .secrets/ssh:/var/jenkins_home/.ssh:ro
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/usr/local/bin/docker
       - /etc/timezone:/etc/timezone:ro

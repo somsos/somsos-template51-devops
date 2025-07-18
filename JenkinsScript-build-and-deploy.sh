@@ -47,8 +47,8 @@ function clone_repo {
 
 function build_image {
   echo -e "\nBuilding image: $1:$VERSION"
-  echo -e "\n\ndocker compose -f ./docker-compose.yml build $1" >> $LOG_FILE 
-  docker compose -f ./docker-compose.yml build $1 &>> $LOG_FILE 
+  echo -e "\n\ndocker compose build $1" >> $LOG_FILE 
+  docker compose build $1 &>> $LOG_FILE 
   print_logs $? "Building image: $1:$VERSION"
 }
 
@@ -59,8 +59,8 @@ function stop_container_if_running {
   docker ps -a --format="{{.Names}}" | grep $1
   if [ $? -eq 0 ]; then
     echo -e "\nStopping $1 container"
-    echo -e "\n\ndocker compose -f ./docker-compose.yml down $1" >> $LOG_FILE
-    docker compose -f ./docker-compose.yml down $1 &>> $LOG_FILE
+    echo -e "\n\ndocker compose down $1" >> $LOG_FILE
+    docker compose down $1 &>> $LOG_FILE
     echo -e "Stopping $1 container Succeeded\n"
   fi
 }
@@ -72,8 +72,8 @@ function start_container_if_not_running {
   docker ps -a --format="{{.Names}}" | grep $1
   if [ $? -ne 0 ]; then
     echo -e "\nStarting $1 container"
-    echo -e "\n\ndocker compose -f ./docker-compose.yml up -d $1" >> $LOG_FILE
-    docker compose -f ./docker-compose.yml up -d $1 &>> $LOG_FILE
+    echo -e "\n\ndocker compose up -d $1" >> $LOG_FILE
+    docker compose up -d $1 &>> $LOG_FILE
     echo -e "Starting $1 container Succeeded\n"
   fi
 }
@@ -84,9 +84,9 @@ function setup_container {
   stop_container_if_running $1
 
   echo -e "\nSetting up $1"
-  echo -e "\n\ndocker compose -f ./docker-compose.yml up -d $1" >> $LOG_FILE  
+  echo -e "\n\ndocker compose up -d $1" >> $LOG_FILE  
 
-  docker compose -f ./docker-compose.yml up -d $1 &>> $LOG_FILE 
+  docker compose up -d $1 &>> $LOG_FILE 
   print_logs $? "Setting up $1"
 }
 
@@ -99,7 +99,7 @@ function setup_container {
 
 start_container_if_not_running $DB_SERVICE_NAME
 
-if [ "$1" == "template51-backend" ]; then
+if [ "$1" == "template51_backend" ]; then
 
   clone_repo $BACK_REPO $BACK_SERVICE_NAME
 
@@ -107,7 +107,7 @@ if [ "$1" == "template51-backend" ]; then
 
   setup_container $BACK_SERVICE_NAME
   
-elif [ "$1" == "template51-frontend" ]; then
+elif [ "$1" == "template51_frontend" ]; then
   
   clone_repo $FRONT_REPO $FRONT_SERVICE_NAME
 

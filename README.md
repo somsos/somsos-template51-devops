@@ -2,33 +2,22 @@
 
 ## ToDo
 
-Make the deploy.script works either in host or container, by changing the
-way the network works (add host.docker.internal on host and container)
+Check the deploy process now in jenkins using web hook triggered by gitea.
 
-Make the conning in jenkins, I stayed on adding the ssh key from ./.secrets/ssh
-as vlume to jenkins
-
-```bash
-cp ~/.ssh/id_ed25519 myproject/jenkins_ssh/
-cp ~/.ssh/id_ed25519.pub myproject/jenkins_ssh/
-chmod 600 myproject/jenkins_ssh/id_ed25519
-
-  volumes:
-    - ./jenkins_home:/var/jenkins_home
-    - ./jenkins_ssh:/root/.ssh:ro
-```
-
-## Requirements
+## Requirements to change in the docker host
 
 ### Unblock the following ports
 
 ```bash
 sudo ufw allow 3000
+sudo ufw allow 222
 sudo ufw allow 3001
 sudo ufw allow 5432
 sudo ufw allow 8080
 sudo ufw allow 80
 
+#So the connection doesn't freeze instead notify is being rejected/refused.
+sudo ufw default reject incoming
 ```
 
 ### Changes in the host
@@ -56,7 +45,11 @@ Install the plugins
 6. (Optional) You can trigger the web hook manually like this
 
 ```shell
-curl -X POST --data '{"repository": { "name": "Hi-There" }}' \
+# Note the "Content-Type" header is important.
+
+# name: template51_frontend - template51_backend
+curl -X POST --data '{"repository": { "name": "template51_backend" }}' \
+    -H "Content-Type: application/json" \
     http://localhost:3001/generic-webhook-trigger/invoke?token=71c27113071788c2f7874f58a584d1138a003693
 ```
 
