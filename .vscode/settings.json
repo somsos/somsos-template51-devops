@@ -2,5 +2,11 @@
     "files.readonlyFromPermissions": true,
     "files.readonlyInclude": {
         "workdir/devops*/**": true,
-    }
+    },
+    "cSpell.words": [
+        "healthcheck",
+        "isready",
+        "localtime",
+        "PGDATABASE"
+    ]
 }
