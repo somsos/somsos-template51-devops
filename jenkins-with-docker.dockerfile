@@ -19,6 +19,9 @@ RUN apt update && apt install tzdata -y
 # CAREFUL: GID must match host's docker group GID (in my case 999): cat /etc/group | grep docker
 RUN groupadd -g 999 docker && usermod -aG docker jenkins
 
+#ip, nc, ping
+RUN apt-get install -y iproute2 iputils-ping netcat-openbsd
+
 RUN rm -rf /var/lib/apt/lists/*
 
 USER jenkins

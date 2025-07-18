@@ -2,11 +2,30 @@
 
 ## ToDo
 
-Separate the deploy in two scripts, one just to download the devops project
-and start the deploy script using the docker compose.
-keep JenkinsScript.sh almost the same but now without the cloning of devops
+Make the deploy.script works either in host or container, by changing the
+way the network works (add host.docker.internal on host and container)
+
+Make the conning in jenkins, I stayed on adding the ssh key from ./.secrets/ssh
+as vlume to jenkins
+
+```bash
+cp ~/.ssh/id_ed25519 myproject/jenkins_ssh/
+cp ~/.ssh/id_ed25519.pub myproject/jenkins_ssh/
+chmod 600 myproject/jenkins_ssh/id_ed25519
+
+  volumes:
+    - ./jenkins_home:/var/jenkins_home
+    - ./jenkins_ssh:/root/.ssh:ro
+```
 
 ## Requirements
+
+### Changes in the host
+
+Add the new line `127.0.0.1       host.docker.internal` on /etc/hosts
+so the scripts connect the same way inside the container or in host.
+
+
 
 ### Jenkins plugins
 

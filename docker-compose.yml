@@ -5,8 +5,8 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 173.100.1.0/24
-          gateway: 173.100.1.1
+        - subnet: 172.30.0.0/24
+          gateway: 172.30.0.1
 
 
 
@@ -46,6 +46,8 @@ services:
     networks:
       net51:
         ipv4_address: ${BACK_IP}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - db
     healthcheck:
@@ -91,6 +93,8 @@ services:
     networks:
       net51:
         ipv4_address: ${GITEA_IP}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 
 
@@ -109,6 +113,7 @@ services:
 # main folder where it wil be all the generated content of jenkins
       - ./data_jenkins:/var/jenkins_home
 # We give access to docker host to jenkins container and sync time
+      - .secrets/ssh:/root/.ssh:ro
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/usr/local/bin/docker
       - /etc/timezone:/etc/timezone:ro
@@ -116,4 +121,6 @@ services:
     networks:
       net51:
         ipv4_address: ${JENKINS_IP}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
