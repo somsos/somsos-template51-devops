@@ -49,7 +49,7 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
-      - db
+      - template51_db
     healthcheck:
       test: ["CMD-SHELL", "wget --spider -q http://localhost:8080/actuator/health && echo servicesAlive"]
       interval: 20s
@@ -68,7 +68,7 @@ services:
       net51:
         ipv4_address: ${FRONT_IP}
     depends_on:
-      - back
+      - template51_back
     healthcheck:
       test: ["CMD-SHELL", "wget --spider -q http://127.0.0.1 && echo servicesAlive"]
       interval: 20s
