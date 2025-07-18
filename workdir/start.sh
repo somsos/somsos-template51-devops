@@ -2,7 +2,7 @@
 set -e
 
 # Request (testing this variable is created by "Generic Webhook Trigger plugin" when gets the webhook request)
-TRIGGERING_REPO='template51-frontend'
+TRIGGERING_REPO='template51-backend'
 
 
 # This scripts run in jenkins, the rea
