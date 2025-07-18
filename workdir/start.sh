@@ -11,14 +11,12 @@ TRIGGERING_REPO='template51-backend'
 
 BRANCH="main"   # CAUTION: Keep sync with .env file
 
-GITEA_IP=173.100.1.201 # keep sync with .env
-
 
 DATE="$(date +"%Y-%m-%d_%H.%M.%S")"
 
 DEVOPS_DIR="devops_$DATE"
 
-DEVOPS_REPO="ssh://git@$GITEA_IP:22/mario1/template51_devops.git"
+DEVOPS_REPO="ssh://git@host.docker.internal:222/mario1/template51_devops.git"
 
 
 
