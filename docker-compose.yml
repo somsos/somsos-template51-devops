@@ -67,6 +67,8 @@ services:
     networks:
       net51:
         ipv4_address: ${FRONT_IP}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - back
     healthcheck:

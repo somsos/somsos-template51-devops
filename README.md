@@ -20,6 +20,17 @@ chmod 600 myproject/jenkins_ssh/id_ed25519
 
 ## Requirements
 
+### Unblock the following ports
+
+```bash
+sudo ufw allow 3000
+sudo ufw allow 3001
+sudo ufw allow 5432
+sudo ufw allow 8080
+sudo ufw allow 80
+
+```
+
 ### Changes in the host
 
 Add the new line `127.0.0.1       host.docker.internal` on /etc/hosts
@@ -60,4 +71,13 @@ the jenkins container use.
 
 ```bash
 sudo chown -R 1000:1000 ./data_jenkins
+```
+
+## Endpoints for checking
+
+```sh
+curl -X POST -i \
+  --header "Content-Type: application/json" \
+  --data '{"username":"mario1","password":"mario1p"}' \
+  http://host.docker.internal:8080/auth/create-token
 ```
