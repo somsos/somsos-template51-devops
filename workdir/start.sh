@@ -18,14 +18,15 @@ DEVOPS_DIR="devops_$DATE"
 
 DEVOPS_REPO="ssh://git@host.docker.internal:222/mario1/template51_devops.git"
 
-
+OPTION_A="template51_back"
+OPTION_B="template51_front"
 
 # Executions
 
 ## Validation
 : "${TRIGGERING_REPO:?Variable TRIGGERING_REPO is not set}"
-if [[ "$TRIGGERING_REPO" != "template51_backend" && "$TRIGGERING_REPO" != "template51_frontend" ]]; then
-  echo "TRIGGERING_REPO variable expected to be template51-frontend template51-backend, it was '$TRIGGERING_REPO'"
+if [[ "$TRIGGERING_REPO" != "$OPTION_A" && "$TRIGGERING_REPO" != "$OPTION_B" ]]; then
+  echo "TRIGGERING_REPO variable expected to be $OPTION_A or $OPTION_B, it was '$TRIGGERING_REPO'"
   exit 1
 fi
 

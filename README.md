@@ -50,7 +50,7 @@ Install the plugins
 # name: template51_frontend - template51_backend
 curl -X POST --data '{"repository": { "name": "template51_backend" }}' \
     -H "Content-Type: application/json" \
-    http://localhost:3001/generic-webhook-trigger/invoke?token=71c27113071788c2f7874f58a584d1138a003693
+    http://host.docker.internal:3001/generic-webhook-trigger/invoke?token=71c27113071788c2f7874f58a584d1138a003693
 ```
 
 ## Pitfalls

@@ -19,6 +19,9 @@ echo "REPO: $1"
 # names
 LOG_FILE="./logs.log"
 
+OPTION_A="template51_back"
+
+OPTION_B="template51_front"
 
 
 function print_logs {
@@ -99,7 +102,7 @@ function setup_container {
 
 start_container_if_not_running $DB_SERVICE_NAME
 
-if [ "$1" == "template51_backend" ]; then
+if [ "$1" == "$OPTION_A" ]; then
 
   clone_repo $BACK_REPO $BACK_SERVICE_NAME
 
@@ -107,7 +110,7 @@ if [ "$1" == "template51_backend" ]; then
 
   setup_container $BACK_SERVICE_NAME
   
-elif [ "$1" == "template51_frontend" ]; then
+elif [ "$1" == "$OPTION_B" ]; then
   
   clone_repo $FRONT_REPO $FRONT_SERVICE_NAME
 
