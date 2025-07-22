@@ -102,7 +102,7 @@ function setup_container {
 
 start_container_if_not_running $DB_SERVICE_NAME
 
-if [ "$1" == "$OPTION_A" ]; then
+if [ $1 == $OPTION_A ]; then
 
   clone_repo $BACK_REPO $BACK_SERVICE_NAME
 
@@ -110,7 +110,7 @@ if [ "$1" == "$OPTION_A" ]; then
 
   setup_container $BACK_SERVICE_NAME
   
-elif [ "$1" == "$OPTION_B" ]; then
+elif [ $1 == $OPTION_B ]; then
   
   clone_repo $FRONT_REPO $FRONT_SERVICE_NAME
 
@@ -119,6 +119,6 @@ elif [ "$1" == "$OPTION_B" ]; then
   setup_container $FRONT_SERVICE_NAME
 
 else 
-  echo "unknown repo"
+  echo "unknown repo, expected: '$OPTION_A' or '$OPTION_B', but was '$1'"
   exit 1
 fi

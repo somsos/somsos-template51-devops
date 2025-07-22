@@ -25,7 +25,24 @@ sudo ufw default reject incoming
 Add the new line `127.0.0.1       host.docker.internal` on /etc/hosts
 so the scripts connect the same way inside the container or in host.
 
+### Changes in gitea
 
+Add allowed hosts in `data_gitea/gitea/conf/app.ini`
+
+```ini
+[webhook]
+ALLOWED_HOST_LIST=host.docker.internal
+```
+
+In repository settings (front and back repos) add webhook.
+
+```sh
+http://host.docker.internal:3001/generic-webhook-trigger/invoke?token=XXXXX
+
+Method: POST
+
+POST Content Type: application/json
+```
 
 ### Jenkins plugins
 
@@ -40,7 +57,7 @@ Install the plugins
 2. Check Generic Webhook Trigger
 3. Add in POST token parameter: name: "TRIGGERING_REPO" expression: "$.repository.name"
 4. Add token (same as webhook): 71c27113071788c2f7874f58a584d1138a003693
-5. In build steps add "Execute shell" and peste the contant of start.sh 
+5. In build steps add "Execute shell" and peste the contant of start.sh
     (comment the declaration of TRIGGERING_REPO)
 6. (Optional) You can trigger the web hook manually like this
 
