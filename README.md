@@ -16,9 +16,13 @@
 
 ## ToDo
 
-Check the process in a just initiated O.S.
-
-Create documentation
+- [ ] fix gitea webhooks, request using curl inside gitea to jenkins, passing through reverse-proxy.
+- [ ] Create a new domain in duck.org as the one in the `.yml`
+- [ ] test the reverse-proxy locally
+- [ ] upload it to remote server and make it work just the http with reverse proxy
+- [ ] set up the https
+- [ ] Create the blog with the 3 diagrams and it explication of each layer.
+- [ ] Add it to C.V.
 
 ## How it works this DevOps pipeline
 
@@ -230,5 +234,5 @@ curl -X POST --data '{"repository": { "name": "template51_backend" }}' \
 curl -X POST -i \
   --header "Content-Type: application/json" \
   --data '{"username":"mario1","password":"mario1p"}' \
-  http://host.docker.internal:8080/auth/create-token
+  http://api.mariomv.duckdns.org/auth/create-token
 ```

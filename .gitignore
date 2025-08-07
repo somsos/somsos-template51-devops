@@ -10,4 +10,4 @@ workdir/**
 test-a
 test-b
 
-.secrets
+**/secrets

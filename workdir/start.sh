@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+# IMPORTANT: When you update the script make sure to update the
+# jenkins job configuration "`template51` -> shell" 
+
 # Request (testing this variable is created by "Generic Webhook Trigger plugin"
 # when gets the webhook request)
 # TRIGGERING_REPO='template51-frontend'
@@ -16,7 +19,7 @@ DATE="$(date +"%Y-%m-%d_%H.%M.%S")"
 
 DEVOPS_DIR="devops_$DATE"
 
-DEVOPS_REPO="ssh://git@host.docker.internal:222/mario1/template51_devops.git"
+DEVOPS_REPO="ssh://git@gitea.mariomv.duckdns.org:222/mario1/template51_devops.git"
 
 OPTION_A="template51_back"
 OPTION_B="template51_front"
