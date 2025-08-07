@@ -236,3 +236,20 @@ curl -X POST -i \
   --data '{"username":"mario1","password":"mario1p"}' \
   http://api.mariomv.duckdns.org/auth/create-token
 ```
+
+mariomv.duckdns.org
+
+eclipse-temurin:21-alpine
+nginx:stable-alpine3.21
+
+docker run --rm -ti --name temp-test \
+  --add-host api.mariomv.duckdns.org:host-gateway \
+  nginx:stable-alpine3.21 sh
+
+
+
+url=jdbc:postgresql://mariomv.duckdns.org:5432/jab_db_test
+spring.datasource.username=jab_db_user
+spring.datasource.password=jab_db_pass
+
+psql postgresql://jab_db_user:jab_db_pass@mariomv.duckdns.org:5432/jab_db_test

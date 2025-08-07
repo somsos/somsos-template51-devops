@@ -91,7 +91,7 @@ services:
       net51:
         ipv4_address: ${BACK_IP}
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - "mariomv.duckdns.org:host-gateway" # to connect to db
     depends_on:
       - db
     healthcheck:
@@ -116,7 +116,7 @@ services:
       net51:
         ipv4_address: ${FRONT_IP}
     extra_hosts:
-      - "mariomv.duckdns.org:host-gateway"
+      - "api.mariomv.duckdns.org:host-gateway"
     depends_on:
       - back
     healthcheck:

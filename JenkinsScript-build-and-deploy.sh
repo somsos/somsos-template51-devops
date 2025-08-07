@@ -87,9 +87,9 @@ function setup_container {
   stop_container_if_running $1
 
   echo -e "\nSetting up $1"
-  echo -e "\n\ndocker compose up -d $1" >> $LOG_FILE  
+  echo -e "\n\ndocker compose up -d --no-recreate $1" >> $LOG_FILE  
 
-  docker compose up -d $1 &>> $LOG_FILE 
+  docker compose up -d --no-recreate $1 &>> $LOG_FILE
   print_logs $? "Setting up $1"
 }
 
