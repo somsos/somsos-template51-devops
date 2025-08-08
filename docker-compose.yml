@@ -63,7 +63,7 @@ services:
     ports:
       - "${DB_PORT}:5432"
     volumes:
-      - data_postgres:/var/lib/postgresql/data
+      - ./data/postgres:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
@@ -137,7 +137,7 @@ services:
       #- LETSENCRYPT_HOST=gitea.${MY_DOMAIN}
       #- LETSENCRYPT_EMAIL=${MY_EMAIL}
     volumes:
-      - ./data_gitea:/data
+      - ./data/gitea:/data
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     ports:
@@ -170,7 +170,7 @@ services:
       - "8080"
     volumes:
 # main folder where it wil be all the generated content of jenkins
-      - ./data_jenkins:/var/jenkins_home
+      - ./data/jenkins:/var/jenkins_home
 # We give access to docker host to jenkins container and sync time
       - ./data/secrets/ssh/:/var/jenkins_home/.ssh:ro
       - /var/run/docker.sock:/var/run/docker.sock

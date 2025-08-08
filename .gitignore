@@ -1,8 +1,8 @@
 **/.git/
 !/.git/
-data_gitea
-data_jenkins
-data_postgres
+data/gitea
+data/jenkins
+data/postgres
 
 workdir/**
 !workdir/start.sh

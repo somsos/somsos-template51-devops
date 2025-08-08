@@ -16,10 +16,7 @@
 
 ## ToDo
 
-- [ ] fix gitea webhooks, request using curl inside gitea to jenkins, passing through reverse-proxy.
-- [ ] Create a new domain in duck.org as the one in the `.yml`
-- [ ] test the reverse-proxy locally
-- [ ] upload it to remote server and make it work just the http with reverse proxy
+- [ ] upload it to remote server and make it work just the http with reverse proxy.
 - [ ] set up the https
 - [ ] Create the blog with the 3 diagrams and it explication of each layer.
 - [ ] Add it to C.V.
