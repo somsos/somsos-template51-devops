@@ -35,23 +35,23 @@ services:
 
 # for automatic SSL certificate management
 # IMPORTANT: run it at the end: 
-  # acme-companion:
-  #   image: nginxproxy/acme-companion
-  #   container_name: acme-companion
-  #   depends_on:
-  #     - reverse-proxy
-  #   environment:
-  #     - DEFAULT_EMAIL=${MY_EMAIL}
-  #     - NGINX_PROXY_CONTAINER=reverse-proxy
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock:ro
-  #     - ./data/reverse-proxy/certs:/etc/nginx/certs:rw
-  #     - ./data/reverse-proxy/vhost.d:/etc/nginx/vhost.d
-  #     - ./data/reverse-proxy/html:/usr/share/nginx/html
-  #     - ./data/reverse-proxy/acme:/etc/acme.sh
-  #   networks:
-  #     net51:
-  #       ipv4_address: ${ACME_COMPANION_IP}
+  acme-companion:
+    image: nginxproxy/acme-companion
+    container_name: acme-companion
+    depends_on:
+      - reverse-proxy
+    environment:
+      - DEFAULT_EMAIL=${MY_EMAIL}
+      - NGINX_PROXY_CONTAINER=reverse-proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./data/reverse-proxy/certs:/etc/nginx/certs:rw
+      - ./data/reverse-proxy/vhost.d:/etc/nginx/vhost.d
+      - ./data/reverse-proxy/html:/usr/share/nginx/html
+      - ./data/reverse-proxy/acme:/etc/acme.sh
+    networks:
+      net51:
+        ipv4_address: ${ACME_COMPANION_IP}
 
   db:
     container_name: ${DB_SERVICE_NAME}
@@ -84,8 +84,8 @@ services:
       - "8080"
     environment:
       - VIRTUAL_HOST=api.${MY_DOMAIN}
-      #- LETSENCRYPT_HOST=api.${MY_DOMAIN}
-      #- LETSENCRYPT_EMAIL=${MY_EMAIL}
+      - LETSENCRYPT_HOST=api.${MY_DOMAIN}
+      - LETSENCRYPT_EMAIL=${MY_EMAIL}
       - VIRTUAL_PORT=8080
     networks:
       net51:
@@ -109,8 +109,8 @@ services:
       - "80"
     environment:
       - VIRTUAL_HOST=${MY_DOMAIN}
-      #- LETSENCRYPT_HOST=${MY_DOMAIN}
-      #- LETSENCRYPT_EMAIL=${MY_EMAIL}
+      - LETSENCRYPT_HOST=${MY_DOMAIN}
+      - LETSENCRYPT_EMAIL=${MY_EMAIL}
       - VIRTUAL_PORT=80
     networks:
       net51:
@@ -134,8 +134,8 @@ services:
       - USER_GID=1000
       - VIRTUAL_HOST=gitea.${MY_DOMAIN}
       - VIRTUAL_PORT=3000
-      #- LETSENCRYPT_HOST=gitea.${MY_DOMAIN}
-      #- LETSENCRYPT_EMAIL=${MY_EMAIL}
+      - LETSENCRYPT_HOST=gitea.${MY_DOMAIN}
+      - LETSENCRYPT_EMAIL=${MY_EMAIL}
     volumes:
       - ./data/gitea:/data
       - /etc/timezone:/etc/timezone:ro
@@ -163,8 +163,8 @@ services:
     privileged: true
     environment:
       - VIRTUAL_HOST=jenkins.${MY_DOMAIN}
-      #- LETSENCRYPT_HOST=jenkins.${MY_DOMAIN}
-      #- LETSENCRYPT_EMAIL=${MY_EMAIL}
+      - LETSENCRYPT_HOST=jenkins.${MY_DOMAIN}
+      - LETSENCRYPT_EMAIL=${MY_EMAIL}
       - VIRTUAL_PORT=8080
     expose:
       - "8080"

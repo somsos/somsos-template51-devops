@@ -16,10 +16,10 @@
 
 ## ToDo
 
-- [ ] upload it to remote server and make it work just the http with reverse proxy.
 - [ ] set up the https
 - [ ] Create the blog with the 3 diagrams and it explication of each layer.
 - [ ] Add it to C.V.
+- [ ] Add in manual before making developing tests, disconnect from internet and update the `/etc/hosts`
 
 ## How it works this DevOps pipeline
 
@@ -63,9 +63,7 @@ Installed
 #### Unblock the following ports
 
 ```bash
-sudo ufw allow 3000
-sudo ufw allow 222
-sudo ufw allow 3001
+sudo ufw allow 222 &&
 sudo ufw allow 5432
 sudo ufw allow 8080
 sudo ufw allow 80
@@ -77,7 +75,7 @@ sudo ufw default reject incoming
 
 #### add domain in local domain /etc/hosts
 
-Add the new line `127.0.0.1       host.docker.internal` on /etc/hosts
+Add the new line `127.0.0.1       mariomv.duckdns.org` on /etc/hosts
 so the scripts connect the same way inside the container or in host.
 
 #### Create a ssh key without keypass
@@ -91,8 +89,8 @@ ssh-keygen -t ed25519 -N '' -f ~/.ssh/id_ed25519_nopass
 Add it to conf so is used in gitea service
 
 ```c
-Host host.docker.internal
-    HostName host.docker.internal
+Host mariomv.duckdns.org
+    HostName mariomv.duckdns.org
     Port 222
     User git
     IdentityFile ~/.ssh/id_ed25519_nopass
@@ -120,7 +118,7 @@ project folder.
 
 ```ini
 [webhook]
-ALLOWED_HOST_LIST=host.docker.internal
+ALLOWED_HOST_LIST=mariomv.duckdns.org
 ```
 
 2, Add in user setting the ssh key generated
@@ -138,13 +136,13 @@ template51_back
 template51_front
 
 # Using format
-ssh://git@host.docker.internal:222/mario1/{{NAME}}.git
+ssh://git@gitea.mariomv.duckdns.org:222/mario1/{{NAME}}.git
 ```
 
 4, Add webhook on back and front repositories settings
 
 ```sh
-http://host.docker.internal:3001/generic-webhook-trigger/invoke?token=XXXXX
+http://jenkins.mariomv.duckdns.org:3001/generic-webhook-trigger/invoke?token=someToken_xxxxx
 
 Method: POST
 
@@ -186,7 +184,7 @@ numbers match.
 change the folder permisions using this command in the docker-host in root devops project.
 
 ```bash
-sudo chown -R 1000:1000 ./data_jenkins
+sudo chown -R 1000:1000 ./data/jenkins
 ```
 
 2, Select install the recommended plugins, on first run of Jenkins.
@@ -207,12 +205,17 @@ sudo chown -R 1000:1000 ./data_jenkins
 6. (Optional) You can trigger the web hook manually like this
 
 ```shell
+# Test running inside the jenkins container to see if there is communication
+git clone  --depth=1 --single-branch --branch main ssh://git@gitea.mariomv.duckdns.org:222/mario1/template51_devops.git one
+
+
+
 # Note the "Content-Type" header is important.
 
 # name: template51_frontend - template51_backend
 curl -X POST --data '{"repository": { "name": "template51_backend" }}' \
     -H "Content-Type: application/json" \
-    http://host.docker.internal:3001/generic-webhook-trigger/invoke?token=71c27113071788c2f7874f58a584d1138a003693
+    http://jenkins.mariomv.duckdns.org/generic-webhook-trigger/invoke?token=someToken_xxxxx
 ```
 
 <!--
