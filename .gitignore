@@ -1,11 +1,12 @@
 **/.git/
 !/.git/
-data/gitea
-data/jenkins
-data/postgres
+
+data
+
 
 workdir/**
 !workdir/start.sh
+
 
 last-login.md
 
