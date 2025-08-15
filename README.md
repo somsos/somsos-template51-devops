@@ -2,7 +2,7 @@
 
 - [README](#readme)
   - [ToDo](#todo)
-  - [How it works this DevOps pipeline](#how-it-works-this-devops-pipeline)
+  - [How it works the DevOps pipeline](#how-it-works-the-devops-pipeline)
   - [Installation](#installation)
     - [Changes in Host (Docker-Host)](#changes-in-host-docker-host)
       - [Unblock the following ports](#unblock-the-following-ports)
@@ -16,32 +16,34 @@
 
 ## ToDo
 
-- [ ] set up the https
+- [ ] Implement rollback on back and front.
+- [ ] Implement an evolutionary Database.
 - [ ] Create the blog with the 3 diagrams and it explication of each layer.
 - [ ] Add it to C.V.
 - [ ] Add in manual before making developing tests, disconnect from internet and update the `/etc/hosts`
 
-## How it works this DevOps pipeline
+## How it works the DevOps pipeline
 
 The idea is to abstract or reduce the commands to build and deploy,
-to only two docker commands
+to only the following two docker commands:
 
 - `docker compose build {db|back|front}`
 - `docker compose up -d {db|back|front}`
 
 These two commands are standard on those who knows docker, and from
-just watching them they can get an idea of how works by behind, with
-in resume, the `docker-compose.yml` defines how to run the app,
-and the `Dockerfile` defines how to build it. So in theory this
-two commands could build and deploy any kind of app, whether are
-build with Java, Python, GoLand, Node, Angular, React, etc.
+just watching them, they can get an idea of how works by behind, with
+in resume, the `docker-compose.yml` defines how to run the containerized app,
+and the `Dockerfile` defines how to build it and deploy it.
+
+So in theory this two commands could build and deploy any kind of
+app, whether it uses Java, Python, GoLand, Node, Angular, React, etc.
 
 Here a graph of the working flow which goes from the git push to the
 deploy of the app.
 
 ![devops pipeline flow](./1_documentation/devops-pipeline.png)
 
-For the connections and management of https, we use a reverse proxy
+For the connections and https management, I'm using a reverse proxy
 to centralize and facilitate the implementation.
 
 ![reverse-proxy-conf](./1_documentation/reverse-proxy-conf.png)
@@ -212,10 +214,10 @@ git clone  --depth=1 --single-branch --branch main ssh://git@gitea.mariomv.duckd
 
 # Note the "Content-Type" header is important.
 
-# name: template51_frontend - template51_backend
-curl -X POST --data '{"repository": { "name": "template51_backend" }}' \
+# name: template51_front - template51_back
+curl -X POST --data '{"repository": { "name": "template51_front" }}' \
     -H "Content-Type: application/json" \
-    http://jenkins.mariomv.duckdns.org/generic-webhook-trigger/invoke?token=someToken_xxxxx
+    https://jenkins.mariomv.duckdns.org/generic-webhook-trigger/invoke?token=someToken_xxxxx
 ```
 
 <!--
@@ -234,7 +236,7 @@ curl -X POST --data '{"repository": { "name": "template51_backend" }}' \
 curl -X POST -i \
   --header "Content-Type: application/json" \
   --data '{"username":"mario1","password":"mario1p"}' \
-  http://api.mariomv.duckdns.org/auth/create-token
+  https://api.mariomv.duckdns.org/auth/create-token
 ```
 
 mariomv.duckdns.org

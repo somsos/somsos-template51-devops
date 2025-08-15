@@ -162,6 +162,7 @@ services:
       dockerfile: jenkins-with-docker.dockerfile
     privileged: true
     environment:
+      - JENKINS_JAVA_OPTS="-Dhudson.model.ParametersAction.keepUndefinedParameters=false"
       - VIRTUAL_HOST=jenkins.${MY_DOMAIN}
       - LETSENCRYPT_HOST=jenkins.${MY_DOMAIN}
       - LETSENCRYPT_EMAIL=${MY_EMAIL}

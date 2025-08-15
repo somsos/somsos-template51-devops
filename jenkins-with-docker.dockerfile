@@ -1,4 +1,5 @@
-FROM jenkins/jenkins:lts-jdk21
+# Keep a specific version because I already had a difficulty because of an automatic update
+FROM jenkins/jenkins:2.516.1-lts-jdk21
 
 USER root
 
