@@ -16,10 +16,10 @@
 
 ## ToDo
 
+- [ ] Add it to C.V.
 - [ ] Implement rollback on back and front.
 - [ ] Implement an evolutionary Database.
 - [ ] Create the blog with the 3 diagrams and it explication of each layer.
-- [ ] Add it to C.V.
 - [ ] Add in manual before making developing tests, disconnect from internet and update the `/etc/hosts`
 
 ## How it works the DevOps pipeline
@@ -69,6 +69,8 @@ sudo ufw allow 222 &&
 sudo ufw allow 5432
 sudo ufw allow 8080
 sudo ufw allow 80
+sudo ufw allow 3000
+sudo ufw allow 443
 
 # (optional) So the connections don't freeze,
 # and instead notify it is being rejected/refused.
@@ -200,6 +202,7 @@ sudo chown -R 1000:1000 ./data/jenkins
 
 1. Create a freestyle job
 2. Check the "Generic Webhook Trigger" box.
+   1. Note: for testing check the `Print post content` box for testing proposes.
 3. Add in POST content parameters: name: "TRIGGERING_REPO" expression: "$.repository.name", Type: "JSONPath"
 4. Add token (same as webhook): XXXX
 5. In build steps add "Execute shell" and peste the contant of start.sh
