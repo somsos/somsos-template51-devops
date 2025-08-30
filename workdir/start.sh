@@ -6,7 +6,7 @@ set -e
 
 # Request (testing this variable is created by "Generic Webhook Trigger plugin"
 # when gets the webhook request)
-# TRIGGERING_REPO='template51-frontend'
+# TRIGGERING_REPO='template51-test'
 
 
 # This scripts run in jenkins, the rea
@@ -29,7 +29,7 @@ OPTION_C="template51_db"
 
 ## Validation
 : "${TRIGGERING_REPO:?Variable TRIGGERING_REPO is not set}"
-if [[ "$TRIGGERING_REPO" != "$OPTION_A" && "$TRIGGERING_REPO" != "$OPTION_B" && "$TRIGGERING_REPO" != "$OPTION_C"]]; then
+if [[ "$TRIGGERING_REPO" != "$OPTION_A" && "$TRIGGERING_REPO" != "$OPTION_B" && "$TRIGGERING_REPO" != "$OPTION_C" ]]; then
   echo "TRIGGERING_REPO variable expected to be $OPTION_A, $OPTION_B or $OPTION_C, it was '$TRIGGERING_REPO'"
   exit 1
 fi

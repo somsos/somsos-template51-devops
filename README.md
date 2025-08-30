@@ -146,7 +146,7 @@ ssh://git@gitea.mariomv.duckdns.org:222/mario1/{{NAME}}.git
 4, Add webhook on back and front repositories settings
 
 ```sh
-http://jenkins.mariomv.duckdns.org:3001/generic-webhook-trigger/invoke?token=someToken_xxxxx
+http://jenkins.mariomv.duckdns.org/generic-webhook-trigger/invoke?token=someToken_xxxxx
 
 Method: POST
 
