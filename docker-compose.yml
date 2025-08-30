@@ -92,7 +92,7 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_IP=${DB_IP}
       - DB_PORT=${DB_PORT}
-    entrypoint: ["sh", "./liquibase-docker-entrypoint.sh"]
+    entrypoint: ["ls -la && sh", "./liquibase-docker-entrypoint.sh"]
     networks:
       - net51
 
