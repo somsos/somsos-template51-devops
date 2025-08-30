@@ -23,6 +23,8 @@ OPTION_A="template51_back"
 
 OPTION_B="template51_front"
 
+OPTION_C="template51_db"
+
 
 function print_logs {
   if [ $1 -ne 0 ]; then
@@ -34,9 +36,11 @@ function print_logs {
   echo -e "$2 Succeeded"
 }
 
+
+#$1 repository ssh URI
+#$2 target directory
 function clone_repo {
   local CLONE_COMMAND="git clone  --depth=1 --single-branch --branch $BRANCH"
-
 
   echo -e "\nCloning $2"
   echo "$CLONE_COMMAND $1 $2" >> $LOG_FILE
@@ -96,6 +100,19 @@ function setup_container {
 
 
 
+# $1: service name
+# $2: command parameter
+function run_container {
+  echo -e "\nSetting up $1"
+  echo -e "\n\n docker compose run --rm $1 $2" >> $LOG_FILE
+
+  docker compose run --rm $1 $2
+}
+
+
+
+
+
 
 # Executions
 
@@ -110,6 +127,8 @@ if [ $1 == $OPTION_A ]; then
 
   setup_container $BACK_SERVICE_NAME
   
+
+
 elif [ $1 == $OPTION_B ]; then
   
   clone_repo $FRONT_REPO $FRONT_SERVICE_NAME
@@ -118,7 +137,16 @@ elif [ $1 == $OPTION_B ]; then
 
   setup_container $FRONT_SERVICE_NAME
 
+
+elif [ $1 == $OPTION_C ]; then
+  MIGRATIONS_SOURCE="./workdir/db_source"
+
+  clone_repo $LIQUIBASE_REPO $MIGRATIONS_SOURCE
+
+  run_container $LIQUIBASE_SERVICE deploy
+
+
 else 
-  echo "unknown repo, expected: '$OPTION_A' or '$OPTION_B', but was '$1'"
+  echo "unknown repo, expected: '$OPTION_A', '$OPTION_B' or '$OPTION_C', but was '$1'"
   exit 1
 fi
