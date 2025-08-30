@@ -75,6 +75,27 @@ services:
       retries: 5
 
 
+# run with: "docker compose run --rm liquibase_migration" for deploy
+# or use "docker compose run --rm liquibase_migration rollback" for rollback
+  liquibase_migration:
+    depends_on:
+      - db
+    image: liquibase:4.33-alpine
+    container_name: db_migration
+    working_dir: /var/liquibase
+    volumes:
+      - ./workdir/db_source:/var/liquibase
+      - /dev/null:/var/liquibase/liquibase.properties
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_IP=${DB_IP}
+      - DB_PORT=${DB_PORT}
+    entrypoint: ["sh", "./liquibase-docker-entrypoint.sh"]
+    networks:
+      - net51
+
 
   back:
     container_name: ${BACK_SERVICE_NAME}

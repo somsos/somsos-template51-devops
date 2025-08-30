@@ -6,10 +6,13 @@
     "cSpell.words": [
         "healthcheck",
         "isready",
+        "jdbc",
         "localtime",
         "mariomv",
         "nginxproxy",
         "PGDATABASE",
-        "vhost"
+        "postgresql",
+        "vhost",
+        "workdir"
     ]
 }

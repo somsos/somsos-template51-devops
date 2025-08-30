@@ -23,13 +23,14 @@ DEVOPS_REPO="ssh://git@gitea.mariomv.duckdns.org:222/mario1/template51_devops.gi
 
 OPTION_A="template51_back"
 OPTION_B="template51_front"
+OPTION_C="template51_db"
 
 # Executions
 
 ## Validation
 : "${TRIGGERING_REPO:?Variable TRIGGERING_REPO is not set}"
-if [[ "$TRIGGERING_REPO" != "$OPTION_A" && "$TRIGGERING_REPO" != "$OPTION_B" ]]; then
-  echo "TRIGGERING_REPO variable expected to be $OPTION_A or $OPTION_B, it was '$TRIGGERING_REPO'"
+if [[ "$TRIGGERING_REPO" != "$OPTION_A" && "$TRIGGERING_REPO" != "$OPTION_B" && "$TRIGGERING_REPO" != "$OPTION_C"]]; then
+  echo "TRIGGERING_REPO variable expected to be $OPTION_A, $OPTION_B or $OPTION_C, it was '$TRIGGERING_REPO'"
   exit 1
 fi
 
