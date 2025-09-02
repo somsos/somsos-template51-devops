@@ -139,9 +139,6 @@ elif [ $1 == $OPTION_B ]; then
 
 
 elif [ $1 == $OPTION_C ]; then
-  pwd
-
-  MIGRATIONS_SOURCE="./workdir/db_source"
 
   clone_repo $LIQUIBASE_REPO $MIGRATIONS_SOURCE
 
