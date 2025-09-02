@@ -76,7 +76,7 @@ services:
 
 
 # run with: "docker compose run --rm liquibase_migration deploy" for deploy
-# or use "docker compose run --rm liquibase_migration rollback" for rollback
+# or use "docker compose run --rm liquibase_migration rollback vXX" for rollback
   liquibase_migration:
     depends_on:
       - db
@@ -92,7 +92,7 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_IP=${DB_IP}
       - DB_PORT=${DB_PORT}
-    entrypoint: ["ls -la && sh", "./liquibase-docker-entrypoint.sh"]
+    entrypoint: ["sh", "./liquibase-docker-entrypoint.sh"]
     networks:
       - net51
 
@@ -193,6 +193,7 @@ services:
     volumes:
 # main folder where it wil be all the generated content of jenkins
       - ./data/jenkins:/var/jenkins_home
+      - ./data/jenkins/workspace/template51/:/var/jenkins_home/workspace/template51
 # We give access to docker host to jenkins container and sync time
       - ./data/secrets/ssh/:/var/jenkins_home/.ssh:ro
       - /var/run/docker.sock:/var/run/docker.sock

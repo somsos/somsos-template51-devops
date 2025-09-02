@@ -258,3 +258,24 @@ spring.datasource.username=jab_db_user
 spring.datasource.password=jab_db_pass
 
 psql postgresql://jab_db_user:jab_db_pass@mariomv.duckdns.org:5432/jab_db_test
+
+
+building
+
+```sh
+
+MY_BRANCH="main"   # CAUTION: Keep sync with .env file
+MY_REPO="ssh://git@gitea.mariomv.duckdns.org:222/mario1/template51_devops.git"
+MY_DATE="$(date +"%Y-%m-%d_%H.%M.%S")"
+MY_DIR="t51_$(echo $BUILD_NUMBER)_db_rollback_$DATE"
+
+git clone  --depth=1 --single-branch --branch $BRANCH $REPO $DIR
+
+cd $DIR
+
+set -a
+source .env
+set +a
+
+docker compose run --rm liquibase_migration rollback $ROLLBACK_VERSION
+```

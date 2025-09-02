@@ -6,6 +6,7 @@ data
 
 workdir/**
 !workdir/start.sh
+!workdir/database_rollback.sh
 
 
 last-login.md
