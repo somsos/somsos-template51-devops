@@ -127,6 +127,10 @@ elif [ $1 == $OPTION_C ]; then
 
   clone_repo $DB_MIGRATIONS_REPO $DB_MIGRATIONS_DIR
 
+  cp .env $DB_MIGRATIONS_DIR
+
+  cd $DB_MIGRATIONS_DIR
+
   liquibase update \
   --username=$POSTGRES_USER \
   --password=$DB_PASSWORD \
