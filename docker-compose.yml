@@ -10,7 +10,6 @@ networks:
 
 volumes:
   data_postgres:
-  data_jenkins_t51_workspace:
 
 
 
@@ -194,7 +193,6 @@ services:
     volumes:
 # main folder where it wil be all the generated content of jenkins
       - ./data/jenkins:/var/jenkins_home
-      - data_jenkins_t51_workspace:/var/jenkins_home/workspace
 # We give access to docker host to jenkins container and sync time
       - ./data/secrets/ssh/:/var/jenkins_home/.ssh:ro
       - /var/run/docker.sock:/var/run/docker.sock

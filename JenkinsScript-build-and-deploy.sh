@@ -99,21 +99,6 @@ function setup_container {
 
 
 
-
-# $1: service name
-# $2: command parameter
-function run_container {
-  echo -e "\nSetting up $1"
-  echo -e "\n\n docker compose run --rm $1 $2" >> $LOG_FILE
-
-  docker compose run --rm $1 $2
-}
-
-
-
-
-
-
 # Executions
 
 
@@ -140,9 +125,14 @@ elif [ $1 == $OPTION_B ]; then
 
 elif [ $1 == $OPTION_C ]; then
 
-  clone_repo $LIQUIBASE_REPO $MIGRATIONS_SOURCE_CODE
+  clone_repo $DB_MIGRATIONS_REPO $DB_MIGRATIONS_DIR
 
-  run_container $LIQUIBASE_SERVICE deploy
+  liquibase update \
+  --username=$POSTGRES_USER \
+  --password=$DB_PASSWORD \
+  --changelog-file=changelog.xml \
+  --url=jdbc:postgresql://$DB_IP:$DB_PORT/$POSTGRES_DB;
+
 
 
 else 
