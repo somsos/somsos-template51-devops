@@ -279,3 +279,10 @@ set +a
 
 docker compose run --rm liquibase_migration rollback $ROLLBACK_VERSION
 ```
+
+```bash
+
+docker run --rm -ti --name temp --network template51_net51 liquibase-git:1  sh
+
+
+```

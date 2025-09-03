@@ -18,12 +18,16 @@ RUN apt-get update && apt-get install -y docker-ce-cli
 RUN apt update && apt install tzdata -y
 
 # CAREFUL: GID must match host's docker group GID (in my case 999): cat /etc/group | grep docker
-RUN groupadd -g 988 docker && usermod -aG docker jenkins
+RUN groupadd -g 999 docker && usermod -aG docker jenkins
 
 #ip, nc, ping
 RUN apt-get install -y iproute2 iputils-ping netcat-openbsd
 
 RUN rm -rf /var/lib/apt/lists/*
+
+COPY --from=liquibase:4.33-alpine /liquibase /liquibase
+
+ENV PATH="/liquibase:${PATH}"
 
 USER jenkins
 
