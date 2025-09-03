@@ -15,17 +15,11 @@ set -e
 
 BRANCH="main"   # CAUTION: Keep sync with .env file
 
-DATE="$(date +"%Y-%m-%d_%H.%M.%S")"
-
-DEVOPS_DIR="devops_$DATE"
-
 DEVOPS_REPO="ssh://git@gitea.mariomv.duckdns.org:222/mario1/template51_devops.git"
 
 OPTION_A="template51_back"
 OPTION_B="template51_front"
 OPTION_C="template51_db"
-
-# Executions
 
 ## Validation
 : "${TRIGGERING_REPO:?Variable TRIGGERING_REPO is not set}"
@@ -34,6 +28,7 @@ if [[ "$TRIGGERING_REPO" != "$OPTION_A" && "$TRIGGERING_REPO" != "$OPTION_B" && 
   exit 1
 fi
 
+DEVOPS_DIR="$(echo $BUILD_NUMBER)_deploy_$TRIGGERING_REPO"
 
 
 
