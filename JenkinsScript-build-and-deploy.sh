@@ -137,6 +137,10 @@ elif [ $1 == $OPTION_C ]; then
   --changelog-file=changelog.xml \
   --url=jdbc:postgresql://$DB_IP:$DB_PORT/$POSTGRES_DB;
 
+  liquibase tag $DB_VERSION \
+  --username=$POSTGRES_USER \
+  --password=$DB_PASSWORD \
+  --url=jdbc:postgresql://$DB_IP:$DB_PORT/$POSTGRES_DB;
 
 
 else 

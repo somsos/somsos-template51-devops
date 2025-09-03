@@ -1,4 +1,8 @@
 #!/bin/bash
+set -e
+
+# CAUTION: Keep this file sync with jenkins job to rollback database, this file
+# is just to keep it saved.
 
 MY_BRANCH="main"   # CAUTION: Keep sync with .env file
 MY_REPO="ssh://git@gitea.mariomv.duckdns.org:222/mario1/template51_devops.git"
@@ -12,11 +16,14 @@ set -a
 source .env
 set +a
 
-clone_repo $LIQUIBASE_REPO $MIGRATIONS_SOURCE_CODE
+git clone  --depth=1 --single-branch --branch $MY_BRANCH $DB_MIGRATIONS_REPO $DB_MIGRATIONS_DIR
 
-cd $MIGRATIONS_SOURCE_CODE
+cp .env $DB_MIGRATIONS_DIR
+
+cd $DB_MIGRATIONS_DIR
 
 
+echo "liquibase rollback $DB_PREVIOUS_VERSION ..."
 liquibase rollback $DB_PREVIOUS_VERSION \
   --username=$POSTGRES_USER \
   --password=$DB_PASSWORD \
@@ -24,13 +31,8 @@ liquibase rollback $DB_PREVIOUS_VERSION \
   --url=jdbc:postgresql://$DB_IP:$DB_PORT/$POSTGRES_DB;
 
 
-#$1 repository ssh URI
-#$2 target directory
-function clone_repo {
-  local CLONE_COMMAND="git clone  --depth=1 --single-branch --branch $BRANCH"
-
-  echo -e "\nCloning $2"
-  echo "$CLONE_COMMAND $1 $2" >> $LOG_FILE
-  $CLONE_COMMAND $1 $2 &>> $LOG_FILE
-  echo -e "\n\n" >> $LOG_FILE
-}
+echo "liquibase tag $DB_PREVIOUS_VERSION ...";
+liquibase tag $DB_PREVIOUS_VERSION \
+  --username=$POSTGRES_USER \
+  --password=$DB_PASSWORD \
+  --url=jdbc:postgresql://$DB_IP:$DB_PORT/$POSTGRES_DB;
