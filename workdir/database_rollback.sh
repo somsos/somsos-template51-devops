@@ -12,23 +12,16 @@ set -a
 source .env
 set +a
 
-clone_repo $LIQUIBASE_REPO $MIGRATIONS_SOURCE
+clone_repo $LIQUIBASE_REPO $MIGRATIONS_SOURCE_CODE
 
-run_container $LIQUIBASE_SERVICE deploy
-
-docker compose run --rm liquibase_migration rollback $DB_PREVIOUS_VERSION
+cd $MIGRATIONS_SOURCE_CODE
 
 
-
-
-# $1: service name
-# $2: command parameter
-function run_container {
-  echo -e "\nSetting up $1"
-  echo -e "\n\n docker compose run --rm $1 $2" >> $LOG_FILE
-
-  docker compose run --rm $1 $2
-}
+liquibase rollback $DB_PREVIOUS_VERSION \
+  --username=$POSTGRES_USER \
+  --password=$DB_PASSWORD \
+  --changelog-file=changelog.xml \
+  --url=jdbc:postgresql://$DB_IP:$DB_PORT/$POSTGRES_DB;
 
 
 #$1 repository ssh URI
@@ -40,5 +33,4 @@ function clone_repo {
   echo "$CLONE_COMMAND $1 $2" >> $LOG_FILE
   $CLONE_COMMAND $1 $2 &>> $LOG_FILE
   echo -e "\n\n" >> $LOG_FILE
-  print_logs $? "Cloning $2"
 }
