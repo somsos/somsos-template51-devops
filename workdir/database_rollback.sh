@@ -23,6 +23,15 @@ cp .env $DB_MIGRATIONS_DIR
 cd $DB_MIGRATIONS_DIR
 
 
+DB_PREVIOUS_VERSION=$(awk -F'=' '/^dbPreviousVersion=/ {print $2}' liquibase.properties)
+
+if [[ -n "$DB_PREVIOUS_VERSION" ]]; then
+    echo "Database previous version: $DB_PREVIOUS_VERSION"
+else
+    echo "Property 'dbPreviousVersion' exists but has no value"
+fi
+
+
 echo "liquibase rollback $DB_PREVIOUS_VERSION ..."
 liquibase rollback $DB_PREVIOUS_VERSION \
   --username=$POSTGRES_USER \
