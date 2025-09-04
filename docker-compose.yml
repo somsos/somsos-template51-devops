@@ -93,6 +93,7 @@ services:
       - DB_PORT=${DB_PORT}
     networks:
       - net51
+    restart: "no"
 
 
   back:

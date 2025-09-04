@@ -87,13 +87,14 @@ function start_container_if_not_running {
 
 
 # $1: service name
+# $2: service parameter
 function setup_container {
   stop_container_if_running $1
 
   echo -e "\nSetting up $1"
-  echo -e "\n\ndocker compose up -d --no-recreate $1" >> $LOG_FILE  
+  echo -e "\n\ndocker compose up -d --no-recreate $1 $2" >> $LOG_FILE
 
-  docker compose up -d --no-recreate $1 &>> $LOG_FILE
+  docker compose up -d --no-recreate $1 $2 &>> $LOG_FILE
   print_logs $? "Setting up $1"
 }
 
@@ -129,7 +130,7 @@ elif [ $1 == $OPTION_C ]; then
 
   build_image db_migrate
 
-  docker compose run --rm db_migrate deploy
+  setup_container db_migrate deploy
 
 
 else 
