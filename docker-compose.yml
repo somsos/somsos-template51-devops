@@ -75,24 +75,22 @@ services:
       retries: 5
 
 
-# run with: "docker compose run --rm liquibase_migration deploy" for deploy
-# or use "docker compose run --rm liquibase_migration rollback vXX" for rollback
-  liquibase_migration:
+# run with: "docker compose run --rm database_migrate deploy" for deploy
+# or use "docker compose run --rm database_migrate rollback" for rollback
+  db_migrate:
+    build: ${DB_MIGRATIONS_DIR}
+    image: db_migrate:v01
+    container_name: db_migrate
+    entrypoint: [ "sh", "./docker-entrypoint.sh" ]
     depends_on:
-      - db
-    image: liquibase:4.33-alpine
-    container_name: db_migration
-    working_dir: /var/liquibase
-    volumes:
-      - ./workdir/db_source:/var/liquibase
-      - /dev/null:/var/liquibase/liquibase.properties
+      db:
+        condition: service_healthy
     environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
+      - DB_NAME=${POSTGRES_DB}
+      - DB_USER=${POSTGRES_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_IP=${DB_IP}
       - DB_PORT=${DB_PORT}
-    entrypoint: ["sh", "./liquibase-docker-entrypoint.sh"]
     networks:
       - net51
 
@@ -114,7 +112,8 @@ services:
     extra_hosts:
       - "mariomv.duckdns.org:host-gateway" # to connect to db
     depends_on:
-      - db
+      db_migrate:
+        condition: service_completed_successfully
     healthcheck:
       test: ["CMD-SHELL", "wget --spider -q http://localhost:8080/actuator/health && echo servicesAlive"]
       interval: 20s
@@ -139,7 +138,8 @@ services:
     extra_hosts:
       - "api.mariomv.duckdns.org:host-gateway"
     depends_on:
-      - back
+      back:
+        condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "wget --spider -q http://127.0.0.1 && echo servicesAlive"]
       interval: 20s

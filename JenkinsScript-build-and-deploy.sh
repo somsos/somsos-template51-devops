@@ -127,28 +127,9 @@ elif [ $1 == $OPTION_C ]; then
 
   clone_repo $DB_MIGRATIONS_REPO $DB_MIGRATIONS_DIR
 
-  cp .env $DB_MIGRATIONS_DIR
+  build_image db_migrate
 
-  cd $DB_MIGRATIONS_DIR
-
-  liquibase update \
-  --username=$POSTGRES_USER \
-  --password=$DB_PASSWORD \
-  --changelog-file=changelog.xml \
-  --url=jdbc:postgresql://$DB_IP:$DB_PORT/$POSTGRES_DB;
-
-  DB_VERSION=$(awk -F'=' '/^dbVersion=/ {print $2}' liquibase.properties);
-
-  if [[ -n "$DB_VERSION" ]]; then
-    echo "Database version: $DB_VERSION"
-  else
-      echo "Property 'dbVersion' exists but has no value"
-  fi
-  
-  liquibase tag $DB_VERSION \
-  --username=$POSTGRES_USER \
-  --password=$DB_PASSWORD \
-  --url=jdbc:postgresql://$DB_IP:$DB_PORT/$POSTGRES_DB;
+  docker compose run --rm db_migrate deploy
 
 
 else 
