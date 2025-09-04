@@ -2,7 +2,7 @@
 !/.git/
 
 data
-
+src
 
 workdir/**
 !workdir/start.sh
