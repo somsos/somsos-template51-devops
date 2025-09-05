@@ -20,4 +20,6 @@ git clone  --depth=1 --single-branch --branch $MY_BRANCH $DB_MIGRATIONS_REPO $DB
 
 docker compose build db_migrate
 
+# VERY IMPORTANT: DO NOT remove "--no-deps" to avoid recreating the db container again
+# which can erase the data.
 docker compose run --rm --no-deps db_migrate rollback

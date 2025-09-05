@@ -130,6 +130,8 @@ elif [ $1 == $OPTION_C ]; then
 
   build_image db_migrate
 
+  # VERY IMPORTANT: DO NOT remove "--no-deps" to avoid recreating the db container again
+  # which can erase the data.
   docker compose run --no-deps --rm db_migrate deploy &>> $LOG_FILE
   print_logs $? "Running DB migrations"
 
