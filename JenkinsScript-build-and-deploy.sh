@@ -130,7 +130,7 @@ elif [ $1 == $OPTION_C ]; then
 
   build_image db_migrate
 
-  docker compose run --rm db_migrate deploy &>> $LOG_FILE
+  docker compose run --rm db_migrate --no-deps deploy &>> $LOG_FILE
   print_logs $? "Running DB migrations"
 
 

@@ -18,30 +18,6 @@ set +a
 
 git clone  --depth=1 --single-branch --branch $MY_BRANCH $DB_MIGRATIONS_REPO $DB_MIGRATIONS_DIR
 
-cp .env $DB_MIGRATIONS_DIR
+docker compose build db_migrate
 
-cd $DB_MIGRATIONS_DIR
-
-
-DB_PREVIOUS_VERSION=$(awk -F'=' '/^dbPreviousVersion=/ {print $2}' liquibase.properties)
-
-if [[ -n "$DB_PREVIOUS_VERSION" ]]; then
-    echo "Database previous version: $DB_PREVIOUS_VERSION"
-else
-    echo "Property 'dbPreviousVersion' exists but has no value"
-fi
-
-
-echo "liquibase rollback $DB_PREVIOUS_VERSION ..."
-liquibase rollback $DB_PREVIOUS_VERSION \
-  --username=$POSTGRES_USER \
-  --password=$DB_PASSWORD \
-  --changelog-file=changelog.xml \
-  --url=jdbc:postgresql://$DB_IP:$DB_PORT/$POSTGRES_DB;
-
-
-echo "liquibase tag $DB_PREVIOUS_VERSION ...";
-liquibase tag $DB_PREVIOUS_VERSION \
-  --username=$POSTGRES_USER \
-  --password=$DB_PASSWORD \
-  --url=jdbc:postgresql://$DB_IP:$DB_PORT/$POSTGRES_DB;
+docker compose run --rm --no-deps db_migrate rollback

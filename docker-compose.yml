@@ -75,8 +75,11 @@ services:
       retries: 5
 
 
-# run with: "docker compose run --rm database_migrate deploy" for deploy
-# or use "docker compose run --rm database_migrate rollback" for rollback
+# VERY IMPORTANT: Run the migrations service using the flag --no-deps to avoid recreating the db container again
+# which can erase the data if the volume is not set correctly.
+
+# run with: "docker compose run --rm --no-deps database_migrate deploy" for deploy
+# or use "docker compose run --rm --no-deps database_migrate rollback" for rollback
   db_migrate:
     build: ${DB_MIGRATIONS_DIR}
     image: db_migrate:v01
