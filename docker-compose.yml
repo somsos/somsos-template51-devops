@@ -55,7 +55,7 @@ services:
 
   db:
     container_name: ${DB_SERVICE_NAME}
-    image: postgres:17.2-alpine3.21
+    image: postgres:17.6-alpine3.22
     command: ["postgres", "-c", "log_statement=all"]
     networks:
       net51:
@@ -63,7 +63,7 @@ services:
     ports:
       - "${DB_PORT}:5432"
     volumes:
-      - ./data/postgres:/var/lib/postgresql/data
+      - data_postgres:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
@@ -78,8 +78,8 @@ services:
 # VERY IMPORTANT: Run the migrations service using the flag --no-deps to avoid recreating the db container again
 # which can erase the data if the volume is not set correctly.
 
-# run with: "docker compose run --rm --no-deps database_migrate deploy" for deploy
-# or use "docker compose run --rm --no-deps database_migrate rollback" for rollback
+# run with: "docker compose run --rm --no-deps db_migrate deploy" for deploy
+# or use "docker compose run --rm --no-deps db_migrate rollback" for rollback
   db_migrate:
     build: ${DB_MIGRATIONS_DIR}
     image: db_migrate:v01
@@ -98,6 +98,49 @@ services:
       - net51
     restart: "no"
 
+
+  # run it manually with: "BUILD_NUMBER=1 docker compose run --rm --no-deps db_backup"
+  db_backup:
+    container_name: db_backup
+    build:
+      context: ./utils
+      dockerfile: alpine-utils.dockerfile
+    image: utils:1
+    environment:
+      - PGPASSWORD=${DB_PASSWORD}
+      - BUILD_NUMBER=${BUILD_NUMBER}
+    volumes:
+      - ./data/db_backups:/app/backups/
+    entrypoint: [ "bash", "-c", "pg_dump -h ${DB_IP} -U ${POSTGRES_USER} -d ${POSTGRES_DB} -F p > /app/backups/db_backup_$(echo $BUILD_NUMBER)_$(date +'%Y-%m-%d_%H-%M-%S').sql" ]
+    networks:
+      - net51
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+
+
+  # run it manually with: "BACKUP_NAME=1 docker compose run --rm --no-deps db_backup"
+  db_restore:
+    container_name: db_restore
+    build:
+      context: ./utils
+      dockerfile: alpine-utils.dockerfile
+    image: utils:1
+    environment:
+      - PGPASSWORD=${DB_PASSWORD}
+      - BACKUP_NAME=${BACKUP_NAME}
+    volumes:
+      - ./data/db_backups:/app/backups/:ro
+    working_dir: /app/backups
+    entrypoint: [ "bash", "-c", "psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} < ./${BACKUP_NAME}" ]
+    networks:
+      - net51
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
 
   back:
     container_name: ${BACK_SERVICE_NAME}
@@ -213,7 +256,7 @@ services:
 # ■■■■■■■■■■■■■■■■■■■■■■■■■■■- artt -■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 
   artt_db_dev:
-    image: postgres:14-alpine3.16
+    image: postgres:14-alpine3.22.1
     container_name: artt_db_dev
     volumes:
       - ./data/artt/data/postgresql_dev:/var/lib/postgresql/data
@@ -229,10 +272,10 @@ services:
 
 
 
-# docker run -ti --rm --name test -w /dist -v ./data/artt:/dist --network template51_net51 alpine:3.16 sh
+# docker run -ti --rm --name test -w /dist -v ./data/artt:/dist --network template51_net51 alpine:3.22.1 sh
 
   artt_server_dev:
-    image: alpine:3.16
+    image: alpine:3.22.1
     container_name: artt_server_dev
     environment:
       - VIRTUAL_HOST=artesaniastlaxco.duckdns.org

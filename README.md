@@ -12,23 +12,28 @@
     - [Deploy and setup Jenkins](#deploy-and-setup-jenkins)
       - [Add permissions to docker.socket to jenkins](#add-permissions-to-dockersocket-to-jenkins)
       - [Create Jenkins Job](#create-jenkins-job)
-  - [Endpoints for checking](#endpoints-for-checking)
+  - [Checking](#checking)
 
 ## ToDo
 
-- [ ] Add it to C.V.
-- [ ] Implement rollback on back and front.
-- [ ] Implement an evolutionary Database.
-- [ ] Create the blog with the 3 diagrams and it explication of each layer.
-- [ ] Add in manual before making developing tests, disconnect from internet and update the `/etc/hosts`
+- [ ] Create backup
+  - [ ] For database
+  - [ ] for backend
+  - [ ] for frontend
+- [ ] Create restore backup
+  - [ ] for database
+  - [ ] for backend
+  - [ ] for frontend
+- [ ] Create complete backup
+- [ ] Create complete restore
 
 ## How it works the DevOps pipeline
 
 The idea is to abstract or reduce the commands to build and deploy,
 to only the following two docker commands:
 
-- `docker compose build {db|back|front}`
-- `docker compose up -d {db|back|front}`
+- `docker compose build { db-migration | back | front}`
+- `docker compose up -d { db-migration | back | front}`
 
 These two commands are standard on those who knows docker, and from
 just watching them, they can get an idea of how works by behind, with
@@ -36,10 +41,12 @@ in resume, the `docker-compose.yml` defines how to run the containerized app,
 and the `Dockerfile` defines how to build it and deploy it.
 
 So in theory this two commands could build and deploy any kind of
-app, whether it uses Java, Python, GoLand, Node, Angular, React, etc.
+app, whether it uses MAriaDB, Java, GoLand, Angular, React, etc.
 
-Here a graph of the working flow which goes from the git push to the
-deploy of the app.
+Here a graph of the working flow which goes from the `git push` to the
+deploy of the app, and in case of rollback it's the same pipeline
+just instead of using `git commit` we use `git revert` to apply again the
+commit that was working before.
 
 ![devops pipeline flow](./1_documentation/devops-pipeline.png)
 
@@ -65,7 +72,7 @@ Installed
 #### Unblock the following ports
 
 ```bash
-sudo ufw allow 222 &&
+sudo ufw allow 222
 sudo ufw allow 5432
 sudo ufw allow 8080
 sudo ufw allow 80
@@ -73,7 +80,7 @@ sudo ufw allow 3000
 sudo ufw allow 443
 
 # (optional) So the connections don't freeze,
-# and instead notify it is being rejected/refused.
+# and instead notify they are being rejected/refused.
 sudo ufw default reject incoming
 ```
 
@@ -233,28 +240,14 @@ curl -X POST --data '{"repository": { "name": "template51_front" }}' \
 
 -->
 
-## Endpoints for checking
+## Checking
 
 ```sh
 curl -X POST -i \
   --header "Content-Type: application/json" \
   --data '{"username":"mario1","password":"mario1p"}' \
   https://api.mariomv.duckdns.org/auth/create-token
-```
-
-mariomv.duckdns.org
-
-eclipse-temurin:21-alpine
-nginx:stable-alpine3.21
-
-docker run --rm -ti --name temp-test \
-  --add-host api.mariomv.duckdns.org:host-gateway \
-  nginx:stable-alpine3.21 sh
-
-
-
-url=jdbc:postgresql://mariomv.duckdns.org:5432/jab_db_test
-spring.datasource.username=jab_db_user
-spring.datasource.password=jab_db_pass
 
 psql postgresql://jab_db_user:jab_db_pass@mariomv.duckdns.org:5432/jab_db_test
+```
+

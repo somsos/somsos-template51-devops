@@ -1,7 +1,9 @@
 **/.git/
 !/.git/
 
-data
+data/**
+!data/README.md
+
 src
 
 workdir/**
