@@ -79,8 +79,8 @@ function start_container_if_not_running {
   docker ps -a --format="{{.Names}}" | grep $1
   if [ $? -ne 0 ]; then
     echo -e "\nStarting $1 container"
-    echo -e "\n\ndocker compose up -d $1" >> $LOG_FILE
-    docker compose up -d $1 &>> $LOG_FILE
+    echo -e "\n\ndocker compose up --no-recreate --no-deps -d $1" >> $LOG_FILE
+    docker compose up --no-recreate --no-deps -d $1 &>> $LOG_FILE
     echo -e "Starting $1 container Succeeded\n"
   fi
 }
@@ -92,9 +92,9 @@ function setup_container {
   stop_container_if_running $1
 
   echo -e "\nSetting up $1"
-  echo -e "\n\ndocker compose up -d --no-recreate $1 $2" >> $LOG_FILE
+  echo -e "\n\ndocker compose up -d --no-recreate --no-deps $1 $2" >> $LOG_FILE
 
-  docker compose up -d --no-recreate $1 $2 &>> $LOG_FILE
+  docker compose up -d --no-recreate --no-deps $1 $2 &>> $LOG_FILE
   print_logs $? "Setting up $1"
 }
 
