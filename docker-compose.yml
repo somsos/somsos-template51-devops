@@ -194,6 +194,7 @@ services:
 
 
 
+  # Careful changing the name, is used to clone the repo in jenkins
   gitea:
     container_name: gitea
     image: gitea/gitea:1.25
@@ -219,8 +220,12 @@ services:
 
 
 
-
-  #CAREFUL: Might give file permissions error, if does run: "sudo chown -R 1000:1000 ./data_jenkins"
+  #C2: CAREFUL: Might give file permissions error, if does run: "sudo chown -R 1000:1000 ./data_jenkins"
+  #C2:--CAREFUL changing the name, is used trigger the webhook from gitea to jenkins.
+  #C2:----./.env
+  #C2:----./data/secrets/ssh/config 
+  #C2:----./workdir/start.sh
+  #C2:----./workdir/database_rollback.sh
   jenkins:
     container_name: jenkins
     build:
@@ -247,8 +252,6 @@ services:
     networks:
       net51:
         ipv4_address: ${JENKINS_IP}
-    extra_hosts:
-      - "gitea.mariomv.duckdns.org:host-gateway"
 
 
 # ■■■■■■■■■■■■■■■■■■■■■■■■■■■- artt -■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■

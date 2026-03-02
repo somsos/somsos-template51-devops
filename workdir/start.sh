@@ -15,7 +15,7 @@ set -e
 
 BRANCH="main"   # CAUTION: Keep sync with .env file
 
-DEVOPS_REPO="ssh://git@gitea.mariomv-local.org:222/mario1/template51_devops.git"
+DEVOPS_REPO="ssh://git@gitea:22/mario1/template51_devops.git"
 
 OPTION_A="template51_back"
 OPTION_B="template51_front"
