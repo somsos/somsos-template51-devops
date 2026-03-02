@@ -1,5 +1,5 @@
 # Multi-stage build for smaller final image
-FROM alpine:3.22.1
+FROM alpine:3.22
 
 # Core system packages (rarely change)
 RUN apk update && apk add --no-cache \

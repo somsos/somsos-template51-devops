@@ -18,7 +18,7 @@ services:
 
 
   reverse-proxy:
-    image: nginxproxy/nginx-proxy
+    image: nginxproxy/nginx-proxy:1.10-alpine
     container_name: reverse-proxy
     ports:
       - "80:80"
@@ -36,7 +36,7 @@ services:
 # for automatic SSL certificate management
 # IMPORTANT: run it at the end: 
   acme-companion:
-    image: nginxproxy/acme-companion
+    image: nginxproxy/acme-companion:2.6
     container_name: acme-companion
     depends_on:
       - reverse-proxy
@@ -196,7 +196,7 @@ services:
 
   gitea:
     container_name: gitea
-    image: docker.gitea.com/gitea:1.23.8
+    image: gitea/gitea:1.25
     environment:
       - USER_UID=1000
       - USER_GID=1000
@@ -215,14 +215,12 @@ services:
     networks:
       net51:
         ipv4_address: ${GITEA_IP}
-    extra_hosts:
-      - "jenkins.mariomv.duckdns.org:host-gateway"
 
 
 
 
 
-  #CAREFUL: Might give file permissions error if does run: "sudo chown -R 1000:1000 ./data_jenkins"
+  #CAREFUL: Might give file permissions error, if does run: "sudo chown -R 1000:1000 ./data_jenkins"
   jenkins:
     container_name: jenkins
     build:
@@ -256,7 +254,7 @@ services:
 # ■■■■■■■■■■■■■■■■■■■■■■■■■■■- artt -■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
 
   artt_db_dev:
-    image: postgres:14-alpine3.22
+    image: postgres:17.6-alpine3.22
     container_name: artt_db_dev
     volumes:
       - ./data/artt/data/postgresql_dev:/var/lib/postgresql/data
@@ -275,7 +273,7 @@ services:
 # docker run -ti --rm --name test -w /dist -v ./data/artt:/dist --network template51_net51 alpine:3.22.1 sh
 
   artt_server_dev:
-    image: alpine:3.22.1
+    image: alpine:3.22
     container_name: artt_server_dev
     environment:
       - VIRTUAL_HOST=artesaniastlaxco.duckdns.org
