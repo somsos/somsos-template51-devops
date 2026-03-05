@@ -87,3 +87,35 @@ bash ./JenkinsScript-build-and-deploy.sh $TRIGGERING_REPO
 ```
 
 Behave: the job is triggered but the variable is not set
+
+
+## Multiple docker-compose with shared dependencies
+
+We can use multiple docker-compose files with the
+following command.
+
+```shell
+docker compose \
+  -f docker-compose-base.yml \
+  -f docker-compose-app.yml \
+  -f docker-compose-devops.yml \
+  ...
+```
+
+This is useful to share network and other
+
+But I already have this structure
+
+project
+   docker-compose-devops.yml
+   app
+      db
+      back
+      front
+      docker-compose-app.yml
+   devops
+      jenkins
+      gitea
+      reverse-proxy
+      secrets
+      docker-compose-devops.yml

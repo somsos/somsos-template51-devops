@@ -1,0 +1,6 @@
+**/.git/
+**/source/
+
+
+**/source
+!**/README_DevOps.md
