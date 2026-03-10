@@ -1,5 +1,5 @@
 # Keep a specific version because I already had a difficulty because of an automatic update
-FROM jenkins/jenkins:2.516.1-lts-jdk21
+FROM jenkins/jenkins:2.541.1-lts-jdk21
 
 USER root
 
@@ -20,14 +20,18 @@ RUN apt update && apt install tzdata -y
 # CAREFUL: GID must match host's docker group GID (in my case 999): cat /etc/group | grep docker
 RUN groupadd -g 999 docker && usermod -aG docker jenkins
 
-#ip, nc, ping
-RUN apt-get install -y iproute2 iputils-ping netcat-openbsd
+# Utils ip, nc, ping: sometime I check thinks since the perspective of a container, using this one
+RUN apt-get install -y iproute2 iputils-ping netcat-openbsd nano
 
 RUN rm -rf /var/lib/apt/lists/*
 
-COPY --from=liquibase:4.33-alpine /liquibase /liquibase
+# I think is better approach to use a container instead of doing it in the jenkins container.
+# COPY --from=liquibase:4.33-alpine /liquibase /liquibase
+# ENV PATH="/liquibase:${PATH}"
 
-ENV PATH="/liquibase:${PATH}"
+# Adding plugins to install, including JCasC plugin to add conf. at boot
+COPY ./casc/plugins.txt /usr/share/jenkins/ref/plugins.txt
+RUN jenkins-plugin-cli --plugin-file /usr/share/jenkins/ref/plugins.txt
 
 USER jenkins
 

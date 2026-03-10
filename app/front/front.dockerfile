@@ -14,6 +14,9 @@ RUN --mount=type=cache,target=/root/.npm \
 
 COPY ./source .
 
+ARG BACK_URL
+RUN sed -i "s|__BACK_URL__|${BACK_URL}|g" src/environments/environment.ts
+
 RUN --mount=type=cache,target=/root/.npm \
     ng build -c production
 

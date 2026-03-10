@@ -13,7 +13,7 @@ services:
       - LETSENCRYPT_HOST=gitea.${MY_DOMAIN}
       - LETSENCRYPT_EMAIL=${MY_EMAIL}
     volumes:
-      - ./data/gitea:/data
+      - ./gitea/vol-data:/data
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     ports:
@@ -37,7 +37,7 @@ services:
     profiles: ["devops"]
     container_name: jenkins
     build:
-      context: .
+      context: ./jenkins
       dockerfile: jenkins-with-docker.dockerfile
     privileged: true
     environment:
@@ -46,13 +46,23 @@ services:
       - LETSENCRYPT_HOST=jenkins.${MY_DOMAIN}
       - LETSENCRYPT_EMAIL=${MY_EMAIL}
       - VIRTUAL_PORT=8080
+      - MY_DOMAIN=${MY_DOMAIN}
+      - CASC_JENKINS_CONFIG=/var/jenkins_home/casc_configs
+      - BACK_REPO=${BACK_REPO}
     expose:
       - "8080"
     volumes:
+
+####### REPO LOCATIONS ########
 # main folder where it wil be all the generated content of jenkins
-      - ./data/jenkins:/var/jenkins_home
-#
+      - ./jenkins/vol-jenkins_home:/var/jenkins_home
+# CasC (Configuration as Code)
+      - ./jenkins/casc:/var/jenkins_home/casc_configs:ro
+# To share conf keys with Gitea
       - ./data/secrets/ssh/:/var/jenkins_home/.ssh:ro
+
+
+####### SYSTEM LOCATIONS ########
 # Access to docker host
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/usr/local/bin/docker
@@ -119,10 +129,10 @@ services:
       db:
         condition: service_healthy
     environment:
-      - DB_NAME=${T51DB_SCHEMA}
-      - DB_USER=${T51DB_USER}
-      - DB_PASSWORD=${T51DB_PASS}
-      - DB_IP=${T51DB_SERVER}
+      - DB_NAME=${DB_SCHEMA}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASS}
+      - DB_IP=${DB_SERVER}
       - DB_PORT=5432
     networks:
       - t51Net
@@ -138,11 +148,11 @@ services:
       dockerfile: alpine-utils.dockerfile
     image: utils:1
     environment:
-      - PGPASSWORD=${T51DB_PASS}
+      - PGPASSWORD=${DB_PASS}
       - BUILD_NUMBER=${BUILD_NUMBER}
     volumes:
       - ./data/db_backups:/app/backups/
-    entrypoint: [ "bash", "-c", "pg_dump -h ${T51DB_IP} -U ${T51DB_USER} -d ${T51DB_SCHEMA} -F p > /app/backups/db_backup_$(echo $BUILD_NUMBER)_$(date +'%Y-%m-%d_%H-%M-%S').sql" ]
+    entrypoint: [ "bash", "-c", "pg_dump -h ${DB_IP} -U ${DB_USER} -d ${DB_SCHEMA} -F p > /app/backups/db_backup_$(echo $BUILD_NUMBER)_$(date +'%Y-%m-%d_%H-%M-%S').sql" ]
     networks:
       - t51Net
     depends_on:
@@ -161,12 +171,12 @@ services:
       dockerfile: alpine-utils.dockerfile
     image: utils:1
     environment:
-      - PGPASSWORD=${T51DB_PASS}
+      - PGPASSWORD=${DB_PASS}
       - BACKUP_NAME=${BACKUP_NAME}
     volumes:
       - ./data/db_backups:/app/backups/:ro
     working_dir: /app/backups
-    entrypoint: [ "bash", "-c", "psql -U ${T51DB_USER} -d ${T51DB_SCHEMA} < ./${BACKUP_NAME}" ]
+    entrypoint: [ "bash", "-c", "psql -U ${DB_USER} -d ${DB_SCHEMA} < ./${BACKUP_NAME}" ]
     networks:
       - t51Net
     depends_on:
@@ -201,7 +211,7 @@ services:
 
   artt_db_dev:
     profiles: ["artt"]
-    image: ${T51DB_IMAGE}
+    image: ${DB_IMAGE}
     container_name: artt_db_dev
     volumes:
       - ./data/artt/data/postgresql_dev:/var/lib/postgresql/data

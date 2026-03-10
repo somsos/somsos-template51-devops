@@ -1,5 +1,10 @@
 # ToDo
 
+## Doing
+
+- [ ] Read the documentation of JCasC `https://plugins.jenkins.io/configuration-as-code/`
+- [ ] Rename devops folder for setup
+
 ## Resume
 
 ### Write a manual of how to start the project
@@ -52,3 +57,13 @@ posible.
 - [ ] Create a happy-path scenery to deploy in all layers.
 - [ ] Create an all-bad scenery to rollback in all layers.
 - [ ] Include it in your the blog.
+
+<!--
+          .
+          .
+          .
+-->
+
+## Finished
+
+- [X] use conf.json in docker

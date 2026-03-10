@@ -1,5 +1,9 @@
 
-data
-!data/README.md
+**/vol-*
+!gitea/vol-data/README_devops.md
+
+
 
 **/secrets
+
+

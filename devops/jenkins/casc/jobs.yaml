@@ -1,0 +1,31 @@
+
+jobs:
+  - script: >
+
+      pipelineJob('t51-build') {
+
+        definition {
+
+          cpsScm {
+
+            scm {
+
+              git {
+
+                remote {
+                  url('${BACK_REPO}')
+                }
+
+                branch('main')
+
+              }
+
+            }
+
+            scriptPath('Jenkinsfile')
+
+          }
+
+        }
+
+      }

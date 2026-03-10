@@ -1,0 +1,12 @@
+jenkins:
+  systemMessage: "Template51 Jenkins Server"
+
+  numExecutors: 2
+
+unclassified:
+  location:
+    url: http://jenkins.${MY_DOMAIN}
+
+#unclassified:
+#  themes:
+#    systemTheme: io.jenkins.plugins.darktheme.DarkThemeManagerFactory
