@@ -3,6 +3,9 @@
 ## Doing
 
 - [ ] Read the documentation of JCasC `https://plugins.jenkins.io/configuration-as-code/`
+  - [X] Create user
+  - [ ] Create jobs
+    - [ ] Link Gitea/Jenkins
 - [ ] Rename devops folder for setup
 
 ## Resume
