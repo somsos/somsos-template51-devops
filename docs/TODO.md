@@ -1,12 +1,9 @@
 # ToDo
 
-## Doing
+## Doing (First one is the current task)
 
-- [ ] Read the documentation of JCasC `https://plugins.jenkins.io/configuration-as-code/`
-  - [X] Create user
-  - [ ] Create jobs
-    - [ ] Link Gitea/Jenkins
-- [ ] Rename devops folder for setup
+- [ ] Create Gitea front repository
+- [ ] Create Gitea DbMig repository
 
 ## Resume
 
@@ -67,6 +64,10 @@ posible.
           .
 -->
 
-## Finished
+## Finished (Last one is more recently finished)
 
-- [X] use conf.json in docker
+- [X] (DISCARDED IDEA) use conf.json in docker.
+- [X] Implement JCasC `https://plugins.jenkins.io/configuration-as-code/`
+- [X] Gitea admin user creation
+- [X] Gitea back repository
+- [X] Jenkins admin user creation

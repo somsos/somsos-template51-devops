@@ -2,7 +2,7 @@ name: t51
 
 include:
   - ./app/docker-compose-app.yml
-  - ./devops/docker-compose-devops.yml
+  - ./setup/docker-compose-devops.yml
 
 networks:
   t51Net:

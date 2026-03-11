@@ -1,5 +1,5 @@
 jenkins:
-  systemMessage: "Template51 Jenkins Server"
+  systemMessage: "T51 Jenkins Server"
 
   numExecutors: 2
 

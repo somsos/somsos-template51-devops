@@ -12,10 +12,26 @@ services:
       - VIRTUAL_PORT=3000
       - LETSENCRYPT_HOST=gitea.${MY_DOMAIN}
       - LETSENCRYPT_EMAIL=${MY_EMAIL}
+      # Gitea Config
+      - GITEA__security__INSTALL_LOCK=true
+      - GITEA_ADMIN_USER=${MY_USER}
+      - GITEA_ADMIN_PASSWORD=${MY_PASS}
+      - GITEA_ADMIN_EMAIL=${MY_EMAIL}
+      - GITEA__server__DOMAIN=gitea.${MY_DOMAIN}
+      - GITEA__server__SSH_DOMAIN=gitea.${MY_DOMAIN}
+      - GITEA__server__ROOT_URL=http://gitea.${MY_DOMAIN}/
+      # Initial repositories
+      - BACK_NAME=${BACK_NAME}
     volumes:
-      - ./gitea/vol-data:/data
+      - ./gitea/vol-data:/data    # Persist data
+      - ./gitea/gitea-entrypoint.sh:/usr/local/bin/gitea-entrypoint.sh:ro   # Config
+      - ./secrets/t51_noPass.pub:/data/setup/t51_noPass.pub:ro    # SSH Config
+      # Initial repositories
+      - ./gitea/initial_repos/${BACK_NAME}.tar.xz:/tmp/repos/back/${BACK_NAME}.tar.xz
+      # Time sync
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+    entrypoint: ["/bin/sh", "/usr/local/bin/gitea-entrypoint.sh"]
     ports:
       - "222:22"
     expose:
@@ -46,6 +62,9 @@ services:
       - LETSENCRYPT_HOST=jenkins.${MY_DOMAIN}
       - LETSENCRYPT_EMAIL=${MY_EMAIL}
       - VIRTUAL_PORT=8080
+      # JCasC (Jenkins Code as Configuration)
+      - MY_USER=${MY_USER}
+      - MY_PASS=${MY_PASS}
       - MY_DOMAIN=${MY_DOMAIN}
       - CASC_JENKINS_CONFIG=/var/jenkins_home/casc_configs
       - BACK_REPO=${BACK_REPO}
@@ -58,8 +77,9 @@ services:
       - ./jenkins/vol-jenkins_home:/var/jenkins_home
 # CasC (Configuration as Code)
       - ./jenkins/casc:/var/jenkins_home/casc_configs:ro
-# To share conf keys with Gitea
-      - ./data/secrets/ssh/:/var/jenkins_home/.ssh:ro
+# SSH conf to add gitea as reliable server
+      - ./secrets/t51_noPass.priv:/var/jenkins_home/.ssh/t51_noPass.priv:ro
+      - ./shared/ssh_config:/var/jenkins_home/.ssh/config
 
 
 ####### SYSTEM LOCATIONS ########

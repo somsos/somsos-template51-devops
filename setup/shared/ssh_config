@@ -1,0 +1,6 @@
+Host gitea
+    HostName gitea
+    Port 22
+    User git
+    IdentityFile ~/.ssh/t51_noPass.priv
+    StrictHostKeyChecking no

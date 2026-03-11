@@ -1,0 +1,8 @@
+**/vol-*/*
+
+**/secrets/*
+**/*.secret.*
+**/*.secret
+
+
+!**/README_devops.md

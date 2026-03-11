@@ -1,21 +1,21 @@
 # README
 
 - [README](#readme)
-  - [ToDo](#todo)
+  - [Internal Links](#internal-links)
   - [How it works the DevOps pipeline](#how-it-works-the-devops-pipeline)
 
-## ToDo
+## Internal Links
 
-- [ ] Create backup
-  - [ ] For database
-  - [ ] for backend
-  - [ ] for frontend
-- [ ] Create restore backup
-  - [ ] for database
-  - [ ] for backend
-  - [ ] for frontend
-- [ ] Create complete backup
-- [ ] Create complete restore
+- [ToDo](./docs/TODO.md)
+
+<!--
+.
+.
+.
+.
+.
+.
+-->
 
 ## How it works the DevOps pipeline
 
