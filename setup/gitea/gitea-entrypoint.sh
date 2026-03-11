@@ -4,6 +4,8 @@
 # This initializes the app and starts the s6 supervisor
 /usr/bin/entrypoint /usr/bin/s6-svscan /etc/s6 &
 
+
+
 # Wait for the Gitea web service to be reachable
 echo "Waiting for Gitea to start..."
 until nc -z localhost 3000; do
@@ -28,11 +30,10 @@ su-exec git gitea admin user create \
 
 
 
-# 4. Generate a temporary API Token for the admin
-# Note: '--name' is the label for the token itself
 TOKEN=$(su-exec git gitea admin user generate-access-token \
   --username "${GITEA_ADMIN_USER}" \
-  --token-name "SetupToken" | awk '{print $NF}')
+  --token-name "$(tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 1)" \
+  | awk '{print $NF}')
 
 # 5. Add the SSH Key via API
 SSH_KEY_CONTENT=$(cat /data/setup/t51_noPass.pub)
@@ -51,14 +52,7 @@ else
   echo "Failed to add key. HTTP Status: $STATUS"
 fi
 
-# Attempt to create the repo via API
-RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X 'POST' \
-  "http://localhost:3000/api/v1/user/repos" \
-  -H "Authorization: token $TOKEN" \
-  -H "Content-Type: application/json" \
-  -d "{\"name\": \"$BACK_NAME\", \"private\": true}")
-
-
+# Add Git global config.
 if [[ -z "$(git config user.email)" ]]; then
   git config --global init.defaultBranch main    # to avoid git asking to add it later
   git config --global user.email "${GITEA_ADMIN_EMAIL}"
@@ -70,33 +64,66 @@ fi
 
 
 
+# $1: Repository name used also in compressed file and URL
+function addRepo {
 
-if [ "$RESPONSE" = "201" ]; then
-    echo "Successfully created repository: $BACK_NAME"
-
-    # Generate content
-    mkdir -p /tmp/repos/back/content && cd /tmp/repos/back/content
-    tar -xJf /tmp/repos/back/$BACK_NAME.tar.xz -C .
+  TOKEN_TWO=$(su-exec git gitea admin user generate-access-token \
+  --username "${GITEA_ADMIN_USER}" \
+  --token-name "$(tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 1)" \
+  | awk '{print $NF}')
     
-    # Create first commit
-    git init
-    git branch -M main # rename current branch to main, to be sure when pushing
-    git add .
-    git commit --quiet -m "Initial commit" &> /dev/null \
-      && echo "Commit created on $BACK_NAME" \
-      || echo "Commit Error on $BACK_NAME"
-    
-    # Use the token for passwordless push (safer than password)
-    git push -q http://${TOKEN}@localhost:3000/${GITEA_ADMIN_USER}/${BACK_NAME}.git main
+    # Attempt to create the repo via API
+    RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X 'POST' \
+      "http://localhost:3000/api/v1/user/repos" \
+      -H "Authorization: token $TOKEN_TWO" \
+      -H "Content-Type: application/json" \
+      -d "{\"name\": \"$1\", \"private\": true}")
 
-    echo "Initial content pushed to $BACK_NAME."
-    rm -rf /tmp/init-repo
 
-elif [ "$RESPONSE" = "409" ] || [ "$RESPONSE" = "422" ]; then
-    echo "Repository '$BACK_NAME' already exists. Skipping creation."
-else
-    echo "Something went wrong creating repo. HTTP Status: $RESPONSE"
-fi
+    if [ "$RESPONSE" = "201" ]; then
+        echo "Successfully created repository: $1"
+
+        # Generate content
+        TAR_FILE="/tmp/initial_repos/$1.tar.xz"
+        if [[ ! -f "$TAR_FILE" ]]; then
+          echo "[ERROR]: Compressed file do not exist: $TAR_FILE"
+          return 1
+        fi
+
+        mkdir -p /tmp/content-$1/ && cd /tmp/content-$1/
+        tar -xJf /tmp/initial_repos/$1.tar.xz -C .
+        
+        # Create first commit
+        git init
+        git branch -M main # rename current branch to main, to be sure when pushing
+        git add .
+        git commit --quiet -m "Initial commit" &> /dev/null \
+          && echo "Commit created on $1" \
+          || echo "Commit Error on $1"
+        
+        # Use the token for passwordless push (safer than password)
+        git push -q http://${TOKEN_TWO}@localhost:3000/${GITEA_ADMIN_USER}/${1}.git main
+
+        rm -rf /tmp/repos/$1/$1.tar.xz
+
+        echo "[SUCCESS]: Repo $1 added"
+
+    elif [ "$RESPONSE" = "409" ] || [ "$RESPONSE" = "422" ]; then
+        echo "Repository '$1' already exists. Skipping creation."
+    else
+        echo "Something went wrong creating repo. HTTP Status: $RESPONSE"
+    fi
+}
+
+addRepo "$BACK_NAME"
+sleep 1
+
+addRepo "$FRONT_NAME"
+sleep 1
+
+addRepo "$DbMIG_NAME"
+sleep 1
+
 
 
 # Bring the background process back to the foreground to keep container alive

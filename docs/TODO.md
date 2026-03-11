@@ -4,6 +4,7 @@
 
 - [ ] Create Gitea front repository
 - [ ] Create Gitea DbMig repository
+- [ ] Create Gitea DevOps repository
 
 ## Resume
 

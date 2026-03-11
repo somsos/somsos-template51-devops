@@ -22,12 +22,16 @@ services:
       - GITEA__server__ROOT_URL=http://gitea.${MY_DOMAIN}/
       # Initial repositories
       - BACK_NAME=${BACK_NAME}
+      - FRONT_NAME=${FRONT_NAME}
+      - DbMIG_NAME=${DbMIG_NAME}
     volumes:
       - ./gitea/vol-data:/data    # Persist data
       - ./gitea/gitea-entrypoint.sh:/usr/local/bin/gitea-entrypoint.sh:ro   # Config
       - ./secrets/t51_noPass.pub:/data/setup/t51_noPass.pub:ro    # SSH Config
       # Initial repositories
-      - ./gitea/initial_repos/${BACK_NAME}.tar.xz:/tmp/repos/back/${BACK_NAME}.tar.xz
+      - ./gitea/initial_repos/${BACK_NAME}.tar.xz:/tmp/initial_repos/${BACK_NAME}.tar.xz
+      - ./gitea/initial_repos/${FRONT_NAME}.tar.xz:/tmp/initial_repos/${FRONT_NAME}.tar.xz
+      - ./gitea/initial_repos/${DbMIG_NAME}.tar.xz:/tmp/initial_repos/${DbMIG_NAME}.tar.xz
       # Time sync
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
@@ -140,7 +144,7 @@ services:
   db_migrate:
     profiles: ["devops-util"]
     image: db_migrate:v01
-    container_name: db_migrate
+    container_name: ${DbMIG_NAME}
     build:
       context: ./db
       dockerfile: db_migrate.Dockerfile

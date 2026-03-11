@@ -4,5 +4,4 @@
 **/*.secret.*
 **/*.secret
 
-
 !**/README_devops.md
