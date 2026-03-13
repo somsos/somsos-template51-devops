@@ -2,9 +2,12 @@
 
 ## Doing (First one is the current task)
 
-- [ ] Create Gitea front repository
-- [ ] Create Gitea DbMig repository
-- [ ] Create Gitea DevOps repository
+- [ ] Back Pipeline to build and deploy
+- [ ] Front Pipeline to build and deploy
+- [ ] DbMig Deploy Pipeline
+- [ ] DbMig Rollback Pipeline
+- [ ] DbMig Backup
+- [ ] DbMig Restore Backup
 
 ## Resume
 
@@ -72,3 +75,6 @@ posible.
 - [X] Gitea admin user creation
 - [X] Gitea back repository
 - [X] Jenkins admin user creation
+- [X] Create Gitea front repository
+- [X] Create Gitea DbMig repository
+- [X] Create Gitea DevOps repository

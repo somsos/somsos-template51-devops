@@ -1,31 +1,56 @@
 
 jobs:
   - script: >
-
-      pipelineJob('t51-build') {
-
+      pipelineJob('t51Back-2026-v3') {
         definition {
+          cps {
+            script('''
+              pipeline {
+                agent any
+                stages {
+                  stage('Build') {
+                    steps {
+                      // Multi-line Bash block
+                      sh \'\'\'
+                        #!/bin/bash
+                        echo "--- Starting Build $BUILD_NUMBER ---"
+                        
+                        BASE_PATH="/var/jenkins_home/workspace"
+                        BUILD_PATH="$BASE_PATH/back/$BUILD_NUMBER"
+                        SCRIPTS_PATH="$BASE_PATH/0_scripts"
+                        
+                        # Create an move to this build folder
+                        mkdir -p $BUILD_PATH && cd $BUILD_PATH && pwd
 
-          cpsScm {
+                        #echo BACK_REPO: $BACK_REPO
+                        clone_repo "$DEVOPS_REPO" "."
 
-            scm {
+                        echo "Build Complete."
+                      \'\'\'
+                    }
+                  }
+                  stage('Deploy') {
+                    steps {
+                      // Multi-line Bash block
+                      sh \'\'\'
+                        #!/bin/bash
+                        
 
-              git {
+                        #echo DbMIG_REPO: $DbMIG_REPO
+                        #echo FRONT_REPO: $FRONT_REPO
+                        echo DEVOPS_REPO: $DEVOPS_REPO
+                        #source $SCRIPTS_PATH/start_container_if_not_running.sh
+                        
+                        #start_container_if_not_running "$DB_SERVICE_NAME" "./build.log"
+                        #clone_repo "$BACK_REPO" $BACK_NAME "./build.log"
+                        #build_image $BACK_NAME
 
-                remote {
-                  url('${BACK_REPO}')
+                      \'\'\'
+                    }
+                  }
                 }
-
-                branch('main')
-
               }
-
-            }
-
-            scriptPath('Jenkinsfile')
-
+            ''')
           }
-
         }
-
       }

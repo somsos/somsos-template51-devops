@@ -63,8 +63,8 @@ else
 fi
 
 
-
-# $1: Repository name used also in compressed file and URL
+# INPUT
+#   $1: Repository name used also in compressed file and URL
 function addRepo {
 
   TOKEN_TWO=$(su-exec git gitea admin user generate-access-token \
@@ -124,6 +124,8 @@ sleep 1
 addRepo "$DbMIG_NAME"
 sleep 1
 
+addRepo "$DEVOPS_NAME"
+sleep 1
 
 
 # Bring the background process back to the foreground to keep container alive

@@ -4,4 +4,11 @@
 **/*.secret.*
 **/*.secret
 
+**/workspace/*
+!**/workspace/0_scripts
+
+**/source/*
+
 !**/README_devops.md
+
+

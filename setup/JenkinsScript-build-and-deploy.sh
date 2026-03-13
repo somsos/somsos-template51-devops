@@ -5,7 +5,7 @@ set -a
 source .env
 set +a
 
-: "${BRANCH:?Variable BRANCH is not set, is .env file loaded?}"
+
 
 # $1: or TRIGGERING_REPO is the repository name that was pushed and 
 # triggered the web-hook, that way know what project to build and deploy.
@@ -26,77 +26,18 @@ OPTION_B="template51_front"
 OPTION_C="template51_db"
 
 
-function print_logs {
-  if [ $1 -ne 0 ]; then
-    echo -e "$2 FAILED\n=========Error logs start============="
-    cat $LOG_FILE
-    echo -e "=========Error logs finish=============\n"
-    exit $1
-  fi
-  echo -e "$2 Succeeded"
-}
-
-
-#$1 repository ssh URI
-#$2 target directory
-function clone_repo {
-  local CLONE_COMMAND="git clone  --depth=1 --single-branch --branch $BRANCH"
-
-  echo -e "\nCloning $2"
-  echo "$CLONE_COMMAND $1 $2" >> $LOG_FILE
-  $CLONE_COMMAND $1 $2 &>> $LOG_FILE
-  echo -e "\n\n" >> $LOG_FILE
-  print_logs $? "Cloning $2"
-}
 
 
 
 
-function build_image {
-  echo -e "\nBuilding image: $1:$VERSION"
-  echo -e "\n\ndocker compose build $1" >> $LOG_FILE 
-  docker compose build $1 &>> $LOG_FILE 
-  print_logs $? "Building image: $1:$VERSION"
-}
 
 
 
-# $1: service name
-function stop_container_if_running {
-  docker ps -a --format="{{.Names}}" | grep $1
-  if [ $? -eq 0 ]; then
-    echo -e "\nStopping $1 container"
-    echo -e "\n\ndocker compose down $1" >> $LOG_FILE
-    docker compose down $1 &>> $LOG_FILE
-    echo -e "Stopping $1 container Succeeded\n"
-  fi
-}
 
 
 
-# $1: service name
-function start_container_if_not_running {
-  docker ps -a --format="{{.Names}}" | grep $1
-  if [ $? -ne 0 ]; then
-    echo -e "\nStarting $1 container"
-    echo -e "\n\ndocker compose up --no-recreate --no-deps -d $1" >> $LOG_FILE
-    docker compose up --no-recreate --no-deps -d $1 &>> $LOG_FILE
-    echo -e "Starting $1 container Succeeded\n"
-  fi
-}
 
 
-# $1: service name
-# $2: service parameter
-function setup_container {
-  stop_container_if_running $1
-
-  echo -e "\nSetting up $1"
-  echo -e "\n\ndocker compose up -d --no-recreate --no-deps $1 $2" >> $LOG_FILE
-
-  docker compose up -d --no-recreate --no-deps $1 $2 &>> $LOG_FILE
-  print_logs $? "Setting up $1"
-}
 
 
 

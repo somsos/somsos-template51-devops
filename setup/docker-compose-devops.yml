@@ -24,6 +24,7 @@ services:
       - BACK_NAME=${BACK_NAME}
       - FRONT_NAME=${FRONT_NAME}
       - DbMIG_NAME=${DbMIG_NAME}
+      - DEVOPS_NAME=${DEVOPS_NAME}
     volumes:
       - ./gitea/vol-data:/data    # Persist data
       - ./gitea/gitea-entrypoint.sh:/usr/local/bin/gitea-entrypoint.sh:ro   # Config
@@ -32,6 +33,7 @@ services:
       - ./gitea/initial_repos/${BACK_NAME}.tar.xz:/tmp/initial_repos/${BACK_NAME}.tar.xz
       - ./gitea/initial_repos/${FRONT_NAME}.tar.xz:/tmp/initial_repos/${FRONT_NAME}.tar.xz
       - ./gitea/initial_repos/${DbMIG_NAME}.tar.xz:/tmp/initial_repos/${DbMIG_NAME}.tar.xz
+      - ./gitea/initial_repos/${DEVOPS_NAME}.tar.xz:/tmp/initial_repos/${DEVOPS_NAME}.tar.xz
       # Time sync
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
@@ -71,16 +73,19 @@ services:
       - MY_PASS=${MY_PASS}
       - MY_DOMAIN=${MY_DOMAIN}
       - CASC_JENKINS_CONFIG=/var/jenkins_home/casc_configs
+      # Repositories URLs
+      - DbMIG_REPO=${DbMIG_REPO}
       - BACK_REPO=${BACK_REPO}
+      - FRONT_REPO=${FRONT_REPO}
+      - DEVOPS_REPO=${DEVOPS_REPO}
     expose:
       - "8080"
     volumes:
 
 ####### REPO LOCATIONS ########
-# main folder where it wil be all the generated content of jenkins
-      - ./jenkins/vol-jenkins_home:/var/jenkins_home
-# CasC (Configuration as Code)
-      - ./jenkins/casc:/var/jenkins_home/casc_configs:ro
+      - ./jenkins/vol-jenkins_home:/var/jenkins_home        # all jenkins main
+      - ./jenkins/casc:/var/jenkins_home/casc_configs:ro    # CasC (Configuration as Code)
+      - ./jenkins/workspace:/var/jenkins_home/workspace     # executions and generations of DevOps Process
 # SSH conf to add gitea as reliable server
       - ./secrets/t51_noPass.priv:/var/jenkins_home/.ssh/t51_noPass.priv:ro
       - ./shared/ssh_config:/var/jenkins_home/.ssh/config
