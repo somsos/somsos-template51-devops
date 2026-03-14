@@ -8,7 +8,7 @@
 #   $2 target directory
 #   $X3X log file
 function clone_repo {
-  local CLONE_COMMAND="git clone  --depth=1 --single-branch --branch main "
+  local CLONE_COMMAND=""
 
   echo -e "\nCloning $2"
   echo "$CLONE_COMMAND $1 $2" # >> $3

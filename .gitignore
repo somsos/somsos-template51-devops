@@ -7,8 +7,10 @@
 **/workspace/*
 !**/workspace/0_scripts
 
-**/source/*
+app/*/source/*
 
 !**/README_devops.md
 
 
+**/*.jar
+**/*.zip

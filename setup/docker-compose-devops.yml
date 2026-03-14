@@ -240,19 +240,19 @@ services:
 
   artt_db_dev:
     profiles: ["artt"]
-    image: ${DB_IMAGE}
+    image: ${ART51_DB_IMAGE}
     container_name: artt_db_dev
     volumes:
       - ./data/artt/data/postgresql_dev:/var/lib/postgresql/data
     expose:
       - 5432
     environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${ART51_DB_NAME}
+      POSTGRES_USER: ${ART51_DB_USER}
+      POSTGRES_PASSWORD: ${ART51_DB_PASS}
     networks:
       t51Net:
-        ipv4_address: ${DB_HOST}
+        ipv4_address: ${ART51_DB_HOST}
 
 
 
@@ -264,9 +264,9 @@ services:
     container_name: artt_server_dev
     environment:
       - VIRTUAL_HOST=artesaniastlaxco.duckdns.org
-      - VIRTUAL_PORT=${PORT}
+      - VIRTUAL_PORT=${ART51_PORT}
       - LETSENCRYPT_HOST=artesaniastlaxco.duckdns.org
-      - LETSENCRYPT_EMAIL=${MY_EMAIL}
+      - LETSENCRYPT_EMAIL=${ART51_MY_EMAIL}
     depends_on:
       - artt_db_dev
     working_dir: /dist
