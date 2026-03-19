@@ -27,8 +27,12 @@ services:
   back:
     profiles: ["app"]
     container_name: ${BACK_NAME}
-    build: ./back
     image: ${BACK_IMAGE}
+    build:
+      context: /back
+      dockerfile: back.dockerfile
+      args:
+        TEST: 1   # Ignore just for testing
     expose:
       - "8080"
     environment:
