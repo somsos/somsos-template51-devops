@@ -39,7 +39,8 @@ WORKDIR_BUILD="$WORKDIR_BACK/$BUILD_NUMBER"
 rm -fr $WORKDIR_BUILD
 git clone --quiet --depth=1 --single-branch --branch main "$DEVOPS_REPO" "$WORKDIR_BUILD" \
   && echo "[INFO] Devops repo cloned"
-
+git log --oneline -n1
+sleep 3
 
 # Removing inecesary folders and files in app
 rm -rf $WORKDIR_BUILD/.git/
@@ -71,7 +72,8 @@ mkdir -p $WORKDIR_BACK_REPO
 rm -rf "$WORKDIR_BACK_REPO/*"   # between quotes because the last part is confused by groovy as a comment
 git clone --quiet --depth=1 --single-branch --branch main "$BACK_REPO" "$WORKDIR_BACK_REPO" \
   && echo "[INFO] Back repo cloned."
-
+git log --oneline -n1
+sleep 3
 rm -rf $WORKDIR_BACK_REPO/.git/
 
 
