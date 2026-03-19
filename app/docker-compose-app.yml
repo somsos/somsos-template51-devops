@@ -29,7 +29,7 @@ services:
     container_name: ${BACK_NAME}
     image: ${BACK_IMAGE}
     build:
-      context: /back
+      context: ./back
       dockerfile: back.dockerfile
       args:
         TEST: 1   # Ignore just for testing
