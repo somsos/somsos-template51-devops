@@ -78,3 +78,5 @@ posible.
 - [X] Create Gitea front repository
 - [X] Create Gitea DbMig repository
 - [X] Create Gitea DevOps repository
+
+Github Copilot: Toggle (Enable/Disable) Inline Suggestions

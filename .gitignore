@@ -5,7 +5,9 @@
 **/*.secret
 
 **/workspace/*
-!**/workspace/0_scripts
+!**/workspace/0_scripts/
+!**/workspace/0_scripts/*
+!**/workspace/0_scripts/back-test/*
 
 app/*/source/*
 
