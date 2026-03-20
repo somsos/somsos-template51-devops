@@ -3,14 +3,21 @@ set -e
 set -x
 
 ################## Build Image ##################
-
-BACK_NAME="t51back"       
-WORKDIR_BACK="/home/m51/mine/t51/devops/setup/jenkins/workspace/back"
-BUILD_NUMBER="0.2"
-
+# JOB_NAME         # It's created in pipeline runtime by Jenkins
 # BACK_NAME        # It's in the .env file and passed by env vars in docker-compose.yml
 # WORKDIR_BACK     # It's in in the docker-compose.yml in environment vars
 # BUILD_NUMBER     # It's created in pipeline runtime by jenkins
+
+if [ -z "$JOB_NAME" ]; then
+  echo "[INFO] Variable JOB_NAME does not exist, running the script out of jenkins, setting test variables"
+  BACK_NAME="t51back"       
+  WORKDIR_BACK="/home/m51/mine/t51/devops/setup/jenkins/workspace/back"
+  BUILD_NUMBER="0.2"
+else
+  echo "[INFO] Running inside Jenkins, because var JOB_NAME exists."
+fi
+
+
 
 WORKDIR_BUILD="$WORKDIR_BACK/$BUILD_NUMBER"
 

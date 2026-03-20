@@ -1,213 +1,35 @@
 
 jobs:
   - script: >
-      pipelineJob('t51Back-2026-v4') {
+      pipelineJob('t51Back-2026-v5') {
         definition {
           cps {
             script('''
               pipeline {
                 agent any
                 stages {
-                stage('Download') {
+                stage('1/3: Download') {
                     steps {
                       sh \'\'\'
-                        #!/bin/bash
-                        set -e
-
-                        ################## Clonning and preparatives ##################
-                        #WORKDIR_BACK   # in pipeline, this var is declared in docker-compose-devops,yml
-                        #BUILD_NUMBER   # in pipeline, this var is declared by jenkins in runtime
-                        #DEVOPS_REPO    # in pipeline, this var is declared in .env file
-                        #BACK_REPO      # in pipeline, this var is declared in .env file
-
-                        if [ -z "$WORKDIR_BACK" ]; then
-                          echo "[ERROR] Variable \$WORKDIR_BACK not found, The path to the devops workdir is required."
-                          exit 1
-                        fi
-
-                        if [ -z "$BUILD_NUMBER" ]; then
-                          echo "[ERROR] Variable \$BUILD_NUMBER not found, The incremental number of builds is requiered."
-                          exit 1
-                        fi
-
-                        if [ -z "$DEVOPS_REPO" ]; then
-                          echo "[ERROR] Variable \$DEVOPS_REPO not found, The URL to the devops repository is required."
-                          exit 1
-                        fi
-
-                        if [ -z "$BACK_REPO" ]; then
-                          echo "[ERROR] Variable \$BACK_REPO not found, The URL to the backend repository is required."
-                          exit 1
-                        fi
-
-
-
-                        WORKDIR_BUILD="$WORKDIR_BACK/$BUILD_NUMBER"
-                        rm -fr $WORKDIR_BUILD
-                        git clone --quiet --depth=1 --single-branch --branch main "$DEVOPS_REPO" "$WORKDIR_BUILD" \
-                          && echo "[INFO] Devops repo cloned"
-                        git log --oneline -n1
-
-                        # Removing inecesary folders and files in app
-                        rm -rf $WORKDIR_BUILD/.git/
-                        rm -rf $WORKDIR_BUILD/setup/
-                        rm -rf $WORKDIR_BUILD/docs/
-                        rm -rf $WORKDIR_BUILD/README.md
-                        rm -rf $WORKDIR_BUILD/.gitignore
-
-                        rm -rf $WORKDIR_BUILD/app/db/
-                        rm -rf $WORKDIR_BUILD/app/front/
-                        rm -rf $WORKDIR_BUILD/app/utils/
-                        echo "[INFO] Removed inecesary files in devops project for Back deploy."
-
-
-                        # Remove line because is not requiered for the maven build and is going to fail if docker copose look for it.
-                        LINE_TO_REMOVE=""
-                        DOCKER_COMPOSE_FILE="$WORKDIR_BUILD/docker-compose.yml"
-                        DOCKER_COMPOSE_FILE_temp="$WORKDIR_BUILD/docker-compose.temp.yml" # Don't know why but I need the temp file
-                        touch $DOCKER_COMPOSE_FILE_temp
-                        cat $DOCKER_COMPOSE_FILE | grep -v setup/docker-compose >> $DOCKER_COMPOSE_FILE_temp \
-                          && echo "[INFO] dependency in docker-compose.yml removed."
-                        rm $DOCKER_COMPOSE_FILE
-                        mv $DOCKER_COMPOSE_FILE_temp $DOCKER_COMPOSE_FILE
-
-
-                        # Clone the back repo
-                        WORKDIR_BACK_REPO="$WORKDIR_BUILD/app/back/source"
-                        mkdir -p $WORKDIR_BACK_REPO
-                        rm -rf "$WORKDIR_BACK_REPO/*"   # between quotes because the last part is confused by groovy as a comment
-                        git clone --quiet --depth=1 --single-branch --branch main "$BACK_REPO" "$WORKDIR_BACK_REPO" \
-                          && echo "[INFO] Back repo cloned."
-                        git log --oneline -n1
-
-                        rm -rf $WORKDIR_BACK_REPO/.git/
-
-
-
-                        echo "[SUCCESS] Cloning and preparings done."
-
+                        source /var/jenkins_home/workspace/back/1-download.sh
                       \'\'\'
                     }
                   }
 
 
-                  stage('Build') {
+                  stage('2/3: Build') {
                     steps {
                       sh \'\'\'
-                        #!/bin/bash
-                        set -e
-                        set -x
-
-                        # BACK_NAME        # It's in the .env file and passed by env vars in docker-compose.yml
-                        # WORKDIR_BACK     # It's in in the docker-compose.yml in environment vars
-                        # BUILD_NUMBER     # It's created in pipeline runtime by jenkins
-
-                        WORKDIR_BUILD="$WORKDIR_BACK/$BUILD_NUMBER"
-
-
-                        if [ -z "$WORKDIR_BACK" ]; then
-                          echo "[ERROR] Variable WORKDIR_BACK not found, The path to the devops workdir is required."
-                          exit 1
-                        fi
-
-                        if [ -z "$BUILD_NUMBER" ]; then
-                          echo "[ERROR] Variable BUILD_NUMBER not found, The incremental number of builds is requiered."
-                          exit 1
-                        fi
-
-                        if [ -z "$BACK_NAME" ]; then
-                          echo "Variable BACK_NAME not found, Image name to build is required" 
-                          exit 1
-                        fi
-
-                        if [ -z "$WORKDIR_BUILD" ]; then
-                          echo "Variable WORKDIR_BUILD not found, Path to directory where is the docker-compose.yml is requiered"
-                          exit 1
-                        fi
-                        echo "[INFO] Variables exist."
-
-
-                        cd $WORKDIR_BUILD && echo "moved to $WORKDIR_BUILD"
-
-                        docker compose build back
-
-                        docker images --format 'table {{.Repository}}:{{.Tag}}\t{{.Size}}\t{{.CreatedAt}}' | grep -i $BACK_NAME
-
+                        source /var/jenkins_home/workspace/back/2-build.sh
                       \'\'\'
                     }
                   }
 
 
-                  stage('Deploy') {
+                  stage('3/3: Deploy') {
                     steps {
                       sh \'\'\'
-                        #!/bin/bash
-                        set -e
-                        set -x
-
-                        #BACK_NAME      # It's in the .env file and passed by env vars in docker-compose.yml
-                        #WORKDIR_BACK   # It's in in the docker-compose.yml in environment vars
-                        #BUILD_NUMBER   # It's created in pipeline runtime by jenkins
-
-                        TIMEOUT_SEC="300"
-                        WORKDIR_BUILD="$WORKDIR_BACK/$BUILD_NUMBER"
-
-
-                        if [ -z "$WORKDIR_BACK" ]; then
-                          echo "[ERROR] Variable WORKDIR_BACK not found, The path to the devops workdir is required."
-                          exit 1
-                        fi
-
-                        if [ -z "$BUILD_NUMBER" ]; then
-                          echo "[ERROR] Variable BUILD_NUMBER not found, The incremental number of builds is requiered."
-                          exit 1
-                        fi
-
-                        if [ -z "$TIMEOUT_SEC" ]; then
-                          echo "Variable TIMEOUT_SEC not found, Timeout in seconds to deploy service is required."
-                          exit 1
-                        fi
-
-                        if [ -z "$WORKDIR_BUILD" ]; then
-                          echo "Variable WORKDIR_BUILD not found, Path to directory where is the docker-compose.yml is requiered"
-                          exit 1
-                        fi
-
-
-                        cd $WORKDIR_BUILD
-
-
-                        docker compose stop back
-
-
-                        docker compose up -d --no-recreate --wait-timeout $TIMEOUT_SEC back
-
-                        set +x
-
-
-                        MESSAGE_APP_STARTED="Started AdapterApplication in"
-                        START_TIME="$(date -u +%s)"
-                        while read line; do
-                          echo $line
-
-                          CURRENT_TIME="$(date -u +%s)"
-                          ELAPSED_SECONDS=$(($CURRENT_TIME-$START_TIME))
-                          if [ $ELAPSED_SECONDS -gt $TIMEOUT_SEC ]; then
-                            echo "timeout of ${TIMEOUT_SEC}sec reached."
-                            exit 1
-                          fi
-
-                          case "$line" in
-                            *"$MESSAGE_APP_STARTED"* )
-                              echo "deploy success"
-                              break;
-                              ;;
-                            
-                          esac
-                        done < <(docker logs -f $BACK_NAME)
-
-                        echo "[SUCCESS] Backend deployed."
-
+                        source /var/jenkins_home/workspace/back/3-deploy.sh
                       \'\'\'
                     }
                   }

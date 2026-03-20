@@ -4,15 +4,19 @@ set -x
 
 
 ################## Deploy ##################
-
-WORKDIR_BACK="/home/m51/mine/t51/devops/setup/jenkins/workspace/back"
-BUILD_NUMBER="0.2"
-BACK_NAME="t51back"
-
-
+#$JOB_NAME      # It's created in pipeline runtime by Jenkins
 #BACK_NAME      # It's in the .env file and passed by env vars in docker-compose.yml
 #WORKDIR_BACK   # It's in in the docker-compose.yml in environment vars
-#BUILD_NUMBER   # It's created in pipeline runtime by jenkins
+#BUILD_NUMBER   # It's created in pipeline runtime by Jenkins
+
+if [ -z "$JOB_NAME" ]; then
+  echo "[INFO] Variable JOB_NAME does not exist, running the script out of jenkins, setting test variables"
+  WORKDIR_BACK="/home/m51/mine/t51/devops/setup/jenkins/workspace/back"
+  BUILD_NUMBER="0.2"
+  BACK_NAME="t51back"
+else
+  echo "[INFO] Running inside Jenkins, because var JOB_NAME exists."
+fi
 
 TIMEOUT_SEC="300"
 WORKDIR_BUILD="$WORKDIR_BACK/$BUILD_NUMBER"
@@ -52,11 +56,12 @@ set +x
 
 MESSAGE_APP_STARTED="Started AdapterApplication in"
 START_TIME="$(date -u +%s)"
-while read line; do
-  echo $line
+docker logs -f $BACK_NAME | while read line; do
+  echo "$line"
 
   CURRENT_TIME="$(date -u +%s)"
-  ELAPSED_SECONDS=$(($CURRENT_TIME-$START_TIME))
+  ELAPSED_SECONDS=$((CURRENT_TIME - START_TIME))
+
   if [ $ELAPSED_SECONDS -gt $TIMEOUT_SEC ]; then
     echo "timeout of ${TIMEOUT_SEC}sec reached."
     exit 1
@@ -65,10 +70,11 @@ while read line; do
   case "$line" in
     *"$MESSAGE_APP_STARTED"* )
       echo "deploy success"
-      break;
+      # IMPORTANT: 'break' here only exits the loop, 
+      # but in a pipe, the loop runs in a subshell.
+      exit 0 
       ;;
-    
   esac
-done < <(docker logs -f $BACK_NAME)
+done
 
 echo "[SUCCESS] Backend deployed."

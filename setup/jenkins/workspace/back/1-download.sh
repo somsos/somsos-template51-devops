@@ -1,17 +1,23 @@
 #!/bin/bash
 set -e
 
-################## Clonning and preparatives ##################
-#WORKDIR_BACK   # in pipeline, this var is declared in docker-compose-devops,yml
-#BUILD_NUMBER   # in pipeline, this var is declared by jenkins in runtime
-#DEVOPS_REPO    # in pipeline, this var is declared in .env file
-#BACK_REPO      # in pipeline, this var is declared in .env file
+################## Download and preparatives ##################
+# JOB_NAME       # It's created in pipeline runtime by Jenkins
+# WORKDIR_BACK   # in pipeline, this var is declared in docker-compose-devops,yml
+# BUILD_NUMBER   # in pipeline, this var is declared by jenkins in runtime
+# DEVOPS_REPO    # in pipeline, this var is declared in .env file
+# BACK_REPO      # in pipeline, this var is declared in .env file
 
-# Remove these variables when copy and peste to job.yaml
-WORKDIR_BACK="/home/m51/mine/t51/devops/setup/jenkins/workspace/back"         # in pipeline, this var is declared in docker-compose-devops,yml
-BUILD_NUMBER="0.2"                                                            # in pipeline, this var is declared by jenkins in runtime
-DEVOPS_REPO="ssh://git@gitea.mariomv-local.org:222/mario1/t51DevOps.git"      # in pipeline, this var is declared in .env file
-BACK_REPO="ssh://git@gitea.mariomv-local.org:222/mario1/t51Back.git"          # in pipeline, this var is declared in .env file
+
+if [ -z "$JOB_NAME" ]; then
+  echo "[INFO] Variable JOB_NAME does not exist, running the script out of jenkins, setting test variables"
+  WORKDIR_BACK="/home/m51/mine/t51/devops/setup/jenkins/workspace/back"
+  BUILD_NUMBER="0.2"
+  DEVOPS_REPO="ssh://git@gitea.mariomv-local.org:222/mario1/t51DevOps.git"
+  BACK_REPO="ssh://git@gitea.mariomv-local.org:222/mario1/t51Back.git"
+else
+  echo "[INFO] Running inside Jenkins, because var JOB_NAME exists."
+fi
 
 if [ -z "$WORKDIR_BACK" ]; then
   echo "[ERROR] Variable \$WORKDIR_BACK not found, The path to the devops workdir is required."

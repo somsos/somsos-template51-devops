@@ -1,13 +1,18 @@
 **/vol-*/*
 
+setup/data
+
 **/secrets/*
 **/*.secret.*
 **/*.secret
 
+
+
+
 **/workspace/*
-!**/workspace/0_scripts/
-!**/workspace/0_scripts/*
-!**/workspace/0_scripts/back-test/*
+!**/workspace/back/
+**/workspace/back/*
+!**/workspace/back/*.sh
 
 app/*/source/*
 
