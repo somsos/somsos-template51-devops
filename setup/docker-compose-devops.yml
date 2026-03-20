@@ -80,6 +80,7 @@ services:
       - DEVOPS_REPO=${DEVOPS_REPO}
       # Pipelines variables
       - WORKDIR_BACK=/var/jenkins_home/workspace/back   # CAUTION: keep in sync with volume path.
+      - DEVOPS_WORKDIR=${DEVOPS_WORKDIR}
       - BACK_NAME=${BACK_NAME}
       - VERSION=${VERSION}
     expose:
@@ -89,7 +90,8 @@ services:
 ####### REPO LOCATIONS ########
       - ./jenkins/vol-jenkins_home:/var/jenkins_home        # all jenkins main
       - ./jenkins/casc:/var/jenkins_home/casc_configs:ro    # CasC (Configuration as Code)
-      - ./jenkins/workspace:/var/jenkins_home/workspace     # executions and generations of DevOps Process
+      - ./jenkins/workspace:${DEVOPS_WORKDIR}     # executions and generations of DevOps Process
+      - ../.env:${DEVOPS_WORKDIR}/.env:ro         # for testing scripts in container shell terminal
 # SSH conf to add gitea as reliable server
       - ./secrets/t51_noPass.priv:/var/jenkins_home/.ssh/t51_noPass.priv:ro
       - ./shared/ssh_config:/var/jenkins_home/.ssh/config

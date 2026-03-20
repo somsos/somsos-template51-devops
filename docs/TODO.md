@@ -2,8 +2,6 @@
 
 ## Doing (First one is the current task)
 
-- [ ] Back Pipeline to build and deploy
-- [ ] Front Pipeline to build and deploy
 - [ ] DbMig Deploy Pipeline
 - [ ] DbMig Rollback Pipeline
 - [ ] DbMig Backup
@@ -78,5 +76,13 @@ posible.
 - [X] Create Gitea front repository
 - [X] Create Gitea DbMig repository
 - [X] Create Gitea DevOps repository
-
-Github Copilot: Toggle (Enable/Disable) Inline Suggestions
+- [X] I changed the commands runner using JCasC "jenkins.yml -> unclassified:->shell:->shell: "/bin/bash""
+- [X] Back Pipeline to build and deploy
+  - [X] Using the jenkins terminal for unitary tests create
+    - [X] script for download
+    - [X] script for build
+    - [X] script for deploy
+  - [X] Create pipeline and using source command call the scripts
+    - [X] Using $JOB_NAME get sure the scripts will run in shell and pipeline
+- [X] Front Pipeline to build and deploy
+  - [X] I did it like the backend pipeline
