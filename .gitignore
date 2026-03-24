@@ -18,6 +18,10 @@ setup/data
 **/workspace/front/*
 !**/workspace/front/*.sh
 
+!**/workspace/docker-control/
+**/workspace/docker-control/*
+!**/workspace/docker-control/*.sh
+
 app/*/source/*
 
 !**/README_devops.md
