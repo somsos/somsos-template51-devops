@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-#set -x # show executed lines
+set -x # show executed lines
 
 
 # ######## introduction
@@ -20,7 +20,7 @@ fi
 echo -e "\e[42m[INFO] Running in: $ENV_TYPE\e[0m"
 
 
-WORKDIR_DOC="$DEVOPS_WORKDIR/docker-control"
+WORKDIR_DOC="$DEVOPS_WORKDIR/db-mig"
 
 
 
@@ -46,6 +46,12 @@ if [ -z "$DEVOPS_REPO" ]; then
 fi
 
 
+if [ -z "$DbMIG_REPO" ]; then
+  echo "[ERROR] Variable DbMIG_REPO not found, The URL to the database migrations project is required."
+  exit 1
+fi
+
+
 
 
 WORKDIR_BUILD="$WORKDIR_DOC/$BUILD_NUMBER"
@@ -56,16 +62,44 @@ git -C $WORKDIR_BUILD log --oneline -n1
 
 
 
-# ######## Remove incesesary things (CAUTION: Keep in sync with back & db_mig/1-download.sh
+# ######## Remove unnecessary things (CAUTION: Keep in sync with back & db_mig/1-download.sh
 rm -rf $WORKDIR_BUILD/.git/
 rm -rf $WORKDIR_BUILD/docs/
+rm -rf $WORKDIR_BUILD/z_*
 rm -rf $WORKDIR_BUILD/README.md
 rm -rf $WORKDIR_BUILD/.gitignore
 
-rm -rf $WORKDIR_BUILD/app/db/
+rm -rf $WORKDIR_BUILD/setup/gitea
+rm -rf $WORKDIR_BUILD/setup/jenkins
+rm -rf $WORKDIR_BUILD/setup/secrets
+rm -rf $WORKDIR_BUILD/setup/shared
+
+
+# rm -rf $WORKDIR_BUILD/app/db/      # We keep this one
 rm -rf $WORKDIR_BUILD/app/back/
+
 rm -rf $WORKDIR_BUILD/app/front/
 rm -rf $WORKDIR_BUILD/app/utils/
 
 echo -e "\e[42m[Success] downloaded and cleaned.\e[0m"
+
+
+
+
+# Clone the db-mig repo
+REPO_DIR="$WORKDIR_BUILD/app/db/source"
+mkdir -p $REPO_DIR
+rm -rf $REPO_DIR/*   # between quotes because the last part is confused by groovy as a comment
+git clone --quiet --depth=1 --single-branch --branch main "$DbMIG_REPO" "$REPO_DIR" \
+  && echo "[INFO] db-mig repository cloned."
+git -C $REPO_DIR log --oneline -n1
+rm -rf $REPO_DIR/.git/
+rm -rf $REPO_DIR/docs/
+rm -rf $REPO_DIR/README*
+sleep 3
+
+
+
+
+echo "[SUCCESS] Cloning and preparations done."
 

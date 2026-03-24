@@ -3,6 +3,11 @@
 ## Doing (First one is the current task)
 
 - [ ] DbMig Deploy Pipeline
+  - [X] Download
+  - [ ] Have at hand an container with liquibase
+  - [ ] Start the container with a volume where I downloaded the repo
+  - [ ] Run the liquibase `update` command.
+  - [ ] Then run the `tag` command.
 - [ ] DbMig Rollback Pipeline
 - [ ] DbMig Backup
 - [ ] DbMig Restore Backup
@@ -86,3 +91,4 @@ posible.
     - [X] Using $JOB_NAME get sure the scripts will run in shell and pipeline
 - [X] Front Pipeline to build and deploy
   - [X] I did it like the backend pipeline
+- [X] Jenkins pipeline for Docker control.

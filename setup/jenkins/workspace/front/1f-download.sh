@@ -22,7 +22,7 @@ fi
 echo -e "\e[42m[INFO] Running in: $ENV_TYPE\e[0m"
 
 
-
+WORKDIR_FRONT="$DEVOPS_WORKDIR/front"
 
 
 # ######## Validate dependencies
@@ -36,8 +36,11 @@ if [ -z "$BUILD_NUMBER" ]; then
   exit 1
 fi
 
+if [ -z "$DEVOPS_REPO" ]; then
+  echo "[ERROR] Variable DEVOPS_REPO not found, The URL to the devops project is required."
+  exit 1
+fi
 
-WORKDIR_FRONT="$DEVOPS_WORKDIR/front"
 
 # ######## Clone DevOps reposotory
 WORKDIR_BUILD="$WORKDIR_FRONT/$BUILD_NUMBER"

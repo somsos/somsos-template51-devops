@@ -22,6 +22,14 @@ setup/data
 **/workspace/docker-control/*
 !**/workspace/docker-control/*.sh
 
+!**/workspace/db-mig/
+**/workspace/db-mig/*
+!**/workspace/db-mig/*.sh
+
+!**/workspace/0_scripts/
+**/workspace/0_scripts/*
+!**/workspace/0_scripts/*.sh
+
 app/*/source/*
 
 !**/README_devops.md
