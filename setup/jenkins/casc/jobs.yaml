@@ -47,7 +47,7 @@ jobs:
           cps {
             script('''
               pipeline {
-                agent any
+                agent { label 'built-in' }
                 stages {
                 stage('1/3: Download') {
                     steps {
@@ -125,6 +125,38 @@ jobs:
                 }
               }
             '''.stripIndent())
+          }
+        }
+      }
+
+  - script: >
+      pipelineJob('t51-db-migrate-v1') {
+        definition {
+          cps {
+            script('''
+              pipeline {
+                agent { label 'built-in' }
+                stages {
+                stage('1/2: Download') {
+                    steps {
+                      sh \'\'\'
+                        source /var/jenkins_home/workspace/db-mig/1m-download-devops-repo.sh
+                      \'\'\'
+                    }
+                  }
+
+
+                  stage('2/2: Build') {
+                    steps {
+                      sh \'\'\'
+                        source /var/jenkins_home/workspace/db-mig/2m-migrate-deploy.sh
+                      \'\'\'
+                    }
+                  }
+
+                }
+              }
+            ''')
           }
         }
       }
