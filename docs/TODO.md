@@ -3,11 +3,8 @@
 ## Doing (First one is the current task)
 
 - [ ] DbMig Deploy Pipeline
-  - [X] Download
-  - [ ] Have at hand an container with liquibase
-  - [ ] Start the container with a volume where I downloaded the repo
-  - [ ] Run the liquibase `update` command.
-  - [ ] Then run the `tag` command.
+  - [ ] Use a file to manage the version
+
 - [ ] DbMig Rollback Pipeline
 - [ ] DbMig Backup
 - [ ] DbMig Restore Backup

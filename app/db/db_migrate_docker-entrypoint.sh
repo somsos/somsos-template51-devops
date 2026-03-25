@@ -8,8 +8,23 @@ echo "DB_USER: $DB_USER"
 #echo "DB_PASSWORD: $DB_PASSWORD"
 echo "DB_IP: $DB_IP"
 echo "DB_PORT: $DB_PORT"
-echo "DB_PREVIOUS_VERSION: $DB_PREVIOUS_VERSION"
-echo "DB_VERSION: $DB_VERSION"
+
+
+### GET VERSION
+
+    # Read first line and trim whitespace
+    DB_VERSION=$(head -n 1 ./VERSION | tr -d '[:space:]')
+
+    # Check if VERSION is a valid integer
+    if ! [[ "$VERSION" =~ ^[0-9]+$ ]]; then
+        echo "[ERROR] Invalid format: version is not a number"
+        exit 1
+    fi
+
+    # Compute previous version
+    DB_PREVIOUS_VERSION=$((VERSION - 1))
+    echo "DB_PREVIOUS_VERSION: $DB_PREVIOUS_VERSION"
+    echo "DB_VERSION: $DB_VERSION"
 
 CONNECTION_VARS="--username=$DB_USER --password=$DB_PASSWORD --url=jdbc:postgresql://$DB_IP:$DB_PORT/$DB_NAME";
 
