@@ -13,9 +13,15 @@ echo "DB_PORT: $DB_PORT"
 ### GET VERSION
 
     # Read first line and trim whitespace
-    DB_VERSION=$(head -n 1 ./VERSION | tr -d '[:space:]')
-
+    VERSION_FILE="./source/VERSION"
     # Check if VERSION is a valid integer
+    if  [ ! -f "$VERSION_FILE" ]; then
+        echo "[ERROR] File VERSION not found and it's required."
+        exit 1
+    fi
+
+    DB_VERSION=$(head -n 1 $VERSION_FILE | tr -d '[:space:]')
+    
     if ! [[ "$VERSION" =~ ^[0-9]+$ ]]; then
         echo "[ERROR] Invalid format: version is not a number"
         exit 1
@@ -25,6 +31,7 @@ echo "DB_PORT: $DB_PORT"
     DB_PREVIOUS_VERSION=$((VERSION - 1))
     echo "DB_PREVIOUS_VERSION: $DB_PREVIOUS_VERSION"
     echo "DB_VERSION: $DB_VERSION"
+
 
 CONNECTION_VARS="--username=$DB_USER --password=$DB_PASSWORD --url=jdbc:postgresql://$DB_IP:$DB_PORT/$DB_NAME";
 
