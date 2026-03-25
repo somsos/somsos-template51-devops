@@ -91,15 +91,15 @@ services:
 # VERY IMPORTANT: Run the migrations service using the flag --no-deps to avoid recreating the db container again
 # which can erase the data if the volume is not set correctly.
 # run with: "docker compose run --rm --no-deps db_migrate deploy" for deploy
-# or use "docker compose run --rm --no-deps db_migrate rollback" for rollback
+# or use    "docker compose run --rm --no-deps db_migrate rollback" for rollback
   db_migrate:
     profiles: ["devops-util"]
-    image: db_migrate:v01
+    image: liquibase:4.33-alpine
     container_name: ${DbMIG_NAME}
-    build:
-      context: ./db
-      dockerfile: db_migrate.Dockerfile
+    working_dir: /var/my_migrations
     entrypoint: [ "sh", "./db_migrate_docker-entrypoint.sh" ]
+    volumes:
+      - ./db/source:/var/my_migrations
     #depends_on:
     #  db:
     #    condition: service_healthy
