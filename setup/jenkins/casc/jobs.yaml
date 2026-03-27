@@ -1,7 +1,7 @@
 
 jobs:
   - script: >
-      pipelineJob('t51Back-v6') {
+      pipelineJob('Backend-Deploy-v1') {
         definition {
           cps {
             script('''
@@ -37,12 +37,12 @@ jobs:
 
                 }
               }
-            ''')
+            '''.stripIndent())
           }
         }
       }
   - script: >
-      pipelineJob('t51Front-v2') {
+      pipelineJob('Frontend-Deploy-v1') {
         definition {
           cps {
             script('''
@@ -78,13 +78,13 @@ jobs:
 
                 }
               }
-            ''')
+            '''.stripIndent())
           }
         }
       }
 
   - script: |
-      pipelineJob('t51-Docker-Control-v6') {
+      pipelineJob('Docker-Control') {
         description('Manage Docker services')
         
         parameters {
@@ -99,6 +99,13 @@ jobs:
               pipeline {
                 agent { label 'built-in' }
                 stages {
+                  
+                  stage('Guard Rail') {
+                    steps {
+                      input message: 'Are you sure you want to deploy?', ok: 'Yes, proceed!'
+                    }
+                  }
+
                   stage('Download') {
                     steps {
                       sh \'\'\'
@@ -130,7 +137,7 @@ jobs:
       }
 
   - script: >
-      pipelineJob('t51dbMig-deploy-v1') {
+      pipelineJob('Database-Deploy-v1') {
         description('Migrate database to next version.')
 
         definition {
@@ -149,29 +156,29 @@ jobs:
                   stage('1/2: Download') {
                     steps {
                       sh \'\'\'
-                        source /var/jenkins_home/workspace/db-mig/1m-download-devops-repo.sh
+                        source /var/jenkins_home/workspace/db-mig-deploy/1md-download-devops-repo.sh
                       \'\'\'
                     }
                   }
 
 
-                  stage('2/2: Build') {
+                  stage('2/2: Migrate') {
                     steps {
                       sh \'\'\'
-                        source /var/jenkins_home/workspace/db-mig/2m-migrate-deploy.sh
+                        source /var/jenkins_home/workspace/db-mig-deploy/2md-migrate-deploy.sh
                       \'\'\'
                     }
                   }
 
                 }
               }
-            ''')
+            '''.stripIndent())
           }
         }
       }
 
   - script: >
-      pipelineJob('t51dbMig-rollback-v1') {
+      pipelineJob('Database-Rollback-v1') {
         description('Rollback database to previous version.')
 
         definition {
@@ -190,7 +197,7 @@ jobs:
                   stage('1/2: Download') {
                     steps {
                       sh \'\'\'
-                        source /var/jenkins_home/workspace/db-mig/1m-download-devops-repo.sh
+                        source /var/jenkins_home/workspace/db-mig-rollback/1mr-download-devops-repo.sh
                       \'\'\'
                     }
                   }
@@ -198,14 +205,14 @@ jobs:
                   stage('2/2: Build') {
                     steps {
                       sh \'\'\'
-                        source /var/jenkins_home/workspace/db-mig/3m-migrate-rollback.sh
+                        source /var/jenkins_home/workspace/db-mig-rollback/2mr-migrate-rollback.sh
                       \'\'\'
                     }
                   }
 
                 }
               }
-            ''')
+            '''.stripIndent())
           }
         }
       }

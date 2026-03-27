@@ -2,10 +2,13 @@
 
 ## Doing (First one is the current task)
 
-- [ ] DbMig Deploy Pipeline
-  - [ ] Use a file to manage the version
+- [ ] Check for a way to have available all the files in the volume of migrate,
+      because it happened me I think like the last time, I need to build an image
+      so I can have the volumes-file complete.
+- [X] DbMig Deploy Pipeline
+  - [X] Use a file to manage the version
+- [X] DbMig Rollback Pipeline
 
-- [ ] DbMig Rollback Pipeline
 - [ ] DbMig Backup
 - [ ] DbMig Restore Backup
 

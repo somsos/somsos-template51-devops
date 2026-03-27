@@ -1,11 +1,13 @@
 #!/bin/bash
 set -e
-set -x # show executed lines
+#set -x # show executed lines
 
 
 # ######## introduction
 if [ -n "$JENKINS_URL" ]; then
     ENV_TYPE="JENKINS"
+    source /var/jenkins_home/workspace/.env
+
 elif [ -f /.dockerenv ]; then
     ENV_TYPE="CONTAINER-SHELL"
     source /var/jenkins_home/workspace/.env
@@ -20,7 +22,7 @@ fi
 echo -e "\e[42m[INFO] Running in: $ENV_TYPE\e[0m"
 
 
-WORKDIR_DOC="$DEVOPS_WORKDIR/db-mig"
+WORKDIR_DOC="$DEVOPS_WORKDIR/db-mig-rollback"
 
 
 
@@ -77,7 +79,6 @@ rm -rf $WORKDIR_BUILD/setup/shared
 
 # rm -rf $WORKDIR_BUILD/app/db/      # We keep this one
 rm -rf $WORKDIR_BUILD/app/back/
-
 rm -rf $WORKDIR_BUILD/app/front/
 rm -rf $WORKDIR_BUILD/app/utils/
 

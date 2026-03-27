@@ -22,9 +22,13 @@ setup/data
 **/workspace/docker-control/*
 !**/workspace/docker-control/*.sh
 
-!**/workspace/db-mig/
-**/workspace/db-mig/*
-!**/workspace/db-mig/*.sh
+!**/workspace/db-mig-deploy/
+**/workspace/db-mig-deploy/*
+!**/workspace/db-mig-deploy/*.sh
+
+!**/workspace/db-mig-rollback/
+**/workspace/db-mig-rollback/*
+!**/workspace/db-mig-rollback/*.sh
 
 !**/workspace/0_scripts/
 **/workspace/0_scripts/*
