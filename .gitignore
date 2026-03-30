@@ -18,9 +18,9 @@ setup/data
 **/workspace/front/*
 !**/workspace/front/*.sh
 
-!**/workspace/docker-control/
-**/workspace/docker-control/*
-!**/workspace/docker-control/*.sh
+!**/workspace/*/
+**/workspace/*/*
+!**/workspace/*/*.sh
 
 !**/workspace/db-mig-deploy/
 **/workspace/db-mig-deploy/*
@@ -33,6 +33,10 @@ setup/data
 !**/workspace/0_scripts/
 **/workspace/0_scripts/*
 !**/workspace/0_scripts/*.sh
+
+!**/workspace/db-backup/
+**/workspace/db-backup/*
+!**/workspace/db-backup/*.sh
 
 app/*/source/*
 

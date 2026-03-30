@@ -2,28 +2,18 @@ jenkins:
   systemMessage: "T51 Jenkins Server"
   numExecutors: 2
 
-  clouds:
-    - docker:
-        name: "docker-local"
-        dockerApi:
-          dockerHost:
-            uri: "unix:///var/run/docker.sock"
-        templates:
-          - name: "docker-agent"
-            labelString: "docker-agent"
-            remoteFs: "/home/jenkins"
-            connector:
-              attach: {} # Use 'attach' for local unix socket agents
-            dockerTemplateBase:
-              image: "jenkins/agent:latest"
-
 unclassified:
   location:
     url: http://jenkins.${MY_DOMAIN}
   shell:
     shell: "/bin/bash"
+  giteaServers:
+    servers:
+      - displayName: "Gitea-Local"
+        serverUrl: "http://gitea:3000"
+        # Changed from manageWebhooks to manageHooks
+        manageHooks: false
 
-  
 #unclassified:
 #  themes:
 #    systemTheme: io.jenkins.plugins.darktheme.DarkThemeManagerFactory

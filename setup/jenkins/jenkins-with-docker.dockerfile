@@ -26,7 +26,8 @@ COPY --from=liquibase:4.33-alpine /liquibase /liquibase
 ENV PATH="/liquibase:${PATH}"
 
 # Utils ip, nc, ping: sometime I check thinks since the perspective of a container, using this one
-RUN apt-get install -y tzdata iproute2 iputils-ping netcat-openbsd nano bc
+RUN apt-get update && apt-get install -y tzdata iproute2 iputils-ping netcat-openbsd nano bc \
+      curl postgresql-client-17 tar
 
 RUN rm -rf /var/lib/apt/lists/*
 

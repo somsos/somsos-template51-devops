@@ -11,7 +11,7 @@ set -e
 
 if [ -z "$JOB_NAME" ]; then
   echo "[INFO] Variable JOB_NAME does not exist, running the script out of jenkins, setting test variables"
-  WORKDIR_BACK="/home/m51/mine/t51/devops/setup/jenkins/workspace/back"
+  WORKDIR_BACK="/home/m51/mine/t51/devops/setup/jenkins/workspace/Backend-Deploy-v1"
   BUILD_NUMBER="0.2"
   DEVOPS_REPO="ssh://git@gitea.mariomv-local.org:222/mario1/t51DevOps.git"
   BACK_REPO="ssh://git@gitea.mariomv-local.org:222/mario1/t51Back.git"
@@ -19,8 +19,11 @@ else
   echo "[INFO] Running inside Jenkins, because var JOB_NAME exists."
 fi
 
-if [ -z "$WORKDIR_BACK" ]; then
-  echo "[ERROR] Variable \$WORKDIR_BACK not found, The path to the devops workdir is required."
+BUILD_DIR="$DEVOPS_WORKDIR/Backend-Deploy-v1/$BUILD_NUMBER"
+BUILD_DIR_BACK="$BUILD_DIR/app/back/source"
+
+if [ -z "$DEVOPS_WORKDIR" ]; then
+  echo "[ERROR] Variable \$DEVOPS_WORKDIR not found, The path to the devops workdir is required."
   exit 1
 fi
 
@@ -40,31 +43,28 @@ if [ -z "$BACK_REPO" ]; then
 fi
 
 
-
-WORKDIR_BUILD="$WORKDIR_BACK/$BUILD_NUMBER"
-rm -fr $WORKDIR_BUILD
-git clone --quiet --depth=1 --single-branch --branch main "$DEVOPS_REPO" "$WORKDIR_BUILD" \
+rm -fr $BUILD_DIR
+git clone --quiet --depth=1 --single-branch --branch main "$DEVOPS_REPO" "$BUILD_DIR" \
   && echo "[INFO] Devops repo cloned"
-git -C $WORKDIR_BUILD log --oneline -n1
+git -C $BUILD_DIR log --oneline -n1
 sleep 3
 
 # Removing inecesary folders and files in app
-rm -rf $WORKDIR_BUILD/.git/
-rm -rf $WORKDIR_BUILD/setup/
-rm -rf $WORKDIR_BUILD/docs/
-rm -rf $WORKDIR_BUILD/README.md
-rm -rf $WORKDIR_BUILD/.gitignore
+rm -rf $BUILD_DIR/.git/
+rm -rf $BUILD_DIR/setup/
+rm -rf $BUILD_DIR/docs/
+rm -rf $BUILD_DIR/README.md
+rm -rf $BUILD_DIR/.gitignore
 
-rm -rf $WORKDIR_BUILD/app/db/
-rm -rf $WORKDIR_BUILD/app/front/
-rm -rf $WORKDIR_BUILD/app/utils/
+rm -rf $BUILD_DIR/app/db/
+rm -rf $BUILD_DIR/app/front/
+rm -rf $BUILD_DIR/app/utils/
 echo "[INFO] Removed inecesary files in devops project for Back deploy."
 
 
 # Remove line because is not requiered for the maven build and is going to fail if docker copose look for it.
-LINE_TO_REMOVE=""
-DOCKER_COMPOSE_FILE="$WORKDIR_BUILD/docker-compose.yml"
-DOCKER_COMPOSE_FILE_temp="$WORKDIR_BUILD/docker-compose.temp.yml" # Don't know why but I need the temp file
+DOCKER_COMPOSE_FILE="$BUILD_DIR/docker-compose.yml"
+DOCKER_COMPOSE_FILE_temp="$BUILD_DIR/docker-compose.temp.yml" # Don't know why but I need the temp file
 touch $DOCKER_COMPOSE_FILE_temp
 cat $DOCKER_COMPOSE_FILE | grep -v setup/docker-compose >> $DOCKER_COMPOSE_FILE_temp \
   && echo "[INFO] dependency in docker-compose.yml removed."
@@ -73,14 +73,13 @@ mv $DOCKER_COMPOSE_FILE_temp $DOCKER_COMPOSE_FILE
 
 
 # Clone the back repo
-WORKDIR_BACK_REPO="$WORKDIR_BUILD/app/back/source"
-mkdir -p $WORKDIR_BACK_REPO
-rm -rf "$WORKDIR_BACK_REPO/*"   # between quotes because the last part is confused by groovy as a comment
-git clone --quiet --depth=1 --single-branch --branch main "$BACK_REPO" "$WORKDIR_BACK_REPO" \
+mkdir -p $BUILD_DIR_BACK
+rm -rf "$BUILD_DIR_BACK/*"   # between quotes because the last part is confused by groovy as a comment
+git clone --quiet --depth=1 --single-branch --branch main "$BACK_REPO" "$BUILD_DIR_BACK" \
   && echo "[INFO] Back repo cloned."
-git -C $WORKDIR_BACK_REPO log --oneline -n1
+git -C $BUILD_DIR_BACK log --oneline -n1
 sleep 3
-rm -rf $WORKDIR_BACK_REPO/.git/
+rm -rf $BUILD_DIR_BACK/.git/
 
 
 

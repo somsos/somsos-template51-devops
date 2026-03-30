@@ -12,6 +12,7 @@
         "mariomv",
         "nginxproxy",
         "PGDATABASE",
+        "PGPASSWORD",
         "postgresql",
         "vhost",
         "workdir",

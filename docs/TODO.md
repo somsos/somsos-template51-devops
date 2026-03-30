@@ -2,15 +2,26 @@
 
 ## Doing (First one is the current task)
 
-- [ ] Check for a way to have available all the files in the volume of migrate,
-      because it happened me I think like the last time, I need to build an image
-      so I can have the volumes-file complete.
-- [X] DbMig Deploy Pipeline
-  - [X] Use a file to manage the version
-- [X] DbMig Rollback Pipeline
+- [ ] CasC in Gitea to create webhook to trigger Jenkins pipelines
+  - [ ] Deploy
+    - [ ] Back D
+    - [ ] Front D
+    - [ ] Database D
+  - [ ] Rollback
+    - [ ] Back R
+    - [ ] Front R
+    - [ ] Database R
+- [ ] Create scenarios where I need to use all the DevOps features
+  - [ ] Deploy and Rollback by layer
+    - [ ] Back
+    - [ ] Front
+    - [ ] Database
+  - [ ] Deploy and Rollback back and front
+  - [ ] Deploy and Rollback back and database
+  - [ ] Deploy and Rollback 3 layers
+- [ ] Restore Backend
+- [ ] Restore Frontend
 
-- [ ] DbMig Backup
-- [ ] DbMig Restore Backup
 
 ## Resume
 
@@ -92,3 +103,10 @@ posible.
 - [X] Front Pipeline to build and deploy
   - [X] I did it like the backend pipeline
 - [X] Jenkins pipeline for Docker control.
+- [X] DbMig Deploy Pipeline
+  - [X] Use a file to manage the version
+- [X] DbMig Rollback Pipeline
+- [X] Avoid using Docker in Docker for database migrations, because at the moment
+    of mounting a volume the files were not accesible
+- [X] DbMig Backup
+- [X] DbMig Restore Backup

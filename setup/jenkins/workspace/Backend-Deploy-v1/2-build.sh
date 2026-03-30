@@ -19,11 +19,11 @@ fi
 
 
 
-WORKDIR_BUILD="$WORKDIR_BACK/$BUILD_NUMBER"
+BUILD_DIR="$DEVOPS_WORKDIR/Backend-Deploy-v1/$BUILD_NUMBER"
 
 
-if [ -z "$WORKDIR_BACK" ]; then
-  echo "[ERROR] Variable WORKDIR_BACK not found, The path to the devops workdir is required."
+if [ -z "$DEVOPS_WORKDIR" ]; then
+  echo "[ERROR] Variable DEVOPS_WORKDIR not found, The path to the devops workdir is required."
   exit 1
 fi
 
@@ -37,14 +37,10 @@ if [ -z "$BACK_NAME" ]; then
   exit 1
 fi
 
-if [ -z "$WORKDIR_BUILD" ]; then
-  echo "Variable WORKDIR_BUILD not found, Path to directory where is the docker-compose.yml is requiered"
-  exit 1
-fi
 echo "[INFO] Variables exist."
 
 
-cd $WORKDIR_BUILD && echo "moved to $WORKDIR_BUILD"
+cd $BUILD_DIR && echo "moved to $BUILD_DIR"
 
 docker compose build back
 

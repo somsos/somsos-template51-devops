@@ -20,11 +20,13 @@ services:
       - GITEA__server__DOMAIN=gitea.${MY_DOMAIN}
       - GITEA__server__SSH_DOMAIN=gitea.${MY_DOMAIN}
       - GITEA__server__ROOT_URL=http://gitea.${MY_DOMAIN}/
+      - GITEA__webhook__ALLOWED_HOST_LIST=jenkins,172.30.0.0/16,external
       # Initial repositories
       - BACK_NAME=${BACK_NAME}
       - FRONT_NAME=${FRONT_NAME}
       - DbMIG_NAME=${DbMIG_NAME}
       - DEVOPS_NAME=${DEVOPS_NAME}
+      - SHARED_TOKEN=${SHARED_TOKEN}
     volumes:
       - ./gitea/vol-data:/data    # Persist data
       - ./gitea/gitea-entrypoint.sh:/usr/local/bin/gitea-entrypoint.sh:ro   # Config
@@ -73,16 +75,19 @@ services:
       - MY_PASS=${MY_PASS}
       - MY_DOMAIN=${MY_DOMAIN}
       - CASC_JENKINS_CONFIG=/var/jenkins_home/casc_configs
-      # Repositories URLs
+      # Pipeline variables
       - DbMIG_REPO=${DbMIG_REPO}
+      - DbMIG_NAME=${DbMIG_NAME}
       - BACK_REPO=${BACK_REPO}
+      - BACK_NAME=${BACK_NAME}
       - FRONT_REPO=${FRONT_REPO}
+      - FRONT_NAME=${FRONT_NAME}
       - DEVOPS_REPO=${DEVOPS_REPO}
       # Pipelines variables
-      - WORKDIR_BACK=/var/jenkins_home/workspace/back   # CAUTION: keep in sync with volume path.
       - DEVOPS_WORKDIR=${DEVOPS_WORKDIR}
-      - BACK_NAME=${BACK_NAME}
+      
       - VERSION=${VERSION}
+      - SHARED_TOKEN=${SHARED_TOKEN}
     expose:
       - "8080"
     volumes:

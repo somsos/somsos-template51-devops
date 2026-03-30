@@ -11,7 +11,7 @@ set -x
 
 if [ -z "$JOB_NAME" ]; then
   echo "[INFO] Variable JOB_NAME does not exist, running the script out of jenkins, setting test variables"
-  WORKDIR_BACK="/home/m51/mine/t51/devops/setup/jenkins/workspace/back"
+  WORKDIR_BACK="/home/m51/mine/t51/devops/setup/jenkins/workspace/Backend-Deploy-v1"
   BUILD_NUMBER="0.2"
   BACK_NAME="t51back"
 else
@@ -19,11 +19,11 @@ else
 fi
 
 TIMEOUT_SEC="300"
-WORKDIR_BUILD="$WORKDIR_BACK/$BUILD_NUMBER"
+BUILD_DIR="$DEVOPS_WORKDIR/Backend-Deploy-v1/$BUILD_NUMBER"
 
 
-if [ -z "$WORKDIR_BACK" ]; then
-  echo "[ERROR] Variable WORKDIR_BACK not found, The path to the devops workdir is required."
+if [ -z "$DEVOPS_WORKDIR" ]; then
+  echo "[ERROR] Variable DEVOPS_WORKDIR not found, The path to the devops workdir is required."
   exit 1
 fi
 
@@ -37,13 +37,13 @@ if [ -z "$TIMEOUT_SEC" ]; then
   exit 1
 fi
 
-if [ -z "$WORKDIR_BUILD" ]; then
-  echo "Variable WORKDIR_BUILD not found, Path to directory where is the docker-compose.yml is requiered"
+if [ -z "$BUILD_DIR" ]; then
+  echo "Variable BUILD_DIR not found, Path to directory where is the docker-compose.yml is requiered"
   exit 1
 fi
 
 
-cd $WORKDIR_BUILD
+cd $BUILD_DIR
 
 
 docker compose stop back
@@ -69,12 +69,12 @@ docker logs -f $BACK_NAME | while read line; do
 
   case "$line" in
     *"$MESSAGE_APP_STARTED"* )
-      echo "deploy success"
-      # IMPORTANT: 'break' here only exits the loop, 
-      # but in a pipe, the loop runs in a subshell.
+      echo "[INFO] Deploy success"
       exit 0 
       ;;
+
   esac
 done
 
-echo "[SUCCESS] Backend deployed."
+echo "[ERROR] It was expected an success log, but it wasn't found."
+exit 1

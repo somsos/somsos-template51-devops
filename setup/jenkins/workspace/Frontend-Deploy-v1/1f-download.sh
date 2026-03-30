@@ -22,7 +22,7 @@ fi
 echo -e "\e[42m[INFO] Running in: $ENV_TYPE\e[0m"
 
 
-WORKDIR_FRONT="$DEVOPS_WORKDIR/front"
+WORKDIR_FRONT="$DEVOPS_WORKDIR/Frontend-Deploy-v1"
 
 
 # ######## Validate dependencies

@@ -128,5 +128,72 @@ addRepo "$DEVOPS_NAME"
 sleep 1
 
 
+# DESCRIPTION
+#    Adds the an webhook to jenkins, so on an push a pipeline is executed
+# INPUT
+#    $1 : Repository name
+#
+function addWebHook {
+
+  if [ -z "$SHARED_TOKEN" ]; then
+    echo "[ERROR] Variable SHARED_TOKEN not found, random token required."
+    exit 1
+  fi
+
+  TOKEN=$(su-exec git gitea admin user generate-access-token \
+    --username "${GITEA_ADMIN_USER}" \
+    --token-name "$(tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 10)" \
+    | awk '{print $NF}')
+
+  if [ -z "$TOKEN" ]; then
+    echo "[ERROR] TOKEN empty, it should have a random string."
+    exit 1
+  fi
+
+  HOOK_URL="http://localhost:3000/api/v1/repos/${GITEA_ADMIN_USER}/${1}/hooks"
+  HOOK_JENKINS="http://jenkins:8080/generic-webhook-trigger/invoke?token=${1}-${SHARED_TOKEN}"
+
+  RESPONSE=$(curl -s -i -o /tmp/resp_${1}.txt -w "%{http_code}" -X 'POST'  \
+    "${HOOK_URL}" \
+    -H "Authorization: token $TOKEN" \
+    -H "Content-Type: application/json" \
+    -d "{
+      \"type\": \"gitea\",
+      \"config\": {
+        \"content_type\": \"json\",
+        \"url\": \"${HOOK_JENKINS}\"
+      },
+      \"events\": [\"push\"],
+      \"active\": true
+    }")
+
+    if [ "$RESPONSE" = "201" ]; then
+      echo "[INFO] WebHook for ${1} created"
+    elif [ "$RESPONSE" = "409" ] || [ "$RESPONSE" = "422" ]; then
+      echo "[INFO] Webhook already exists."
+    else
+      echo "[ERROR] Error creating webhook for ${1}."
+      echo "[DEBUG] TOKEN: ${TOKEN}"
+      echo "[DEBUG] HOOK_URL: ${HOOK_URL}"
+      echo "[DEBUG] HOOK_JENKINS: ${HOOK_JENKINS}"
+      cat /tmp/resp_${1}.txt
+    fi
+    
+}
+
+addWebHook "$BACK_NAME"
+sleep 1
+
+addWebHook "$FRONT_NAME"
+sleep 1
+
+addWebHook "$DbMIG_NAME"
+sleep 1
+
+addWebHook "$DEVOPS_NAME"
+sleep 1
+
+
+
 # Bring the background process back to the foreground to keep container alive
 wait

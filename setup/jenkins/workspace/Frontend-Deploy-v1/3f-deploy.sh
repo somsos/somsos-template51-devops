@@ -24,7 +24,7 @@ echo -e "\e[42m[INFO] Running in: $ENV_TYPE\e[0m"
 
 TIMEOUT_SEC="300"
 
-WORKDIR_BUILD="$DEVOPS_WORKDIR/front/$BUILD_NUMBER"
+WORKDIR_BUILD="$DEVOPS_WORKDIR/Frontend-Deploy-v1/$BUILD_NUMBER"
 
 
 if [ -z "$DEVOPS_WORKDIR" ]; then
