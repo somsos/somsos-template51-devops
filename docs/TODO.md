@@ -2,6 +2,11 @@
 
 ## Doing (First one is the current task)
 
+- [ ] Return the docker compose command for database migrate deploy and rollback.
+  - [ ] One Layer to download
+  - [ ] Other layer to migrate/rollback
+- [ ] Return the docker compose command for database backup and restore.
+- [ ] Design idea of incremental versioning using files, e.g.,  back/VERSION
 - [ ] CasC in Gitea to create webhook to trigger Jenkins pipelines
   - [ ] Deploy
     - [ ] Back D

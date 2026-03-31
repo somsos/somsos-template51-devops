@@ -121,7 +121,7 @@ sleep 1
 addRepo "$FRONT_NAME"
 sleep 1
 
-addRepo "$DbMIG_NAME"
+addRepo "$DB_MIG_NAME"
 sleep 1
 
 addRepo "$DEVOPS_NAME"
@@ -187,7 +187,7 @@ sleep 1
 addWebHook "$FRONT_NAME"
 sleep 1
 
-addWebHook "$DbMIG_NAME"
+addWebHook "$DB_MIG_NAME"
 sleep 1
 
 addWebHook "$DEVOPS_NAME"

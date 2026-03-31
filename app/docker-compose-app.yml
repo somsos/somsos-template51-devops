@@ -2,7 +2,7 @@
 services:
 
   db:
-    profiles: ["app"]
+    profiles: ["app", "all"]
     container_name: ${DB_SERVER}
     image: ${DB_IMAGE}
     command: ["postgres", "-c", "log_statement=all"]
@@ -25,7 +25,7 @@ services:
 
 
   back:
-    profiles: ["app"]
+    profiles: ["app", "all"]
     container_name: ${BACK_NAME}
     image: ${BACK_IMAGE}
     build:
@@ -59,7 +59,7 @@ services:
 
 
   front:
-    profiles: ["app"]
+    profiles: ["app", "all"]
     container_name: ${FRONT_NAME}
     build:
       context: ./front
@@ -84,3 +84,81 @@ services:
       test: ["CMD-SHELL", "wget --spider -q http://127.0.0.1 && echo servicesAlive"]
       interval: 20s
       retries: 5
+
+
+## Maintenance
+
+# run with: "docker compose run --rm db_migrate deploy" for deploy
+# or use    "docker compose run --rm db_migrate rollback" for rollback
+  db_migrate:
+    profiles: ["devops-util"]
+    container_name: ${DB_MIG_NAME}
+    image: t51migrator:1
+    build:
+      context: ./db
+      args:
+        DB_MIG_IMAGE: ${DB_MIG_IMAGE}
+        DB_USER: ${DB_USER}
+        DB_PASS: ${DB_PASS}
+        DB_SERVER: ${DB_SERVER}
+        DB_SCHEMA: ${DB_SCHEMA}
+      dockerfile: migrator.dockerfile
+    entrypoint: [ "bash", "/app/migrator.entrypoint.sh" ]
+
+    
+    
+    #volumes:                           # AVOIDING THIS, BECAUSE i HAD PROBLEMS WITH HOST VOLUMES AND DinD
+     # - ./db/source:/var/my_migrations
+    #depends_on:
+    #  db:                              # AVOID THIS, IT MIGHT RECREATE THE DATABASE VOLUME ¡¡DELETING!! ALL, BETTER CHECK THE LOGS
+    #    condition: service_healthy
+    
+    networks:
+      - t51Net
+    restart: "no"
+
+
+  # run it manually with: "BUILD_NUMBER=1 docker compose run --rm --no-deps db_backup"
+  db_backup:
+    profiles: ["devops-util"]
+    container_name: db_backup
+    build:
+      context: ./utils
+      dockerfile: alpine-utils.dockerfile
+    image: utils:1
+    environment:
+      - PGPASSWORD=${DB_PASS}
+      - BUILD_NUMBER=${BUILD_NUMBER}
+    volumes:
+      - ./data/db_backups:/app/backups/
+    entrypoint: [ "bash", "-c", "pg_dump -h ${DB_IP} -U ${DB_USER} -d ${DB_SCHEMA} -F p > /app/backups/db_backup_$(echo $BUILD_NUMBER)_$(date +'%Y-%m-%d_%H-%M-%S').sql" ]
+    networks:
+      - t51Net
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+
+
+  # run it manually with: "BACKUP_NAME=1 docker compose run --rm --no-deps db_backup"
+  db_restore:
+    profiles: ["devops-util"]
+    container_name: db_restore
+    build:
+      context: ./utils
+      dockerfile: alpine-utils.dockerfile
+    image: utils:1
+    environment:
+      - PGPASSWORD=${DB_PASS}
+      - BACKUP_NAME=${BACKUP_NAME}
+    volumes:
+      - ./data/db_backups:/app/backups/:ro
+    working_dir: /app/backups
+    entrypoint: [ "bash", "-c", "psql -U ${DB_USER} -d ${DB_SCHEMA} < ./${BACKUP_NAME}" ]
+    networks:
+      - t51Net
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"

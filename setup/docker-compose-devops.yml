@@ -2,7 +2,7 @@
 services:
 
   gitea:
-    profiles: ["devops"]
+    profiles: ["devops", "all"]
     container_name: gitea       # Careful changing it's used to clone the repo in jenkins
     image: gitea/gitea:1.25
     environment:
@@ -24,7 +24,7 @@ services:
       # Initial repositories
       - BACK_NAME=${BACK_NAME}
       - FRONT_NAME=${FRONT_NAME}
-      - DbMIG_NAME=${DbMIG_NAME}
+      - DB_MIG_NAME=${DB_MIG_NAME}
       - DEVOPS_NAME=${DEVOPS_NAME}
       - SHARED_TOKEN=${SHARED_TOKEN}
     volumes:
@@ -34,7 +34,7 @@ services:
       # Initial repositories
       - ./gitea/initial_repos/${BACK_NAME}.tar.xz:/tmp/initial_repos/${BACK_NAME}.tar.xz
       - ./gitea/initial_repos/${FRONT_NAME}.tar.xz:/tmp/initial_repos/${FRONT_NAME}.tar.xz
-      - ./gitea/initial_repos/${DbMIG_NAME}.tar.xz:/tmp/initial_repos/${DbMIG_NAME}.tar.xz
+      - ./gitea/initial_repos/${DB_MIG_NAME}.tar.xz:/tmp/initial_repos/${DB_MIG_NAME}.tar.xz
       - ./gitea/initial_repos/${DEVOPS_NAME}.tar.xz:/tmp/initial_repos/${DEVOPS_NAME}.tar.xz
       # Time sync
       - /etc/timezone:/etc/timezone:ro
@@ -58,7 +58,7 @@ services:
   #C2:----./workdir/start.sh
   #C2:----./workdir/database_rollback.sh
   jenkins:
-    profiles: ["devops"]
+    profiles: ["devops", "all"]
     container_name: jenkins
     build:
       context: ./jenkins
@@ -76,8 +76,8 @@ services:
       - MY_DOMAIN=${MY_DOMAIN}
       - CASC_JENKINS_CONFIG=/var/jenkins_home/casc_configs
       # Pipeline variables
-      - DbMIG_REPO=${DbMIG_REPO}
-      - DbMIG_NAME=${DbMIG_NAME}
+      - DB_MIG_REPO=${DB_MIG_REPO}
+      - DB_MIG_NAME=${DB_MIG_NAME}
       - BACK_REPO=${BACK_REPO}
       - BACK_NAME=${BACK_NAME}
       - FRONT_REPO=${FRONT_REPO}
@@ -116,7 +116,7 @@ services:
 
 
   reverse-proxy:
-    profiles: ["gateway"]
+    profiles: ["gateway", "all"]
     image: nginxproxy/nginx-proxy:1.10-alpine
     container_name: reverse-proxy
     ports:

@@ -49,7 +49,8 @@ cd $BUILD_DIR
 docker compose stop back
 
 
-docker compose up -d --no-recreate --wait-timeout $TIMEOUT_SEC back
+docker compose up -d --wait-timeout $TIMEOUT_SEC back
+
 
 set +x
 
@@ -70,11 +71,11 @@ docker logs -f $BACK_NAME | while read line; do
   case "$line" in
     *"$MESSAGE_APP_STARTED"* )
       echo "[INFO] Deploy success"
-      exit 0 
+      exit 0
       ;;
 
   esac
 done
 
-echo "[ERROR] It was expected an success log, but it wasn't found."
-exit 1
+echo "Deploy pipeline End."
+

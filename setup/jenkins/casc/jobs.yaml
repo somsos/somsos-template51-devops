@@ -113,7 +113,7 @@ jobs:
 
         triggers {
           genericTrigger {
-            token("${DbMIG_NAME}-${SHARED_TOKEN}")
+            token("${DB_MIG_NAME}-${SHARED_TOKEN}")
             printPostContent(false)
             printContributedVariables(false)
             causeString('Triggered by Gitea Webhook')

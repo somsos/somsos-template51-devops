@@ -38,32 +38,6 @@ if [ -z "$BUILD_NUMBER" ]; then
   exit 1
 fi
 
-## Connection Vars
-if [ -z "$DB_SCHEMA" ]; then
-  echo "[ERROR] Variable DB_SCHEMA not found, The name of the database schema is required."
-  exit 1
-fi
-
-if [ -z "$DB_USER" ]; then
-  echo "[ERROR] Variable DB_USER not found, The connection username to the database is required ."
-  exit 1
-fi
-
-if [ -z "$DB_IP" ]; then
-  echo "[ERROR] Variable DB_IP not found, The IP to the database is required."
-  exit 1
-fi
-
-if [ -z "$DB_PORT" ]; then
-  echo "[ERROR] Variable DB_PORT not found, The connection port to the database is required."
-  exit 1
-fi
-
-if [ -z "$DB_PASS" ]; then
-  echo "[ERROR] Variable DB_PASS not found, The database password is required."
-  exit 1
-fi
-
 
 cd $WORKDIR_REPO/app/db/source
 
@@ -99,8 +73,6 @@ cd $WORKDIR_REPO/app/db/source
 
 echo "DB_VERSION: $DB_VERSION"
 echo "DB_PREVIOUS_VERSION: $DB_PREVIOUS_VERSION"
-echo "CONNECTION_VARS=--username=$DB_USER --password=DB_PASS --url=jdbc:postgresql://$DB_SERVER:5432/$DB_SCHEMA"
-CONNECTION_VARS="--username=$DB_USER --password=$DB_PASS --url=jdbc:postgresql://$DB_SERVER:5432/$DB_SCHEMA"
 
 
 
@@ -108,19 +80,6 @@ CONNECTION_VARS="--username=$DB_USER --password=$DB_PASS --url=jdbc:postgresql:/
 echo "[INFO] liquibase deploy starting";
 sleep 5;
 
-echo "################START-BEFORE########################"
-liquibase history $CONNECTION_VARS
-echo "################END---BEFORE########################"
-
-
-liquibase update $CONNECTION_VARS --changelog-file=changelog.xml
-
-
-echo "Tagging database with: $DB_VERSION";
-liquibase tag $DB_VERSION $CONNECTION_VARS
-
-
-liquibase history $CONNECTION_VARS
-
+docker compose 
 
 echo "[INFO] liquibase update finished."

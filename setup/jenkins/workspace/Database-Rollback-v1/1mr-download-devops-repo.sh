@@ -48,8 +48,8 @@ if [ -z "$DEVOPS_REPO" ]; then
 fi
 
 
-if [ -z "$DbMIG_REPO" ]; then
-  echo "[ERROR] Variable DbMIG_REPO not found, The URL to the database migrations project is required."
+if [ -z "$DB_MIG_REPO" ]; then
+  echo "[ERROR] Variable DB_MIG_REPO not found, The URL to the database migrations project is required."
   exit 1
 fi
 
@@ -91,7 +91,7 @@ echo -e "\e[42m[Success] downloaded and cleaned.\e[0m"
 REPO_DIR="$WORKDIR_BUILD/app/db/source"
 mkdir -p $REPO_DIR
 rm -rf $REPO_DIR/*   # between quotes because the last part is confused by groovy as a comment
-git clone --quiet --depth=1 --single-branch --branch main "$DbMIG_REPO" "$REPO_DIR" \
+git clone --quiet --depth=1 --single-branch --branch main "$DB_MIG_REPO" "$REPO_DIR" \
   && echo "[INFO] db-mig repository cloned."
 git -C $REPO_DIR log --oneline -n1
 rm -rf $REPO_DIR/.git/
