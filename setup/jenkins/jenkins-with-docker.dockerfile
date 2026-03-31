@@ -22,15 +22,16 @@ RUN groupadd -g 999 docker && usermod -aG docker jenkins
 COPY ./casc/plugins.txt /usr/share/jenkins/ref/plugins.txt
 RUN jenkins-plugin-cli --plugin-file /usr/share/jenkins/ref/plugins.txt
 
-COPY --from=liquibase:4.33-alpine /liquibase /liquibase
-ENV PATH="/liquibase:${PATH}"
-
 # Utils ip, nc, ping: sometime I check thinks since the perspective of a container, using this one
 RUN apt-get update && apt-get install -y tzdata iproute2 iputils-ping netcat-openbsd nano bc \
       curl postgresql-client-17 tar
 
 RUN rm -rf /var/lib/apt/lists/*
 
+# The PROBLEM with this approach it's that makes different the workflow for
+# pipeline and for developing pipeline, duplicating ways to do the same.
+# COPY --from=liquibase:4.33-alpine /liquibase /liquibase
+# ENV PATH="/liquibase:${PATH}"
 
 
 USER jenkins
