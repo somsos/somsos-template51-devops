@@ -127,35 +127,91 @@ jobs:
                 agent { label 'built-in' }
                 stages {
                    
-                  stage('Guard Rail') {
+                  stage('1/4 Guard Rail') {
                     steps {
                       input message: 'Did you already created an database backup?', ok: 'Yes, proceed!'
                     }
                   }
                   
-                  stage('1/2: Download') {
+                  stage('2/4: Download') {
                     steps {
                       sh \'\'\'
-                        source /var/jenkins_home/workspace/db-mig-deploy/1md-download-devops-repo.sh
+                        source /var/jenkins_home/workspace/Database-Deploy-v1/1md-download-devops-repo.sh
                       \'\'\'
                     }
                   }
 
 
-                  stage('2/2: Migrate') {
+                  stage('3/4: Build Image') {
                     steps {
                       sh \'\'\'
-                        source /var/jenkins_home/workspace/db-mig-deploy/2md-migrate-deploy.sh
+                        source /var/jenkins_home/workspace/Database-Deploy-v1/2md-build-image.sh
                       \'\'\'
                     }
                   }
 
+                  stage('4/4: Migrate Deploy') {
+                    steps {
+                      sh \'\'\'
+                        source /var/jenkins_home/workspace/Database-Deploy-v1/3md-migrate.sh deploy
+                      \'\'\'
+                    }
+                  }
                 }
               }
             '''.stripIndent())
           }
         }
       }
+
+  - script: >
+      pipelineJob('Database-Rollback-v1') {
+        description('Rollback database to previous version.')
+
+        definition {
+          cps {
+            script('''
+              pipeline {
+                agent { label 'built-in' }
+                stages {
+                   
+                  stage('1/4 Guard Rail') {
+                    steps {
+                      input message: 'Did you already created an database backup?', ok: 'Yes, proceed!'
+                    }
+                  }
+                  
+                  stage('2/4: Download') {
+                    steps {
+                      sh \'\'\'
+                        source /var/jenkins_home/workspace/Database-Deploy-v1/1md-download-devops-repo.sh
+                      \'\'\'
+                    }
+                  }
+
+
+                  stage('3/4: Build Image') {
+                    steps {
+                      sh \'\'\'
+                        source /var/jenkins_home/workspace/Database-Deploy-v1/2md-build-image.sh
+                      \'\'\'
+                    }
+                  }
+
+                  stage('4/4: Migrate Rollback') {
+                    steps {
+                      sh \'\'\'
+                        source /var/jenkins_home/workspace/Database-Deploy-v1/3md-migrate.sh rollback
+                      \'\'\'
+                    }
+                  }
+                }
+              }
+            '''.stripIndent())
+          }
+        }
+      }
+
 
   - script: |
       pipelineJob('Docker-Control') {
@@ -202,46 +258,6 @@ jobs:
                     }
 
                   }
-                }
-              }
-            '''.stripIndent())
-          }
-        }
-      }
-
-  - script: >
-      pipelineJob('Database-Rollback-v1') {
-        description('Rollback database to previous version.')
-
-        definition {
-          cps {
-            script('''
-              pipeline {
-                agent { label 'built-in' }
-                stages {
-                   
-                   stage('Guard Rail') {
-                      steps {
-                          input message: 'Did you already created an database backup?', ok: 'Yes, proceed!'
-                      }
-                   }
-                  
-                  stage('1/2: Download') {
-                    steps {
-                      sh \'\'\'
-                        source /var/jenkins_home/workspace/db-mig-rollback/1mr-download-devops-repo.sh
-                      \'\'\'
-                    }
-                  }
-
-                  stage('2/2: Rollback') {
-                    steps {
-                      sh \'\'\'
-                        source /var/jenkins_home/workspace/db-mig-rollback/2mr-migrate-rollback.sh
-                      \'\'\'
-                    }
-                  }
-
                 }
               }
             '''.stripIndent())

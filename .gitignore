@@ -10,33 +10,37 @@ setup/data
 
 
 **/workspace/*
-!**/workspace/back/
-**/workspace/back/*
-!**/workspace/back/*.sh
+!**/workspace/Backend-Deploy-v1/
+**/workspace/Backend-Deploy-v1/*
+!**/workspace/Backend-Deploy-v1/*.sh
 
-!**/workspace/front/
-**/workspace/front/*
-!**/workspace/front/*.sh
+!**/workspace/Frontend-Deploy-v1/
+**/workspace/Frontend-Deploy-v1/*
+!**/workspace/Frontend-Deploy-v1/*.sh
 
-!**/workspace/*/
-**/workspace/*/*
-!**/workspace/*/*.sh
+!**/workspace/Database-Rollback-v1/
+**/workspace/Database-Rollback-v1/*
+!**/workspace/Database-Rollback-v1/*.sh
 
-!**/workspace/db-mig-deploy/
-**/workspace/db-mig-deploy/*
-!**/workspace/db-mig-deploy/*.sh
+!**/workspace/Database-Deploy-v1/
+**/workspace/Database-Deploy-v1/*
+!**/workspace/Database-Deploy-v1/*.sh
+!**/workspace/Database-Deploy-v1/*.md
 
-!**/workspace/db-mig-rollback/
-**/workspace/db-mig-rollback/*
-!**/workspace/db-mig-rollback/*.sh
+!**/workspace/Database-Rollback-v1/
+**/workspace/Database-Rollback-v1/*
+!**/workspace/Database-Rollback-v1/*.sh
+!**/workspace/Database-Rollback-v1/*.md
+
+
+
+!**/workspace/Database-Backup/
+**/workspace/Database-Backup/*
+!**/workspace/Database-Backup/*.sh
 
 !**/workspace/0_scripts/
 **/workspace/0_scripts/*
 !**/workspace/0_scripts/*.sh
-
-!**/workspace/db-backup/
-**/workspace/db-backup/*
-!**/workspace/db-backup/*.sh
 
 app/*/source/*
 

@@ -92,7 +92,7 @@ services:
 # or use    "docker compose run --rm db_migrate rollback" for rollback
   db_migrate:
     profiles: ["devops-util"]
-    container_name: ${DB_MIG_NAME}
+    container_name: temp_db_migrate
     image: t51migrator:1
     build:
       context: ./db
@@ -104,61 +104,42 @@ services:
         DB_SCHEMA: ${DB_SCHEMA}
       dockerfile: migrator.dockerfile
     entrypoint: [ "bash", "/app/migrator.entrypoint.sh" ]
-
-    
-    
-    #volumes:                           # AVOIDING THIS, BECAUSE i HAD PROBLEMS WITH HOST VOLUMES AND DinD
-     # - ./db/source:/var/my_migrations
-    #depends_on:
-    #  db:                              # AVOID THIS, IT MIGHT RECREATE THE DATABASE VOLUME ¡¡DELETING!! ALL, BETTER CHECK THE LOGS
-    #    condition: service_healthy
-    
     networks:
       - t51Net
     restart: "no"
+    #volumes:                           # AVOIDING THIS, BECAUSE i HAD PROBLEMS WITH HOST VOLUMES AND DinD
+     # - ./db/source:/var/my_migrations
+    #depends_on:
+    #  db:                              # AVOID THIS, IT MIGHT RECREATE THE DATABASE VOLUME ¡¡DELETING!! ALL
+    #    condition: service_healthy
+
+
 
 
   # run it manually with: "BUILD_NUMBER=1 docker compose run --rm --no-deps db_backup"
   db_backup:
-    profiles: ["devops-util"]
-    container_name: db_backup
-    build:
-      context: ./utils
-      dockerfile: alpine-utils.dockerfile
-    image: utils:1
+    profiles: ["utils"]
+    container_name: temp_db_backup
+    image: ${DB_UTILS_IMAGE}
     environment:
       - PGPASSWORD=${DB_PASS}
-      - BUILD_NUMBER=${BUILD_NUMBER}
     volumes:
-      - ./data/db_backups:/app/backups/
-    entrypoint: [ "bash", "-c", "pg_dump -h ${DB_IP} -U ${DB_USER} -d ${DB_SCHEMA} -F p > /app/backups/db_backup_$(echo $BUILD_NUMBER)_$(date +'%Y-%m-%d_%H-%M-%S').sql" ]
+      - ../workspace/db_backups:/app/backups
+    entrypoint: [ "sh", "-c", "pg_dump -h ${DB_IP} -U ${DB_USER} -d ${DB_SCHEMA} -F p > /app/backups/backup_$(date +'%Y-%m-%d_%H-%M-%S').sql" ]
     networks:
       - t51Net
-    depends_on:
-      db:
-        condition: service_healthy
     restart: "no"
 
-
-
-  # run it manually with: "BACKUP_NAME=1 docker compose run --rm --no-deps db_backup"
+# Example: "docker compose run --rm db_restore backup_name.sql"
   db_restore:
-    profiles: ["devops-util"]
-    container_name: db_restore
-    build:
-      context: ./utils
-      dockerfile: alpine-utils.dockerfile
-    image: utils:1
+    profiles: ["utils"]
+    container_name: temp_db_restore
+    image: ${DB_UTILS_IMAGE}
     environment:
       - PGPASSWORD=${DB_PASS}
-      - BACKUP_NAME=${BACKUP_NAME}
     volumes:
-      - ./data/db_backups:/app/backups/:ro
-    working_dir: /app/backups
-    entrypoint: [ "bash", "-c", "psql -U ${DB_USER} -d ${DB_SCHEMA} < ./${BACKUP_NAME}" ]
+      - ../workspace/db_backups:/app/backups/:ro
+    entrypoint: ["sh", "-c", "psql -h ${DB_IP} -U ${DB_USER} -d ${DB_SCHEMA} < /app/backups/$0"]
     networks:
       - t51Net
-    depends_on:
-      db:
-        condition: service_healthy
     restart: "no"

@@ -26,6 +26,11 @@
   - [ ] Deploy and Rollback 3 layers
 - [ ] Restore Backend
 - [ ] Restore Frontend
+- [ ] Security
+  - [ ] Hide .env passwords 
+    - [ ] Check how it works [varLook](https://github.com/alhenry/varlook)
+
+
 
 
 ## Resume

@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-#set -x # show executed lines
+set -x # show executed lines
 
 
 # ######## introduction
@@ -22,7 +22,7 @@ fi
 echo -e "\e[42m[INFO] Running in: $ENV_TYPE\e[0m"
 
 
-WORKDIR_DOC="$DEVOPS_WORKDIR/db-mig-rollback"
+WORKDIR_DOC="$WORKSPACE/$BUILD_NUMBER"
 
 
 
@@ -47,7 +47,6 @@ if [ -z "$DEVOPS_REPO" ]; then
   exit 1
 fi
 
-
 if [ -z "$DB_MIG_REPO" ]; then
   echo "[ERROR] Variable DB_MIG_REPO not found, The URL to the database migrations project is required."
   exit 1
@@ -56,7 +55,8 @@ fi
 
 
 
-WORKDIR_BUILD="$WORKDIR_DOC/$BUILD_NUMBER"
+WORKDIR_BUILD="$WORKSPACE/$BUILD_NUMBER"
+
 rm -fr $WORKDIR_BUILD
 git clone --quiet --depth=1 --single-branch --branch main "$DEVOPS_REPO" "$WORKDIR_BUILD" \
   && echo -e "\e[42m[INFO] Devops repo cloned.\e[0m"
@@ -64,19 +64,21 @@ git -C $WORKDIR_BUILD log --oneline -n1
 
 
 
-# ######## Remove unnecessary things (CAUTION: Keep in sync with back & db_mig/1-download.sh
+# ######## Remove unnecessary things
+# root directory
 rm -rf $WORKDIR_BUILD/.git/
 rm -rf $WORKDIR_BUILD/docs/
 rm -rf $WORKDIR_BUILD/z_*
 rm -rf $WORKDIR_BUILD/README.md
 rm -rf $WORKDIR_BUILD/.gitignore
 
+# setup directory
 rm -rf $WORKDIR_BUILD/setup/gitea
 rm -rf $WORKDIR_BUILD/setup/jenkins
 rm -rf $WORKDIR_BUILD/setup/secrets
 rm -rf $WORKDIR_BUILD/setup/shared
 
-
+# app directory
 # rm -rf $WORKDIR_BUILD/app/db/      # We keep this one
 rm -rf $WORKDIR_BUILD/app/back/
 rm -rf $WORKDIR_BUILD/app/front/

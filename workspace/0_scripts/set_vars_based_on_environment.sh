@@ -8,8 +8,7 @@
 # INPUT
 #   $1
 
-
-function based_on_environment_set_variables {
+function set_vars_based_on_environment {
     if [ -n "$JENKINS_URL" ]; then
         ENV_TYPE="JENKINS"
         source /var/jenkins_home/workspace/.env
