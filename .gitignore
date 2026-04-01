@@ -25,7 +25,11 @@ setup/data
 !**/workspace/Database-Deploy-v1/
 **/workspace/Database-Deploy-v1/*
 !**/workspace/Database-Deploy-v1/*.sh
-!**/workspace/Database-Deploy-v1/*.md
+
+!**/workspace/Docker-Control/
+**/workspace/Docker-Control/*
+!**/workspace/Docker-Control/*.sh
+
 
 !**/workspace/Database-Rollback-v1/
 **/workspace/Database-Rollback-v1/*

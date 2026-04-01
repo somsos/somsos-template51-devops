@@ -14,7 +14,7 @@ elif [ -f /.dockerenv ]; then
 
 elif [ "$(ps -p 1 -o comm=)" = "systemd" ] || [ "$(ps -p 1 -o comm=)" = "init" ]; then
     ENV_TYPE="HOST"
-    DEVOPS_WORKDIR="/home/m51/mine/t51/devops/setup/jenkins/workspace"
+    WORKSPACE="/home/m51/mine/t51/devops/setup/jenkins/workspace"
     DEVOPS_REPO="ssh://git@gitea.mariomv-local.org:222/mario1/t51DevOps.git"
     BUILD_NUMBER="0.1-test"
     WORKSPACE="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )" # PATH of the SCRIPT

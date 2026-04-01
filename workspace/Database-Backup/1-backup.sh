@@ -14,7 +14,6 @@ elif [ -f /.dockerenv ]; then
 
 elif [ "$(ps -p 1 -o comm=)" = "systemd" ] || [ "$(ps -p 1 -o comm=)" = "init" ]; then
     ENV_TYPE="HOST"
-    DEVOPS_WORKDIR="/home/m51/mine/t51/devops/setup/jenkins/workspace"
     DEVOPS_REPO="ssh://git@gitea.mariomv-local.org:222/mario1/t51DevOps.git"
     BUILD_NUMBER="0.1-test"
 fi
@@ -25,8 +24,8 @@ echo -e "\e[42m[INFO] Running in: $ENV_TYPE\e[0m"
 
 
 # ######## Validate dependencies
-if [ -z "$DEVOPS_WORKDIR" ]; then
-  echo "[ERROR] Variable DEVOPS_WORKDIR not found, The path to the devops workdir is required."
+if [ -z "$WORKSPACE" ]; then
+  echo "[ERROR] Variable WORKSPACE not found, The path to the devops workdir is required."
   exit 1
 fi
 
@@ -65,9 +64,7 @@ fi
 echo "CONNECTION_VARS=--username=$DB_USER --password=DB_PASS --url=jdbc:postgresql://$DB_SERVER:5432/$DB_SCHEMA"
 
 
-WORKDIR_REPO="$DEVOPS_WORKDIR/Database-Backup"
-
-mkdir -p $WORKDIR_REPO
+mkdir -p $WORKSPACE
 
 NOW_DATE="$(date +'%Y-%m-%d_%H-%M-%S')"
 BACKUP_FILE="$WORKDIR_REPO/backup_$(echo $BUILD_NUMBER)_$(echo $NOW_DATE).sql"

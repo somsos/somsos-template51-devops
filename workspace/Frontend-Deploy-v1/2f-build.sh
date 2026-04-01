@@ -16,7 +16,7 @@ elif [ -f /.dockerenv ]; then
 
 elif [ "$(ps -p 1 -o comm=)" = "systemd" ] || [ "$(ps -p 1 -o comm=)" = "init" ]; then
     ENV_TYPE="HOST"
-    DEVOPS_WORKDIR="/home/m51/mine/t51/devops/setup/jenkins/workspace"
+    WORKSPACE="/home/m51/mine/t51/devops/setup/jenkins/workspace"
     DEVOPS_REPO="ssh://git@gitea.mariomv-local.org:222/mario1/t51DevOps.git"
     BUILD_NUMBER="0.1-test"
 fi
@@ -24,13 +24,11 @@ fi
 echo -e "\e[42m[INFO] Running in: $ENV_TYPE\e[0m"
 
 
-FRONT_WORKDIR=$DEVOPS_WORKDIR/Frontend-Deploy-v1
-
-WORKDIR_BUILD="$FRONT_WORKDIR/$BUILD_NUMBER"
+WORKDIR_BUILD="$WORKSPACE/$BUILD_NUMBER"
 
 
-if [ -z "$DEVOPS_WORKDIR" ]; then
-  echo "[ERROR] Variable DEVOPS_WORKDIR not found, The path to the devops workdir is required."
+if [ -z "$WORKSPACE" ]; then
+  echo "[ERROR] Variable WORKSPACE not found, The path to the devops workdir is required."
   exit 1
 fi
 

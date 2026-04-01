@@ -2,33 +2,25 @@
 set -e
 set -x # show executed lines
 
-echo "param-1: $1"
+# ENTRIES
+#    $1: Action to do
+#    $2: Tag for the version
+
+echo "ACTION: $1"
+echo "TAG:: $2"
 if [[ "$1" != "deploy" && "$1" != "rollback" && "$1" != "history" ]]; then
-    echo "set first parameter to either -deploy- or -rollback-"
+    echo "[ERROR]* set first parameter to either -deploy- or -rollback-"
     exit 1
 fi
 
+if [[ ! -n "$2" && "$2" =~ ^-?[0-9]+$ ]]; then
+    echo "[ERROR] Second parameter (the tag of the version) must be a number"
+fi
 
-
-### GET VERSION
-    # Check if VERSION is a valid integer
-    if  [ ! -f "./VERSION" ]; then
-        echo "[ERROR] File VERSION not found and it's required."
-        exit 1
-    fi
-
-    DB_VERSION=$(head -n 1 "./VERSION" | tr -d '[:space:]')
-    echo "1-DB_VERSION: $DB_VERSION"
-    
-    if ! [[ $DB_VERSION =~ ^[0-9]+$ ]]; then
-        echo "[ERROR] Invalid format: version is not a number"
-        exit 1
-    fi
-
-    # Compute previous version
-    DB_PREVIOUS_VERSION=$( echo "$DB_VERSION - 1" | bc )
-    echo "DB_PREVIOUS_VERSION: $DB_PREVIOUS_VERSION"
-    echo "DB_VERSION: $DB_VERSION"
+DB_VERSION="$2"
+DB_NEW_VERSION=$( echo "$DB_VERSION + 1" | bc )
+echo "DB_NEW_VERSION: $DB_NEW_VERSION"
+echo "DB_VERSION: $DB_VERSION"
 
 
 
@@ -37,8 +29,7 @@ if [ "$1" = "deploy" ]; then
     sleep 5;
     liquibase update
 
-    echo "Tagging database with: $DB_VERSION";
-    liquibase tag $DB_VERSION
+    liquibase tag $DB_NEW_VERSION
 
     liquibase history
 
@@ -54,10 +45,9 @@ if [ "$1" = "rollback" ]; then
     liquibase history
     echo "################END---BEFORE########################"
 
-    liquibase rollback $DB_PREVIOUS_VERSION 
+    liquibase rollback $DB_VERSION 
     
-    echo "Tagging database with: $DB_PREVIOUS_VERSION";
-    liquibase tag $DB_PREVIOUS_VERSION
+    liquibase tag $DB_VERSION
 
     liquibase history
 

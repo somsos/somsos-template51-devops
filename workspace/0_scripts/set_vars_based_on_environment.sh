@@ -19,7 +19,6 @@ function set_vars_based_on_environment {
 
     elif [ "$(ps -p 1 -o comm=)" = "systemd" ] || [ "$(ps -p 1 -o comm=)" = "init" ]; then
         ENV_TYPE="HOST"
-        DEVOPS_WORKDIR="/home/m51/mine/t51/devops/setup/jenkins/workspace"
         DEVOPS_REPO="ssh://git@gitea.mariomv-local.org:222/mario1/t51DevOps.git"
         BUILD_NUMBER="0.1-test"
     fi

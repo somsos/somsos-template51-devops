@@ -96,12 +96,6 @@ services:
     image: t51migrator:1
     build:
       context: ./db
-      args:
-        DB_MIG_IMAGE: ${DB_MIG_IMAGE}
-        DB_USER: ${DB_USER}
-        DB_PASS: ${DB_PASS}
-        DB_SERVER: ${DB_SERVER}
-        DB_SCHEMA: ${DB_SCHEMA}
       dockerfile: migrator.dockerfile
     entrypoint: [ "bash", "/app/migrator.entrypoint.sh" ]
     networks:
@@ -122,10 +116,14 @@ services:
     container_name: temp_db_backup
     image: ${DB_UTILS_IMAGE}
     environment:
+      - PGUSER=t51DB_user
       - PGPASSWORD=${DB_PASS}
+      - PGDATABASE=t51DB_schema
+      - PGHOST=${DB_SERVER}
+      - PGPORT=5432
     volumes:
       - ../workspace/db_backups:/app/backups
-    entrypoint: [ "sh", "-c", "pg_dump -h ${DB_IP} -U ${DB_USER} -d ${DB_SCHEMA} -F p > /app/backups/backup_$(date +'%Y-%m-%d_%H-%M-%S').sql" ]
+    entrypoint: [ "sh", "-c", "pg_dump -F p > /app/backups/backup_$(date +'%Y-%m-%d_%H-%M-%S').sql" ]
     networks:
       - t51Net
     restart: "no"
@@ -136,10 +134,32 @@ services:
     container_name: temp_db_restore
     image: ${DB_UTILS_IMAGE}
     environment:
+      - PGUSER=t51DB_user
       - PGPASSWORD=${DB_PASS}
+      - PGDATABASE=t51DB_schema
+      - PGHOST=${DB_SERVER}
+      - PGPORT=5432
     volumes:
       - ../workspace/db_backups:/app/backups/:ro
-    entrypoint: ["sh", "-c", "psql -h ${DB_IP} -U ${DB_USER} -d ${DB_SCHEMA} < /app/backups/$0"]
+    entrypoint: ["sh", "-c", "psql < /app/backups/$0"]
+    networks:
+      - t51Net
+    restart: "no"
+
+  db_get_last_tag:
+    profiles: ["utils"]
+    container_name: temp_db_restore
+    image: ${DB_UTILS_IMAGE}
+    environment:
+      - PGUSER=t51DB_user
+      - PGPASSWORD=${DB_PASS}
+      - PGDATABASE=t51DB_schema
+      - PGHOST=${DB_SERVER}
+      - PGPORT=5432
+    volumes:
+      - ../workspace/db_backups:/app/backups/:ro
+      - ./db/psql.entrypoint.sh:/app/psql.entrypoint.sh
+    entrypoint: ["sh", "./app/psql.entrypoint.sh"]
     networks:
       - t51Net
     restart: "no"
