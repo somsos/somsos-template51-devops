@@ -6,7 +6,8 @@ setup/data
 **/*.secret.*
 **/*.secret
 
-
+**/backups/*
+!**/backups/*.md
 
 
 **/workspace/*
