@@ -8,20 +8,15 @@
 # INPUT
 #   $1
 
-function set_vars_based_on_environment {
+function get_environment {
     if [ -n "$JENKINS_URL" ]; then
-        ENV_TYPE="JENKINS"
-        source /var/jenkins_home/workspace/.env
+        echo "JENKINS"
         
     elif [ -f /.dockerenv ]; then
-        ENV_TYPE="CONTAINER-SHELL"
-        source /var/jenkins_home/workspace/.env
+        echo "CONTAINER-SHELL"
 
     elif [ "$(ps -p 1 -o comm=)" = "systemd" ] || [ "$(ps -p 1 -o comm=)" = "init" ]; then
-        ENV_TYPE="HOST"
-        DEVOPS_REPO="ssh://git@gitea.mariomv-local.org:222/mario1/t51DevOps.git"
-        BUILD_NUMBER="0.1-test"
+        echo "HOST"
+        
     fi
-    
-    echo $ENV_TYPE
 }

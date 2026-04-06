@@ -88,58 +88,41 @@ services:
 
 ## Maintenance
 
-# run with: "docker compose run --rm db_migrate deploy" for deploy
-# or use    "docker compose run --rm db_migrate rollback" for rollback
-  db_migrate:
+# OPTIONS: 
+#   docker compose run --rm db_utils deploy
+#   docker compose run --rm db_utils rollback
+#   docker compose run --rm db_utils backup
+#   docker compose run --rm db_utils restore
+  db_utils:
     profiles: ["devops-util"]
     container_name: temp_db_migrate
-    image: t51migrator:1
+    image: db_utils:1
     build:
-      context: ./db
       args:
         DB_MIG_IMAGE: ${DB_MIG_IMAGE}
-        DB_USER: ${DB_USER}
-        DB_PASS: ${DB_PASS}
-        DB_SERVER: ${DB_SERVER}
-        DB_SCHEMA: ${DB_SCHEMA}
-      dockerfile: migrator.dockerfile
-    entrypoint: [ "bash", "/app/migrator.entrypoint.sh" ]
+      context: ./db
+      dockerfile: ./db_utils.dockerfile
+    environment:
+      - PGUSER=${DB_USER}
+      - PGPASSWORD=${DB_PASS}
+      - PGDATABASE=${DB_SCHEMA}
+      - PGHOST=${DB_SERVER}
+      - PGPORT=5432
+      - LIQUIBASE_COMMAND_USERNAME=${DB_USER}
+      - LIQUIBASE_COMMAND_PASSWORD=${DB_PASS}
+      - LIQUIBASE_COMMAND_URL=jdbc:postgresql://${DB_SERVER}:5432/${DB_SCHEMA}
+      - LIQUIBASE_COMMAND_CHANGELOG_FILE=./changelog.xml
+      - TZ=America/Mexico_City
+    entrypoint: [ "bash", "../db_utils.entrypoint.sh" ]
     networks:
       - t51Net
     restart: "no"
-    #volumes:                           # AVOIDING THIS, BECAUSE i HAD PROBLEMS WITH HOST VOLUMES AND DinD
-     # - ./db/source:/var/my_migrations
+    volumes:
+      - ./db/db_utils.entrypoint.sh:/t51/app/db/db_utils.entrypoint.sh
+      - ./db/source:/t51/app/db/source
+      - ../workspace/Database-Backup:/t51/app/db/backups
+      - /etc/localtime:/etc/localtime:ro
     #depends_on:
     #  db:                              # AVOID THIS, IT MIGHT RECREATE THE DATABASE VOLUME ¡¡DELETING!! ALL
     #    condition: service_healthy
 
-
-
-
-  # run it manually with: "BUILD_NUMBER=1 docker compose run --rm --no-deps db_backup"
-  db_backup:
-    profiles: ["utils"]
-    container_name: temp_db_backup
-    image: ${DB_UTILS_IMAGE}
-    environment:
-      - PGPASSWORD=${DB_PASS}
-    volumes:
-      - ../workspace/db_backups:/app/backups
-    entrypoint: [ "sh", "-c", "pg_dump -h ${DB_IP} -U ${DB_USER} -d ${DB_SCHEMA} -F p > /app/backups/backup_$(date +'%Y-%m-%d_%H-%M-%S').sql" ]
-    networks:
-      - t51Net
-    restart: "no"
-
-# Example: "docker compose run --rm db_restore backup_name.sql"
-  db_restore:
-    profiles: ["utils"]
-    container_name: temp_db_restore
-    image: ${DB_UTILS_IMAGE}
-    environment:
-      - PGPASSWORD=${DB_PASS}
-    volumes:
-      - ../workspace/db_backups:/app/backups/:ro
-    entrypoint: ["sh", "-c", "psql -h ${DB_IP} -U ${DB_USER} -d ${DB_SCHEMA} < /app/backups/$0"]
-    networks:
-      - t51Net
-    restart: "no"

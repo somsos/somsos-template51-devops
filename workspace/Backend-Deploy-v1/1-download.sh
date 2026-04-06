@@ -19,11 +19,11 @@ else
   echo "[INFO] Running inside Jenkins, because var JOB_NAME exists."
 fi
 
-BUILD_DIR="$DEVOPS_WORKDIR/Backend-Deploy-v1/$BUILD_NUMBER"
+BUILD_DIR="$WORKSPACE/$BUILD_NUMBER"
 BUILD_DIR_BACK="$BUILD_DIR/app/back/source"
 
-if [ -z "$DEVOPS_WORKDIR" ]; then
-  echo "[ERROR] Variable \$DEVOPS_WORKDIR not found, The path to the devops workdir is required."
+if [ -z "$WORKSPACE" ]; then
+  echo "[ERROR] Variable \$WORKSPACE not found, The path to the devops workdir is required."
   exit 1
 fi
 

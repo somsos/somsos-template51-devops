@@ -83,7 +83,6 @@ services:
       - FRONT_REPO=${FRONT_REPO}
       - FRONT_NAME=${FRONT_NAME}
       - DEVOPS_REPO=${DEVOPS_REPO}
-      - DEVOPS_WORKDIR=${DEVOPS_WORKDIR}
       - VERSION=${VERSION}
       - SHARED_TOKEN=${SHARED_TOKEN}
     expose:
@@ -93,8 +92,8 @@ services:
 ####### REPO LOCATIONS ########
       - ./jenkins/vol-jenkins_home:/var/jenkins_home        # all jenkins main
       - ./jenkins/casc:/var/jenkins_home/casc_configs:ro    # CasC (Configuration as Code)
-      - ../workspace:${DEVOPS_WORKDIR}                      # executions and generations of DevOps Process
-      - ../.env:${DEVOPS_WORKDIR}/.env:ro         # for testing scripts in container shell terminal
+      - ../workspace:/var/jenkins_home/workspace                      # executions and generations of DevOps Process
+      - ../.env:/var/jenkins_home/workspace/.env:ro         # for testing scripts in container shell terminal
 # SSH conf to add gitea as reliable server
       - ./secrets/t51_noPass.priv:/var/jenkins_home/.ssh/t51_noPass.priv:ro
       - ./shared/ssh_config:/var/jenkins_home/.ssh/config
