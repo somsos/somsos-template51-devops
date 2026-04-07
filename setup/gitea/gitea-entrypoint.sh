@@ -32,7 +32,7 @@ su-exec git gitea admin user create \
 
 TOKEN=$(su-exec git gitea admin user generate-access-token \
   --username "${GITEA_ADMIN_USER}" \
-  --token-name "$(tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 1)" \
+  --token-name "$(tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 10)" \
   | awk '{print $NF}')
 
 # 5. Add the SSH Key via API
@@ -69,7 +69,7 @@ function addRepo {
 
   TOKEN_TWO=$(su-exec git gitea admin user generate-access-token \
   --username "${GITEA_ADMIN_USER}" \
-  --token-name "$(tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 1)" \
+  --token-name "$(tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 10)" \
   | awk '{print $NF}')
     
     # Attempt to create the repo via API

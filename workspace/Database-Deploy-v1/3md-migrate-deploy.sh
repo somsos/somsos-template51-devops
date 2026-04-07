@@ -37,4 +37,5 @@ WORKDIR_REPO="$WORKSPACE/$BUILD_NUMBER"
 
 cd $WORKDIR_REPO
 
-docker compose run --rm db_utils deploy
+docker compose run --rm --name temp_db_utils db_utils deploy
+

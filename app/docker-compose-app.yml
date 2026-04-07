@@ -88,11 +88,15 @@ services:
 
 ## Maintenance
 
+# CAUTION: 
+#   Do not try to use host-volumes to get the source code, because DinD and
+#   volumes makes things complicated. It happened me that it was working and
+#   suddenly stopped working. better use temporal images.
 # OPTIONS: 
-#   docker compose run --rm db_utils deploy
-#   docker compose run --rm db_utils rollback
-#   docker compose run --rm db_utils backup
-#   docker compose run --rm db_utils restore
+#   docker compose run --rm --build --name temp db_utils deploy
+#   docker compose run --rm --build --name temp db_utils rollback
+#   docker compose run --rm --build --name temp db_utils backup
+#   docker compose run --rm --build --name temp db_utils restore
   db_utils:
     profiles: ["devops-util"]
     container_name: temp_db_migrate
@@ -113,13 +117,11 @@ services:
       - LIQUIBASE_COMMAND_URL=jdbc:postgresql://${DB_SERVER}:5432/${DB_SCHEMA}
       - LIQUIBASE_COMMAND_CHANGELOG_FILE=./changelog.xml
       - TZ=America/Mexico_City
-    entrypoint: [ "bash", "../db_utils.entrypoint.sh" ]
+    entrypoint: [ "bash", "/db_utils.entrypoint.sh" ]
     networks:
       - t51Net
     restart: "no"
     volumes:
-      - ./db/db_utils.entrypoint.sh:/t51/app/db/db_utils.entrypoint.sh
-      - ./db/source:/t51/app/db/source
       - ../workspace/Database-Backup:/t51/app/db/backups
       - /etc/localtime:/etc/localtime:ro
     #depends_on:

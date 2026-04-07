@@ -127,13 +127,13 @@ jobs:
                 agent { label 'built-in' }
                 stages {
                    
-                  stage('1/3 Guard Rail') {
+                  stage('1/4 Guard Rail') {
                     steps {
                       input message: 'Did you already created an database backup?', ok: 'Yes, proceed!'
                     }
                   }
                   
-                  stage('2/3: Download') {
+                  stage('2/4: Download') {
                     steps {
                       sh \'\'\'
                         source $WORKSPACE/1md-download-devops-repo.sh
@@ -142,10 +142,19 @@ jobs:
                   }
 
 
-                  stage('3/3: Build Image') {
+                  stage('3/4: Build Image') {
                     steps {
                       sh \'\'\'
-                        source $WORKSPACE/2md-migrate-deploy.sh
+                        source $WORKSPACE/2md-build-image.sh
+                      \'\'\'
+                    }
+                  }
+
+
+                  stage('4/4: Migrate Deploy') {
+                    steps {
+                      sh \'\'\'
+                        source $WORKSPACE/3md-migrate-deploy.sh
                       \'\'\'
                     }
                   }
