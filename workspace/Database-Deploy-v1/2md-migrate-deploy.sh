@@ -17,7 +17,6 @@ elif [ "$(ps -p 1 -o comm=)" = "systemd" ] || [ "$(ps -p 1 -o comm=)" = "init" ]
     WORKSPACE="/home/m51/mine/t51/devops/setup/jenkins/workspace"
     DEVOPS_REPO="ssh://git@gitea.mariomv-local.org:222/mario1/t51DevOps.git"
     BUILD_NUMBER="0.1-test"
-    WORKSPACE="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )" # PATH of the SCRIPT
 fi
 
 echo -e "\e[42m[INFO] Running in: $ENV_TYPE\e[0m"
@@ -34,15 +33,8 @@ if [ -z "$BUILD_NUMBER" ]; then
   exit 1
 fi
 
-if [ -z "$1" ]; then
-  echo "[ERROR] 1 argument required in file execution required, e.g. source this-file.sh required-param."
-  exit 1
-fi
+WORKDIR_REPO="$WORKSPACE/$BUILD_NUMBER"
 
-cd "$WORKSPACE/$BUILD_NUMBER"
+cd $WORKDIR_REPO
 
-echo "[INFO] liquibase migration starting";
-
-docker compose run --rm --name temp db_migrate $1
-
-echo "[INFO] liquibase update finished."
+docker compose run --rm db_utils deploy

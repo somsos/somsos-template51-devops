@@ -140,6 +140,17 @@ function addWebHook {
     exit 1
   fi
 
+
+  # Check if exists the webhook already
+  TOKEN_A=$(su-exec git gitea admin user generate-access-token \
+    --username "${GITEA_ADMIN_USER}" \
+    --token-name "$(tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 10)" \
+    | awk '{print $NF}')
+  if curl -s -H "Authorization: token $TOKEN_A" "$HOOK_URL" | grep -qF "\"url\":\"${HOOK_JENKINS}\""; then
+    echo "[INFO] Webhook for $1 already exists. Skipping."
+    return 0
+  fi
+
   TOKEN=$(su-exec git gitea admin user generate-access-token \
     --username "${GITEA_ADMIN_USER}" \
     --token-name "$(tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 10)" \
