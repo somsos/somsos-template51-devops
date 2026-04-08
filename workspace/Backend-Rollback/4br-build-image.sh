@@ -17,16 +17,22 @@ elif [ "$ENV" = "HOST"  ]; then
     BUILD_NUMBER=10
 fi
 
-source "../0_scripts/get_repo_dir.sh"
-REPO_DIR=$(get_repo_dir)
-echo "[INFO] REPO_DIR: $REPO_DIR"
 
+if [ -z "$WORKSPACE" ]; then
+  echo "[ERROR] Variable WORKSPACE not found, The path to the devops workdir is required."
+  exit 1
+fi
 
-source "../0_scripts/download_devops_repo.sh"
-download_devops_repo $DEVOPS_REPO $REPO_DIR "back"
+if [ -z "$BUILD_NUMBER" ]; then
+  echo "[ERROR] Variable BUILD_NUMBER not found, The incremental number of builds is requiered."
+  exit 1
+fi
 
+BUILD_DIR="$WORKSPACE/$BUILD_NUMBER"
 
-BACK_REPO_DIR="$REPO_DIR/app/back/source"
-source "../0_scripts/download_back_repo.sh"
-download_back_repo $BACK_REPO $BACK_REPO_DIR "git"
+cd $BUILD_DIR && echo "[INFO] moved to $BUILD_DIR"
+
+docker compose build back
+
+docker images --format 'table {{.Repository}}:{{.Tag}}\t{{.Size}}\t{{.CreatedAt}}' | grep -i $BACK_NAME
 

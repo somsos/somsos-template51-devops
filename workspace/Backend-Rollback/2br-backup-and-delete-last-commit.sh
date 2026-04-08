@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-
 source "../0_scripts/get_environment.sh"
 ENV=$(get_environment)
 if [ "$ENV" = "JENKINS"  ]; then
@@ -12,6 +11,7 @@ elif [ "$ENV" = "HOST"  ]; then
     echo "In DOCKER HOST"
     source "../../.env"
     WORKSPACE="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+    BUILD_NUMBER=10
 fi
 
 source "../0_scripts/get_repo_dir.sh"
@@ -30,5 +30,24 @@ rm ./temp1.txt
 echo -e "\e[42m[INFO] TO_DELETE     : $TO_DELETE\e[0m"
 echo -e "\e[42m[INFO] TO_RE_DEPLOY  : $TO_RE_DEPLOY\e[0m"
 
-git -C $BACK_REPO_DIR reset HEAD^
-git -C $BACK_REPO_DIR push local +main^1:main
+# Checking path
+# CAUTION: It happened me that as the path was wrong the command did a revert
+# in the wrong path
+
+if [ -z "$BACK_REPO_DIR" ]; then
+    echo "[ERROR] BACK_REPO_DIR variable empty"
+    exit 1;
+fi
+
+if [[ ! "$BACK_REPO_DIR" == *"/back/"* ]]; then
+    echo "[ERROR] BACK_REPO_DIR seems incorrect check path. CAUTION: if the path is bad might revert other repository in upper paths"
+    exit 1;
+fi
+
+echo "[INFO] Last commit backup created."
+mv $BACK_REPO_DIR $BACK_REPO_DIR-backup
+
+
+echo "[INFO] [START-1xs3cd7] Deleting last commit in repository."
+git -C $BACK_REPO_DIR-backup push origin +main^1:main
+echo "[INFO] [END---1xs3cd7] Deleting last commit in repository."

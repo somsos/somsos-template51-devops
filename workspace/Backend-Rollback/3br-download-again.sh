@@ -22,9 +22,6 @@ REPO_DIR=$(get_repo_dir)
 echo "[INFO] REPO_DIR: $REPO_DIR"
 
 
-source "../0_scripts/download_devops_repo.sh"
-download_devops_repo $DEVOPS_REPO $REPO_DIR "back"
-
 
 BACK_REPO_DIR="$REPO_DIR/app/back/source"
 source "../0_scripts/download_back_repo.sh"
