@@ -2,20 +2,12 @@
 
 ## Doing (First one is the current task)
 
-- [ ] Return the docker compose command for database migrate deploy and rollback.
-  - [ ] One Layer to download
-  - [ ] Other layer to migrate/rollback
-- [ ] Return the docker compose command for database backup and restore.
-- [ ] Design idea of incremental versioning using files, e.g.,  back/VERSION
-- [ ] CasC in Gitea to create webhook to trigger Jenkins pipelines
-  - [ ] Deploy
-    - [ ] Back D
-    - [ ] Front D
-    - [ ] Database D
-  - [ ] Rollback
-    - [ ] Back R
-    - [ ] Front R
-    - [ ] Database R
+- [ ] Create pipeline/button for Backend Rollback (I already have the bash scripts)
+
+- [ ] Create scripts/commands/pipeline for Frontend Rollback
+
+- [ ] Add notes why I'm not using webhook for rollback and the alternative of using `revert`.
+
 - [ ] Create scenarios where I need to use all the DevOps features
   - [ ] Deploy and Rollback by layer
     - [ ] Back
@@ -23,9 +15,16 @@
     - [ ] Database
   - [ ] Deploy and Rollback back and front
   - [ ] Deploy and Rollback back and database
-  - [ ] Deploy and Rollback 3 layers
+  - [ ] Deploy and Rollback the 3 layers
+
+- [ ] Research how to use docker image registry for containers app backup
+
+- [ ] Backup Backend
+- [ ] Backup Frontend
+
 - [ ] Restore Backend
 - [ ] Restore Frontend
+
 - [ ] Security
   - [ ] Hide .env passwords 
     - [ ] Check how it works [varLook](https://github.com/alhenry/varlook)
@@ -120,3 +119,15 @@ posible.
     of mounting a volume the files were not accesible
 - [X] DbMig Backup
 - [X] DbMig Restore Backup
+- [X] Return the docker compose command for database migrate deploy and rollback.
+  - [X] One Layer to download
+  - [X] Other layer to migrate/rollback
+- [X] Return the docker compose command for database backup and restore.
+- [X] Design idea of incremental versioning using files, e.g.,  back/VERSION
+- [X] CasC in Gitea to create webhook to trigger Jenkins pipelines
+  - [X] Deploy
+    - [X] Back D
+    - [X] Front D
+    - [X] Database D
+- [X] Create scripts/commands/pipeline for Frontend Database
+- [X] Create scripts/commands/pipeline for Backend Rollback

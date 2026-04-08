@@ -15,10 +15,16 @@ function download_devops_repo {
 
     # Removing unnecessary folders and files in app
     rm -rf $2/.git/
-    rm -rf $2/setup/
     rm -rf $2/docs/
     rm -rf $2/README.md
     rm -rf $2/.gitignore
+
+    # Delete all setup folder except for docker-compose file
+    mv $2/setup/docker-compose-devops.yml $2/docker-compose-devops.yml
+    rm -rf $2/setup/
+    mkdir $2/setup/
+    mv $2/docker-compose-devops.yml $2/setup
+    
 
     if [ "$3" = "back" ]; then
         rm -rf $2/app/db/

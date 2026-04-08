@@ -54,7 +54,7 @@ docker compose up -d --wait-timeout $TIMEOUT_SEC back
 
 set +x
 
-
+# CAUTION: duplicated code with backend rollback
 MESSAGE_APP_STARTED="Started AdapterApplication in"
 START_TIME="$(date -u +%s)"
 docker logs -f $BACK_NAME | while read line; do
