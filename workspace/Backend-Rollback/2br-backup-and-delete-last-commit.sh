@@ -49,5 +49,7 @@ mv $BACK_REPO_DIR $BACK_REPO_DIR-backup
 
 
 echo "[INFO] [START-1xs3cd7] Deleting last commit in repository."
-git -C $BACK_REPO_DIR-backup push origin +main^1:main
+set -x
+git -C $BACK_REPO_DIR-backup push --force-with-lease origin +main^1:main
+set +x
 echo "[INFO] [END---1xs3cd7] Deleting last commit in repository."
