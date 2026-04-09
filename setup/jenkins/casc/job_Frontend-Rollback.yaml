@@ -1,0 +1,25 @@
+jobs:
+  - script: >
+      pipelineJob('Frontend-Rollback') {
+
+        definition {
+          cps {
+            script('''
+              pipeline {
+                agent { label 'built-in' }
+                stages {
+                  
+                  stage('1/X: XXXXXXXX') {
+                    steps {
+                      sh \'\'\'
+                        source $WORKSPACE/XXXXXXX
+                      \'\'\'
+                    }
+                  }
+
+                }
+              }
+            '''.stripIndent())
+          }
+        }
+      }

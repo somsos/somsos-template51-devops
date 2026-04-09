@@ -2,8 +2,6 @@
 
 ## Doing (First one is the current task)
 
-- [ ] Create pipeline/button for Backend Rollback (I already have the bash scripts)
-
 - [ ] Create scripts/commands/pipeline for Frontend Rollback
 
 - [ ] Add notes why I'm not using webhook for rollback and the alternative of using `revert`.
@@ -131,3 +129,4 @@ posible.
     - [X] Database D
 - [X] Create scripts/commands/pipeline for Frontend Database
 - [X] Create scripts/commands/pipeline for Backend Rollback
+- [ ] Create pipeline/button for Backend Rollback (I already have the bash scripts)

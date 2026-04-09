@@ -1,0 +1,37 @@
+jobs:
+  - script: >
+      pipelineJob('Database-Restore') {
+        description('Restore database using a backup.')
+
+        parameters {
+          stringParam('BACKUP_NAME', '', 'Enter the filename of the database backup to restore (e.g. backup_997.sql)')
+        }
+
+        definition {
+          cps {
+            script('''
+              pipeline {
+                agent { label 'built-in' }
+                stages {
+                   
+                  stage('Guard Rail') {
+                     steps {
+                         input message: 'Are you sure you want to continue?', ok: 'Yes, proceed!'
+                     }
+                  }
+
+                  stage('Restore') {
+                    steps {
+                      sh "echo 'Restoring from: ^${params.BACKUP_NAME}'"
+                      sh "BACKUP_NAME=^${params.BACKUP_NAME} source $WORKSPACE/1-restore.sh"
+                    }
+                  }
+
+                }
+              }
+            '''.stripIndent())
+          }
+        }
+      }
+
+

@@ -13,19 +13,19 @@ elif [ "$ENV" = "HOST"  ]; then
     source "../../.env"
     WORKSPACE="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
     FRONT_REPO="ssh://git@gitea.mariomv-local.org:222/mario1/t51Front.git"
+    DEVOPS_REPO="ssh://git@gitea.mariomv-local.org:222/mario1/t51DevOps.git"
     BUILD_NUMBER=11
 fi
 
 source "../0_scripts/get_repo_dir.sh"
-BUILD_DIR=$(get_repo_dir)
-echo "[INFO] REPO_DIR: $BUILD_DIR"
+REPO_DIR=$(get_repo_dir)
+echo "[INFO] REPO_DIR: $REPO_DIR"
 
 
-TIMEOUT_SEC=300
+source "../0_scripts/download_devops_repo.sh"
+download_devops_repo $DEVOPS_REPO $REPO_DIR "front"
 
-source "../0_scripts/front_deploy.sh"
-front_deploy $BUILD_DIR $TIMEOUT_SEC
+FRONT_REPO_DIR="$REPO_DIR/app/front/source"
+source "../0_scripts/download_front_repo.sh"
+download_front_repo $FRONT_REPO_DIR "git"
 
-source "../0_scripts/front_check_start_health.sh"
-
-echo "[SUCCESS] FrontEnd deployed."

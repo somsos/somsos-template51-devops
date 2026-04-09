@@ -32,6 +32,12 @@ function download_devops_repo {
         rm -rf $2/app/utils/    
     fi
     
+    if [ "$3" = "front" ]; then
+        rm -rf $2/app/db/
+        rm -rf $2/app/back/
+        rm -rf $2/app/utils/    
+    fi
+    
     
     
 }

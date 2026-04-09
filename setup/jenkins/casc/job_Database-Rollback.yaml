@@ -1,0 +1,49 @@
+jobs:
+
+  - script: >
+      pipelineJob('Database-Rollback-v1') {
+        description('Rollback database to previous version.')
+
+        definition {
+          cps {
+            script('''
+              pipeline {
+                agent { label 'built-in' }
+                stages {
+                   
+                  stage('1/4 Guard Rail') {
+                    steps {
+                      input message: 'Did you already created an database backup?', ok: 'Yes, proceed!'
+                    }
+                  }
+                  
+                  stage('2/4: Download') {
+                    steps {
+                      sh \'\'\'
+                        source $WORKSPACE/1md-download-devops-repo.sh
+                      \'\'\'
+                    }
+                  }
+
+
+                  stage('3/4: Build Image') {
+                    steps {
+                      sh \'\'\'
+                        source $WORKSPACE/2md-build-image.sh
+                      \'\'\'
+                    }
+                  }
+
+                  stage('4/4: Migrate Rollback') {
+                    steps {
+                      sh \'\'\'
+                        source $WORKSPACE/3md-migrate.sh rollback
+                      \'\'\'
+                    }
+                  }
+                }
+              }
+            '''.stripIndent())
+          }
+        }
+      }

@@ -17,15 +17,12 @@ elif [ "$ENV" = "HOST"  ]; then
 fi
 
 source "../0_scripts/get_repo_dir.sh"
-BUILD_DIR=$(get_repo_dir)
-echo "[INFO] REPO_DIR: $BUILD_DIR"
+REPO_DIR=$(get_repo_dir)
+echo "[INFO] REPO_DIR: $REPO_DIR"
 
 
-TIMEOUT_SEC=300
 
-source "../0_scripts/front_deploy.sh"
-front_deploy $BUILD_DIR $TIMEOUT_SEC
+FRONT_REPO_DIR="$REPO_DIR/app/front/source"
+source "../0_scripts/download_front_repo.sh"
+download_front_repo $FRONT_REPO_DIR
 
-source "../0_scripts/front_check_start_health.sh"
-
-echo "[SUCCESS] FrontEnd deployed."

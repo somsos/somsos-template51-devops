@@ -1,0 +1,61 @@
+jobs:
+
+  - script: >
+      pipelineJob('Database-Deploy-v1') {
+        description('Migrate database to next version.')
+
+        triggers {
+          genericTrigger {
+            token("${DB_MIG_NAME}-${SHARED_TOKEN}")
+            printPostContent(false)
+            printContributedVariables(false)
+            causeString('Triggered by Gitea Webhook')
+          }
+        }
+
+        definition {
+          cps {
+            script('''
+              pipeline {
+                agent { label 'built-in' }
+                stages {
+                   
+                  stage('1/4 Guard Rail') {
+                    steps {
+                      input message: 'Did you already created an database backup?', ok: 'Yes, proceed!'
+                    }
+                  }
+                  
+                  stage('2/4: Download') {
+                    steps {
+                      sh \'\'\'
+                        source $WORKSPACE/1md-download-devops-repo.sh
+                      \'\'\'
+                    }
+                  }
+
+
+                  stage('3/4: Build Image') {
+                    steps {
+                      sh \'\'\'
+                        source $WORKSPACE/2md-build-image.sh
+                      \'\'\'
+                    }
+                  }
+
+
+                  stage('4/4: Migrate Deploy') {
+                    steps {
+                      sh \'\'\'
+                        source $WORKSPACE/3md-migrate-deploy.sh
+                      \'\'\'
+                    }
+                  }
+
+
+                }
+              }
+            '''.stripIndent())
+          }
+        }
+      }

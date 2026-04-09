@@ -20,12 +20,9 @@ source "../0_scripts/get_repo_dir.sh"
 BUILD_DIR=$(get_repo_dir)
 echo "[INFO] REPO_DIR: $BUILD_DIR"
 
+cd $BUILD_DIR && echo "[INFO] moved to $BUILD_DIR"
 
-TIMEOUT_SEC=300
+docker compose build front
 
-source "../0_scripts/front_deploy.sh"
-front_deploy $BUILD_DIR $TIMEOUT_SEC
+docker images --format 'table {{.Repository}}:{{.Tag}}\t{{.Size}}\t{{.CreatedAt}}' | grep -i $FRONT_NAME
 
-source "../0_scripts/front_check_start_health.sh"
-
-echo "[SUCCESS] FrontEnd deployed."

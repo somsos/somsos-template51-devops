@@ -1,0 +1,52 @@
+jobs:
+  - script: |
+      pipelineJob('Docker-Control') {
+        description('Manage Docker services')
+        
+        parameters {
+          choiceParam('ACTION', ['up -d --wait', 'stop', 'restart'], 'Select action')
+          choiceParam('SERVICE', ['db', 'back', 'front', 'gitea', 'reverse-proxy', 'db_backup'], 'Select service')
+        }
+
+        definition {
+          cps {
+            script('''
+              pipeline {
+                agent { label 'built-in' }
+                stages {
+                  
+                  stage('Guard Rail') {
+                    steps {
+                      input message: 'Are you sure you want to deploy?', ok: 'Yes, proceed!'
+                    }
+                  }
+
+                  stage('Download') {
+                    steps {
+                      sh \'\'\'
+                        source $WORKSPACE/1dc-download.sh
+                      \'\'\'
+                    }
+                  }
+
+                  stage('Docker Compose Action') {
+                    steps {
+                      sh "cd $WORKSPACE/$BUILD_NUMBER && docker compose ^${params.ACTION} ^${params.SERVICE}"
+                    }
+                  }
+
+                  stage('Verify Status') {
+                    steps {
+                      sh \'\'\'
+                        cd $WORKSPACE/$BUILD_NUMBER
+                        docker ps -a --format 'table {{.Names}}\t{{.Status}}\t{{.Size}}'
+                      \'\'\'
+                    }
+
+                  }
+                }
+              }
+            '''.stripIndent())
+          }
+        }
+      }

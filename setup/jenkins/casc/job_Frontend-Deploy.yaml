@@ -1,0 +1,52 @@
+jobs:
+  - script: >
+      pipelineJob('Frontend-Deploy-v1') {
+
+        triggers {
+          genericTrigger {
+            token("${FRONT_NAME}-${SHARED_TOKEN}")
+            printPostContent(false)
+            printContributedVariables(false)
+            causeString('Triggered by Gitea Webhook')
+          }
+        }
+
+        definition {
+          cps {
+            script('''
+              pipeline {
+                agent { label 'built-in' }
+                stages {
+                stage('1/3: Download') {
+                    steps {
+                      sh \'\'\'
+                        source $WORKSPACE/1f-download.sh
+                      \'\'\'
+                    }
+                  }
+
+
+                  stage('2/3: Build') {
+                    steps {
+                      sh \'\'\'
+                        source $WORKSPACE/2f-build.sh
+                      \'\'\'
+                    }
+                  }
+
+
+                  stage('3/3: Deploy') {
+                    steps {
+                      sh \'\'\'
+                        source $WORKSPACE/3f-deploy.sh
+                      \'\'\'
+                    }
+                  }
+
+
+                }
+              }
+            '''.stripIndent())
+          }
+        }
+      }

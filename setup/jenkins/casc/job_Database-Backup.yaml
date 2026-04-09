@@ -1,0 +1,33 @@
+jobs:
+  - script: >
+      pipelineJob('Database-Backup') {
+        description('Create a backup of the database.')
+
+        definition {
+          cps {
+            script('''
+              pipeline {
+                agent { label 'built-in' }
+                stages {
+                   
+                  stage('Guard Rail') {
+                     steps {
+                         input message: 'Are you sure you want to continue?', ok: 'Yes, proceed!'
+                     }
+                  }
+
+                  stage('Backup') {
+                    steps {
+                      sh \'\'\'
+                        source $WORKSPACE/1-backup.sh
+                      \'\'\'
+                    }
+                  }
+
+                }
+              }
+            '''.stripIndent())
+          }
+        }
+      }
+
