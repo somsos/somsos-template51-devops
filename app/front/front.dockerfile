@@ -1,18 +1,16 @@
-# syntax=docker/dockerfile:1.6
-
 FROM node:25.7-alpine3.23 AS build
 
 WORKDIR /app
 
 COPY source/package*.json ./
 
+# avoid using "--mount=type=cache,target=/root/.npm", because it gave me problems
+# with the cache, making the changes were not applied.
 RUN npm install
 
 RUN npm install -g @angular/cli
 
-# CAREFUL: I do not know why started to cache the copy of code making the
-# changes were not applied, so I add the bellow command ARG ... to avoid
-# caching this part
+# CAREFUL: Just to be sure that bellow here is not cached, it happened me once
 ARG CACHE_BUST=$(tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 10)
 RUN echo $CACHE_BUST
 
