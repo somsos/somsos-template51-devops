@@ -6,17 +6,16 @@ WORKDIR /app
 
 COPY source/package*.json ./
 
-RUN --mount=type=cache,target=/root/.npm \
-    npm install
+RUN npm install
 
-RUN --mount=type=cache,target=/root/.npm \
-    npm install -g @angular/cli
+RUN npm install -g @angular/cli
 
 # CAREFUL: I do not know why started to cache the copy of code making the
-# changes were not applied, so I add the bellow command (ARG ...) to avoid
+# changes were not applied, so I add the bellow command ARG ... to avoid
 # caching this part
 ARG CACHE_BUST=$(tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 10)
 RUN echo $CACHE_BUST
+
 COPY ./source .
 
 ARG BACK_URL
