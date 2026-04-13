@@ -12,12 +12,15 @@ RUN --mount=type=cache,target=/root/.npm \
 RUN --mount=type=cache,target=/root/.npm \
     npm install -g @angular/cli
 
+# CAREFUL: I do not know why started to cache the copy of code making the
+# changes were not applied, so I add the bellow command (ARG ...) to avoid
+# caching this part
+ARG CACHE_BUST=$(date +%s)
 COPY ./source .
 
 ARG BACK_URL
 RUN sed -i "s|__BACK_URL__|${BACK_URL}|g" src/environments/environment.ts
 
-# --mount=type=cache,target=/root/.npm # CAREFUL: It makes the changes are not applied
 RUN ng build -c production
 
 
