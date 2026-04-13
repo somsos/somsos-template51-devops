@@ -15,7 +15,7 @@ RUN --mount=type=cache,target=/root/.npm \
 # CAREFUL: I do not know why started to cache the copy of code making the
 # changes were not applied, so I add the bellow command (ARG ...) to avoid
 # caching this part
-ARG CACHE_BUST=$(date +%s)
+ARG CACHE_BUST=$(tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 10)
 COPY ./source .
 
 ARG BACK_URL
