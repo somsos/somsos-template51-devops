@@ -51,7 +51,12 @@ echo "[INFO] Variables exist."
 
 cd $WORKDIR_BUILD && echo "moved to $WORKDIR_BUILD"
 
+set -x
+
+docker image rm t51front:0.0.1 2> /dev/null
+
 docker compose build front
 
 docker images --format 'table {{.Repository}}:{{.Tag}}\t{{.Size}}\t{{.CreatedAt}}' | grep -i $FRONT_NAME
 
+set +x

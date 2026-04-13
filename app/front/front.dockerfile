@@ -11,7 +11,7 @@ RUN npm install
 RUN npm install -g @angular/cli
 
 # CAREFUL: Just to be sure that bellow here is not cached, it happened me once
-ARG CACHE_BUST=$(tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 10)
+ARG CACHE_BUST=$(date -u +%s)
 RUN echo $CACHE_BUST
 
 COPY ./source .
