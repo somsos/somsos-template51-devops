@@ -15,5 +15,5 @@ function front_deploy {
     fi
 
     docker compose -f $1/docker-compose.yml stop front
-    docker compose -f $1/docker-compose.yml up -d --no-recreate --wait-timeout $2 front
+    docker compose -f $1/docker-compose.yml up -d --wait-timeout $2 front
 }
