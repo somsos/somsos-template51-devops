@@ -16,6 +16,7 @@ RUN --mount=type=cache,target=/root/.npm \
 # changes were not applied, so I add the bellow command (ARG ...) to avoid
 # caching this part
 ARG CACHE_BUST=$(tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 10)
+RUN echo $CACHE_BUST
 COPY ./source .
 
 ARG BACK_URL
