@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-#set -x
+set -x
 
 source "../0_scripts/get_environment.sh"
 ENV=$(get_environment)
@@ -8,6 +8,10 @@ if [ "$ENV" = "JENKINS"  ]; then
     echo "In pipeline"
 elif [ "$ENV" = "CONTAINER-SHELL"  ]; then
     echo "In container"
+    source "../.env"
+    WORKSPACE="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+    BUILD_NUMBER=11
+
 elif [ "$ENV" = "HOST"  ]; then
     echo "In DOCKER HOST"
     source "../../.env"

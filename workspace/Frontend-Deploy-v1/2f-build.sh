@@ -11,8 +11,10 @@ if [ -n "$JENKINS_URL" ]; then
     source /var/jenkins_home/workspace/.env
     
 elif [ -f /.dockerenv ]; then
-    ENV_TYPE="CONTAINER-SHELL"
-    source /var/jenkins_home/workspace/.env
+    echo "In container"
+    source "../.env"
+    WORKSPACE="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+    BUILD_NUMBER=11
 
 elif [ "$(ps -p 1 -o comm=)" = "systemd" ] || [ "$(ps -p 1 -o comm=)" = "init" ]; then
     ENV_TYPE="HOST"
@@ -53,7 +55,7 @@ cd $WORKDIR_BUILD && echo "moved to $WORKDIR_BUILD"
 
 set -x
 
-docker image rm t51front:0.0.1 2> /dev/null
+docker image rm t51front:0.0.1 2> /dev/null | true
 
 docker compose build front
 

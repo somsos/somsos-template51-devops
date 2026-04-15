@@ -9,8 +9,10 @@ set -e
 if [ -n "$JENKINS_URL" ]; then
     ENV_TYPE="JENKINS"
 elif [ -f /.dockerenv ]; then
-    ENV_TYPE="CONTAINER-SHELL"
-    source /var/jenkins_home/workspace/.env
+    echo "In container"
+    source "../.env"
+    WORKSPACE="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+    BUILD_NUMBER=11
 
 elif [ "$(ps -p 1 -o comm=)" = "systemd" ] || [ "$(ps -p 1 -o comm=)" = "init" ]; then
     ENV_TYPE="HOST"

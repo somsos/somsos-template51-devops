@@ -26,7 +26,7 @@ echo "[INFO] REPO_DIR: $BUILD_DIR"
 
 cd $BUILD_DIR && echo "[INFO] moved to $BUILD_DIR"
 
-docker compose build front
+#docker compose build front
 
-docker images --format 'table {{.Repository}}:{{.Tag}}\t{{.Size}}\t{{.CreatedAt}}' | grep -i $FRONT_NAME
+#docker images --format 'table {{.Repository}}:{{.Tag}}\t{{.Size}}\t{{.CreatedAt}}' | grep -i $FRONT_NAME
 

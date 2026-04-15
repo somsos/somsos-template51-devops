@@ -77,9 +77,9 @@ services:
     networks:
       t51Net:
         ipv4_address: ${FRONT_IP}
-    depends_on:
-      back:
-        condition: service_healthy
+   #depends_on:
+   #  back:
+   #    condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "wget --spider -q http://127.0.0.1 && echo servicesAlive"]
       interval: 20s

@@ -12,7 +12,7 @@ RUN npm install -g @angular/cli
 
 # CAREFUL: Just to be sure that bellow here is not cached, it happened me once
 ARG CACHE_BUST=$(date -u +%s)
-RUN echo $CACHE_BUST
+RUN echo $CACHE_BUST > /app/BUILD_DATE.txt
 
 COPY ./source .
 
