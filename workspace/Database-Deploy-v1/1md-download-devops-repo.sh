@@ -14,9 +14,10 @@ elif [ -f /.dockerenv ]; then
 
 elif [ "$(ps -p 1 -o comm=)" = "systemd" ] || [ "$(ps -p 1 -o comm=)" = "init" ]; then
     ENV_TYPE="HOST"
-    WORKSPACE="/home/m51/mine/t51/devops/setup/jenkins/workspace"
+    WORKSPACE="/home/m51/mine/t51/devops/workspace/Database-Rollback-v1"
+    DB_MIG_REPO="git@gitea.mariomv-local.org:mario1/t51mig-db.git"
     DEVOPS_REPO="ssh://git@gitea.mariomv-local.org:222/mario1/t51DevOps.git"
-    BUILD_NUMBER="0.1-test"
+    BUILD_NUMBER="0.1"
 fi
 
 echo -e "\e[42m[INFO] Running in: $ENV_TYPE\e[0m"
@@ -93,13 +94,19 @@ echo -e "\e[42m[Success] downloaded and cleaned.\e[0m"
 REPO_DIR="$WORKDIR_BUILD/app/db/source"
 mkdir -p $REPO_DIR
 rm -rf $REPO_DIR/*   # between quotes because the last part is confused by groovy as a comment
-git clone --quiet --depth=1 --single-branch --branch main "$DB_MIG_REPO" "$REPO_DIR" \
+git clone --quiet --depth=2 --single-branch --branch main "$DB_MIG_REPO" "$REPO_DIR" \
   && echo "[INFO] db-mig repository cloned."
 git -C $REPO_DIR log --oneline -n1
-rm -rf $REPO_DIR/.git/
-rm -rf $REPO_DIR/docs/
-rm -rf $REPO_DIR/README*
+
+# Commented line, so it can work for rollback, because look for the remote url,
+# and git does not detect changes and so will be able to make a push.
+#rm -rf $REPO_DIR/.git/ 
+#rm -rf $REPO_DIR/docs/
+#rm -rf $REPO_DIR/README*
+
+
 sleep 3
+
 
 
 

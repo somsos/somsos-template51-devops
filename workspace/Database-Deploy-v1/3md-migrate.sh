@@ -14,9 +14,9 @@ elif [ -f /.dockerenv ]; then
 
 elif [ "$(ps -p 1 -o comm=)" = "systemd" ] || [ "$(ps -p 1 -o comm=)" = "init" ]; then
     ENV_TYPE="HOST"
-    WORKSPACE="/home/m51/mine/t51/devops/setup/jenkins/workspace"
+    WORKSPACE="/home/m51/mine/t51/devops/workspace/Database-Rollback-v1"
     DEVOPS_REPO="ssh://git@gitea.mariomv-local.org:222/mario1/t51DevOps.git"
-    BUILD_NUMBER="0.1-test"
+    BUILD_NUMBER="0.1"
 fi
 
 echo -e "\e[42m[INFO] Running in: $ENV_TYPE\e[0m"
@@ -33,9 +33,15 @@ if [ -z "$BUILD_NUMBER" ]; then
   exit 1
 fi
 
+if [[ "$1" != "deploy" && "$1" != "rollback" ]]; then
+    echo "[ERROR] File Argument 1 not found, "deploy" or "rollback" argument required."
+    exit 1
+fi
+
 WORKDIR_REPO="$WORKSPACE/$BUILD_NUMBER"
 
 cd $WORKDIR_REPO
 
-docker compose run --rm --name temp_db_utils db_utils deploy
-
+set -x
+docker compose run --rm --name temp_db_utils db_utils $1
+set +x

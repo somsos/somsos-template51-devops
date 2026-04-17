@@ -17,30 +17,39 @@ jobs:
                     }
                   }
                   
-                  stage('2/4: Download') {
+                  stage('2/5: Download') {
                     steps {
                       sh \'\'\'
-                        source $WORKSPACE/1md-download-devops-repo.sh
+                        source $WORKSPACE/../Database-Deploy-v1/1md-download-devops-repo.sh
                       \'\'\'
                     }
                   }
 
 
-                  stage('3/4: Build Image') {
+                  stage('3/5: Build Image') {
                     steps {
                       sh \'\'\'
-                        source $WORKSPACE/2md-build-image.sh
+                        source $WORKSPACE/../Database-Deploy-v1/2md-build-image.sh
                       \'\'\'
                     }
                   }
 
-                  stage('4/4: Migrate Rollback') {
+                  stage('4/5: Migrate Rollback') {
                     steps {
                       sh \'\'\'
-                        source $WORKSPACE/3md-migrate.sh rollback
+                        source $WORKSPACE/../Database-Deploy-v1/3md-migrate.sh rollback
                       \'\'\'
                     }
                   }
+
+                  stage('5/5: Delete last commit') {
+                    steps {
+                      sh \'\'\'
+                        source $WORKSPACE/4dr-delete-last-commit.sh
+                      \'\'\'
+                    }
+                  }
+
                 }
               }
             '''.stripIndent())

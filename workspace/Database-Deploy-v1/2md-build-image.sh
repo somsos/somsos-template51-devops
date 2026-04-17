@@ -14,9 +14,9 @@ elif [ -f /.dockerenv ]; then
 
 elif [ "$(ps -p 1 -o comm=)" = "systemd" ] || [ "$(ps -p 1 -o comm=)" = "init" ]; then
     ENV_TYPE="HOST"
-    WORKSPACE="/home/m51/mine/t51/devops/setup/jenkins/workspace"
+    WORKSPACE="/home/m51/mine/t51/devops/workspace/Database-Rollback-v1"
     DEVOPS_REPO="ssh://git@gitea.mariomv-local.org:222/mario1/t51DevOps.git"
-    BUILD_NUMBER="0.1-test"
+    BUILD_NUMBER="0.1"
 fi
 
 echo -e "\e[42m[INFO] Running in: $ENV_TYPE\e[0m"

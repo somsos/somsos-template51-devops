@@ -47,7 +47,7 @@ jobs:
                   stage('4/4: Migrate Deploy') {
                     steps {
                       sh \'\'\'
-                        source $WORKSPACE/3md-migrate-deploy.sh
+                        source $WORKSPACE/3md-migrate.sh deploy
                       \'\'\'
                     }
                   }
