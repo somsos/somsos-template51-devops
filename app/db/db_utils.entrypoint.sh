@@ -30,39 +30,24 @@ function get_current_version {
 
 
 
+echo "################START-BEFORE########################"
+liquibase history
+echo "################END---BEFORE########################"
 
 if [ "$1" = "deploy" ]; then
-    VERSION=$(get_current_version)
     echo "deploy starting"
     sleep 5;
     liquibase update
-
-    NEXT_VERSION=$( echo "$VERSION + 1" | bc )
-    liquibase tag $NEXT_VERSION
-
     liquibase history
-
-    exit 0;
 fi
 
 
 if [ "$1" = "rollback" ]; then
-    VERSION=$(get_current_version)
-    echo "rollback starting";
-    
-    PREV_VERSION=$( echo "$VERSION - 1" | bc )
-
-    echo "################START-BEFORE########################"
-    liquibase history
-    echo "################END---BEFORE########################"
-
+    echo "Rollback starting";
     sleep 5;
-
-    liquibase rollback $PREV_VERSION
-    
+    VERSION=$(get_current_version)
+    liquibase rollback $VERSION
     liquibase history
-
-    exit 0;
 fi
 
 

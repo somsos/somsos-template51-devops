@@ -2,10 +2,9 @@
 
 ## Doing (First one is the current task)
 
-- [ ] Create scenarios where I need to use all the DevOps features
-  - [ ] Deploy and Rollback back and front
-  - [ ] Deploy and Rollback back and database
-  - [ ] Deploy and Rollback the 3 layers
+- [ ] Create scenarios where I need to use Deploy and Rollback back and database
+
+- [ ] Create scenarios where I need to use Deploy and Rollback the 3 layers
 
 - [ ] Research how to use docker image registry for containers app backup
   - [ ] Backup Backend
@@ -16,7 +15,6 @@
 - [ ] Security
   - [ ] Hide .env passwords
     - [ ] Check how it works [varLook](https://github.com/alhenry/varlook)
-
 
 ## Resume
 
@@ -121,6 +119,7 @@ posible.
 - [X] Create scripts/commands/pipeline for Frontend Rollback
 - [X] Add notes why I'm not using webhook for rollback and the alternative of using `revert`.
 - [X] Deploy and Rollback by layer
-    - [X] Back
-    - [X] Front
-    - [X] Database
+  - [X] Back
+  - [X] Front
+  - [X] Database
+- [X] Create scenarios where I need to use Deploy and Rollback back and front
