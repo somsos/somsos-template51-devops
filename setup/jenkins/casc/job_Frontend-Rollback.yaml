@@ -9,7 +9,7 @@ jobs:
                 agent { label 'built-in' }
                 stages {
                   
-                  stage('1/5: Download DevOps Project') {
+                  stage('1/4: Download DevOps Project') {
                     steps {
                       sh \'\'\'
                         source $WORKSPACE/1fr-download.sh
@@ -17,7 +17,7 @@ jobs:
                     }
                   }
 
-                  stage('1/5: Backup And Delete Last Commit') {
+                  stage('2/4: Backup And Delete Last Commit') {
                     steps {
                       sh \'\'\'
                         source $WORKSPACE/2fr-backup-and-delete-last-commit.sh
@@ -26,7 +26,7 @@ jobs:
                   }
 
 
-                  stage('1/5: Download Penultimate Commit') {
+                  stage('3/4: Download Penultimate Commit') {
                     steps {
                       sh \'\'\'
                         source $WORKSPACE/3fr-download-penultimate-commit.sh
@@ -35,19 +35,10 @@ jobs:
                   }
 
 
-                  stage('1/5: Build Image') {
+                  stage('4/4: Rebuild and deploy') {
                     steps {
                       sh \'\'\'
-                        source $WORKSPACE/4fr-build-image.sh
-                      \'\'\'
-                    }
-                  }
-
-
-                  stage('1/5: Deploy') {
-                    steps {
-                      sh \'\'\'
-                        source $WORKSPACE/5fr-deploy.sh
+                        source $WORKSPACE/4fr-rebuild-and-deploy.sh
                       \'\'\'
                     }
                   }

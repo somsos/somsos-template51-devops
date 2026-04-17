@@ -32,50 +32,11 @@ if [ -z "$BUILD_NUMBER" ]; then
   exit 1
 fi
 
-if [ -z "$TIMEOUT_SEC" ]; then
-  echo "Variable TIMEOUT_SEC not found, Timeout in seconds to deploy service is required."
-  exit 1
-fi
-
-if [ -z "$BUILD_DIR" ]; then
-  echo "Variable BUILD_DIR not found, Path to directory where is the docker-compose.yml is requiered"
-  exit 1
-fi
 
 
-cd $BUILD_DIR
+source "../0_scripts/back_deploy.sh"
+back_deploy $BUILD_DIR $TIMEOUT_SEC
 
 
-docker compose stop back
-
-
-docker compose up -d --wait-timeout $TIMEOUT_SEC back
-
-
-set +x
-
-# CAUTION: duplicated code with backend rollback
-MESSAGE_APP_STARTED="Started AdapterApplication in"
-START_TIME="$(date -u +%s)"
-docker logs -f $BACK_NAME | while read line; do
-  echo "$line"
-
-  CURRENT_TIME="$(date -u +%s)"
-  ELAPSED_SECONDS=$((CURRENT_TIME - START_TIME))
-
-  if [ $ELAPSED_SECONDS -gt $TIMEOUT_SEC ]; then
-    echo "timeout of ${TIMEOUT_SEC}sec reached."
-    exit 1
-  fi
-
-  case "$line" in
-    *"$MESSAGE_APP_STARTED"* )
-      echo "[INFO] Deploy success"
-      exit 0
-      ;;
-
-  esac
-done
-
-echo "Deploy pipeline End."
+source "../0_scripts/back_check_start_and_health.sh"
 

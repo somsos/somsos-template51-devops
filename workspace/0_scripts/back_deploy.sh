@@ -3,7 +3,7 @@ set -e
 #set -x
 
 
-function front_deploy {
+function back_deploy {
     if [ -z "$1" ]; then
         echo "[ERROR] The directory where the main docker-compose is required."
         exit 1
@@ -14,6 +14,6 @@ function front_deploy {
         exit 1
     fi
 
-    docker compose -f $1/docker-compose.yml stop front
-    docker compose -f $1/docker-compose.yml up -d --build --force-recreate --wait-timeout $2 front
+    docker compose -f $1/docker-compose.yml stop back
+    docker compose -f $1/docker-compose.yml up -d --build --force-recreate --wait-timeout $2 back
 }

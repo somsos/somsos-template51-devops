@@ -17,32 +17,22 @@ jobs:
               pipeline {
                 agent { label 'built-in' }
                 stages {
-                stage('1/3: Download') {
+
+                  stage('1/2: Download') {
                     steps {
                       sh \'\'\'
-                        source $WORKSPACE/1f-download.sh
+                        source $WORKSPACE/1fd-download.sh
                       \'\'\'
                     }
                   }
 
-
-                  stage('2/3: Build') {
+                  stage('2/2: Deploy') {
                     steps {
                       sh \'\'\'
-                        source $WORKSPACE/2f-build.sh
+                        source $WORKSPACE/2fd-deploy.sh
                       \'\'\'
                     }
                   }
-
-
-                  stage('3/3: Deploy') {
-                    steps {
-                      sh \'\'\'
-                        source $WORKSPACE/3f-deploy.sh
-                      \'\'\'
-                    }
-                  }
-
 
                 }
               }

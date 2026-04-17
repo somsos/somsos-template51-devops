@@ -6,6 +6,7 @@
   - [How to deploy database](#how-to-deploy-database)
   - [How to deploy the backend](#how-to-deploy-the-backend)
   - [How to deploy the frontend](#how-to-deploy-the-frontend)
+  - [How to rollback](#how-to-rollback)
 
 ## Internal Links
 
@@ -127,7 +128,19 @@ docker compose build back
 docker compose up back
 ```
 
-sep
+<!--
+
+■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+-->
+
+----
+
+<!--
+
+■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+-->
 
 ## How to deploy the frontend
 
@@ -163,3 +176,58 @@ docker compose build back
 
 docker compose up back
 ```
+
+<!--
+
+■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+-->
+
+----
+
+<!--
+
+■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
+
+-->
+
+## How to rollback
+
+There is two ways to rollback the project.
+
+1- Usando revert y push, lo cual re-utilizara el pipeline the deploy, solo que
+este comando pondrá el ultimo commit adelante, lo cual funciona como rollback,
+explicado de una forma mas visual, usar un revert pasa lo siguiente.
+
+the **advantage** of this approach is that the rollback keeps registered in the
+history.
+
+```r
+        revert
+          |      
+1 -> 2 -> 3 -> 2 -> 3b -> 4
+      \       /
+        -----
+```
+
+----
+
+2- Using `git push --force-with-lease origin +main^1:main`, which deletes the last
+commit
+
+Usando `git push --force-with-lease origin +main^1:main`, lo cual elimina el
+utltimo commit, se agrega `--force-with-lease` para evitar eliminar el ultimo
+commit si es que no esta bien sincronizados los repositorios, lo que pasa
+visualmente es lo siguiente.
+
+The **advantage** of this approach is that the history keeps clean, because
+sometimes keep an error in the history just add noise.
+
+```r
+Before
+1 -> 2 -> 3
+
+After
+1 -> 2
+```
+
