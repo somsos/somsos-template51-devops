@@ -5,7 +5,7 @@ set -e
 # INPUT
 #    $1 : Repo URL
 #    $2 : Directory where to download
-#    $3 : keep .git directory "use 'git' only "
+#    $3 : keep .git directory use "git" only.
 
 function download_back_repo {
     if [ -z "$1" ]; then

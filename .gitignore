@@ -19,6 +19,7 @@ setup/data
 !**/workspace/Backend-Rollback/
 **/workspace/Backend-Rollback/*
 !**/workspace/Backend-Rollback/*.sh
+!**/workspace/Backend-Rollback/*.md
 
 !**/workspace/Frontend-Deploy-v1/
 **/workspace/Frontend-Deploy-v1/*
@@ -32,9 +33,9 @@ setup/data
 **/workspace/Database-Deploy-v1/*
 !**/workspace/Database-Deploy-v1/*.sh
 
-!**/workspace/Docker-Control/
-**/workspace/Docker-Control/*
-!**/workspace/Docker-Control/*.sh
+!**/workspace/Docker-Commands/
+**/workspace/Docker-Commands/*
+!**/workspace/Docker-Commands/*.sh
 
 
 !**/workspace/Database-Restore/

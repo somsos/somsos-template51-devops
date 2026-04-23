@@ -13,3 +13,9 @@
 - Adding tags in **liquibase** is at the start not at the end, otherwise the
   rollback will delete also the tag, and that behavior is not useful, check
   the chapter `liquibase.md#${id:mvi48blw}` for details.
+
+- The flag `--force-recreate` in `docker compose up` re-create the container not
+  the image, because if we just stop the container and not remove it, the next
+  time will preserve the previous state, but if we recreate the container it's
+  going to start with a new state, more details in
+  `docker_pitfalls#{id:6fn04mh87}`.

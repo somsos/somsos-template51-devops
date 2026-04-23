@@ -13,7 +13,7 @@ jobs:
                   stage('1/4: Download DevOps and Backend') {
                     steps {
                       sh \'\'\'
-                        source $WORKSPACE/1br-download.sh
+                        source $WORKSPACE/../Backend-Deploy-v1/1bd-download.sh
                       \'\'\'
                     }
                   }
@@ -26,18 +26,26 @@ jobs:
                     }
                   }
 
-                  stage('3/4: Download penultimate commit') {
+                  stage('3/4: Download again but now penultimate commit') {
                     steps {
                       sh \'\'\'
-                        source $WORKSPACE/3br-download-again.sh
+                        source $WORKSPACE/../Backend-Deploy-v1/1bd-download.sh
                       \'\'\'
                     }
                   }
 
-                  stage('4/4: Re-build Deploy') {
+                  stage('4/4: Build Image') {
                     steps {
                       sh \'\'\'
-                        source $WORKSPACE/4br-build-and-deploy.sh
+                        source $WORKSPACE/../Backend-Deploy-v1/2bd-build-image.sh
+                      \'\'\'
+                    }
+                  }
+
+                  stage('4/4: Deploy') {
+                    steps {
+                      sh \'\'\'
+                        source $WORKSPACE/../Backend-Deploy-v1/3bd-deploy.sh
                       \'\'\'
                     }
                   }

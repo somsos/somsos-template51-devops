@@ -140,6 +140,8 @@ function addWebHook {
     exit 1
   fi
 
+  HOOK_URL="http://localhost:3000/api/v1/repos/${GITEA_ADMIN_USER}/${1}/hooks"
+  HOOK_JENKINS="http://jenkins:8080/generic-webhook-trigger/invoke?token=${1}-${SHARED_TOKEN}"
 
   # Check if exists the webhook already
   TOKEN_A=$(su-exec git gitea admin user generate-access-token \
@@ -160,9 +162,6 @@ function addWebHook {
     echo "[ERROR] TOKEN empty, it should have a random string."
     exit 1
   fi
-
-  HOOK_URL="http://localhost:3000/api/v1/repos/${GITEA_ADMIN_USER}/${1}/hooks"
-  HOOK_JENKINS="http://jenkins:8080/generic-webhook-trigger/invoke?token=${1}-${SHARED_TOKEN}"
 
   RESPONSE=$(curl -s -i -o /tmp/resp_${1}.txt -w "%{http_code}" -X 'POST'  \
     "${HOOK_URL}" \
@@ -199,9 +198,6 @@ addWebHook "$FRONT_NAME"
 sleep 1
 
 addWebHook "$DB_MIG_NAME"
-sleep 1
-
-addWebHook "$DEVOPS_NAME"
 sleep 1
 
 

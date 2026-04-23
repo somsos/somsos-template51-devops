@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+# set -x
 
 
 # INPUT
@@ -38,7 +40,32 @@ function download_devops_repo {
         rm -rf $2/app/utils/    
     fi
     
+
+    if [ "$3" = "docker-commands" ]; then
+        rm -rf $WORKDIR_BUILD/.git/
+        rm -rf $WORKDIR_BUILD/docs/
+        rm -rf $WORKDIR_BUILD/README.md
+        rm -rf $WORKDIR_BUILD/.gitignore
+
+        rm -rf $WORKDIR_BUILD/app/db/
+        rm -rf $WORKDIR_BUILD/app/back/
+        rm -rf $WORKDIR_BUILD/app/front/
+        rm -rf $WORKDIR_BUILD/app/utils/
+
+        rm -rf $WORKDIR_BUILD/setup/gitea
+        rm -rf $WORKDIR_BUILD/setup/gitea
+        rm -rf $WORKDIR_BUILD/setup/jenkins
+        rm -rf $WORKDIR_BUILD/setup/secrets
+        rm -rf $WORKDIR_BUILD/setup/shared
+
+        rm -rf $WORKDIR_BUILD/workspace
+        rm -rf $WORKDIR_BUILD/z_artt51
+        rm -rf $WORKDIR_BUILD/.env
+        rm -rf $WORKDIR_BUILD/.vscode
+    fi
     
     
 }
 
+
+    

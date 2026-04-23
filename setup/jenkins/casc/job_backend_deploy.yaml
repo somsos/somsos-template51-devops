@@ -43,10 +43,18 @@ jobs:
                     }
                   }
 
+                  stage('2/2: Build image') {
+                    steps {
+                      sh \'\'\'
+                        source $WORKSPACE/2bd-build-image.sh
+                      \'\'\'
+                    }
+                  }
+
                   stage('2/2: Deploy') {
                     steps {
                       sh \'\'\'
-                        source $WORKSPACE/2bd-build-and-deploy.sh
+                        source $WORKSPACE/3bd-deploy.sh
                       \'\'\'
                     }
                   }

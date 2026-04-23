@@ -2,15 +2,19 @@
 
 ## Doing (First one is the current task)
 
-- [ ] Create scenarios where I need to use Deploy and Rollback back and database
-
-- [ ] Create scenarios where I need to use Deploy and Rollback the 3 layers
+- [ ] Add in Docker-Control pipeline command to see the containers status
 
 - [ ] Research how to use docker image registry for containers app backup
-  - [ ] Backup Backend
-    - [ ] Restore Backend
-  - [ ] Backup Frontend
-    - [ ] Restore Frontend
+  - `docker compose build --tag back:${BUILD_NUMBER} back`
+  - `git log -1 --pretty=format:%h`
+  - An image can be tagged several times, so we can refer to the same image with different tags, for example, Note, the first tag is the original/official name, and the second one is the alias.
+    - docker tag back:${BUILD_NUMBER}-${COMMIT_ID} back:1.2.3
+    - docker tag back:${BUILD_NUMBER}-${COMMIT_ID} back:${COMMIT_ID}
+  
+- [ ] Backup Backend
+  - [ ] Restore Backend
+- [ ] Backup Frontend
+  - [ ] Restore Frontend
 
 - [ ] Security
   - [ ] Hide .env passwords
@@ -123,3 +127,6 @@ posible.
   - [X] Front
   - [X] Database
 - [X] Create scenarios where I need to use Deploy and Rollback back and front
+- [X] Create scenarios where I need to use Deploy and Rollback back and database
+- [X] Fix Avoid the creation of extra/multiple back webhooks in gitea entrypoint.
+- [X] Create scenarios where I need to use Deploy and Rollback the 3 layers

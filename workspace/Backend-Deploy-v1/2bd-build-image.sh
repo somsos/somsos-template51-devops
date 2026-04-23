@@ -17,13 +17,19 @@ elif [ "$ENV" = "HOST"  ]; then
     BUILD_NUMBER=10
 fi
 
+
 source "../0_scripts/get_repo_dir.sh"
-REPO_DIR=$(get_repo_dir)
-echo "[INFO] REPO_DIR: $REPO_DIR"
+DEVOPS_REPO_DIR=$(get_repo_dir)
+BACK_REPO_DIR=$(get_app_dir $DEVOPS_REPO_DIR "back") 
+echo "[INFO] DEVOPS_REPO_DIR: $DEVOPS_REPO_DIR"
+echo "[INFO] BACK_REPO_DIR  : $BACK_REPO_DIR"
 
 
+source "../0_scripts/get_tag_name.sh"
+IMAGE_TAG=$(get_tag_name $BACK_REPO_DIR $BUILD_NUMBER)
+echo "[INFO] IMAGE_TAG      : $IMAGE_TAG"
 
-BACK_REPO_DIR="$REPO_DIR/app/back/source"
-source "../0_scripts/download_back_repo.sh"
-download_back_repo $BACK_REPO $BACK_REPO_DIR "git"
+
+source "../0_scripts/back_build_image.sh"
+back_build_image $DEVOPS_REPO_DIR $IMAGE_TAG
 

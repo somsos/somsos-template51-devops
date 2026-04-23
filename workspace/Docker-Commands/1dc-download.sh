@@ -18,15 +18,10 @@ elif [ "$ENV" = "HOST"  ]; then
 fi
 
 source "../0_scripts/get_repo_dir.sh"
-REPO_DIR=$(get_repo_dir)
-echo "[INFO] REPO_DIR: $REPO_DIR"
-
+DEVOPS_REPO_DIR=$(get_repo_dir)
+echo "[INFO] DEVOPS_REPO_DIR: $DEVOPS_REPO_DIR"
 
 source "../0_scripts/download_devops_repo.sh"
-download_devops_repo $DEVOPS_REPO $REPO_DIR "back"
-
-
-BACK_REPO_DIR="$REPO_DIR/app/back/source"
-source "../0_scripts/download_back_repo.sh"
-download_back_repo $BACK_REPO $BACK_REPO_DIR "git"
+download_devops_repo $DEVOPS_REPO $DEVOPS_REPO_DIR "docker-commands"
+echo -e "\e[42m[Success] downloaded and cleaned.\e[0m"
 

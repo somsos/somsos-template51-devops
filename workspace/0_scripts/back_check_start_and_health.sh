@@ -17,6 +17,7 @@ fi
 
 
 MESSAGE_APP_STARTED="Started AdapterApplication in"
+MESSAGE_APP_FAILED_1="Application run failed"
 START_TIME="$(date -u +%s)"
 docker logs -f $BACK_NAME | while read line; do
     echo "$line"
@@ -28,10 +29,17 @@ docker logs -f $BACK_NAME | while read line; do
         echo "timeout of ${TIMEOUT_SEC}sec reached."
         exit 1
     fi
+    
+    case "$line" in
+        *"$MESSAGE_APP_FAILED_1"* )
+        echo "[ERROR] deploy failed."
+        exit 1
+        ;;
+    esac
 
     case "$line" in
         *"$MESSAGE_APP_STARTED"* )
-        echo "deploy success"
+        echo "[SUCCESS] deploy success"
         exit 0 
         ;;
     esac

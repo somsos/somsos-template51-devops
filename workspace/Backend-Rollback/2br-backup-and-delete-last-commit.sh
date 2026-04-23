@@ -14,12 +14,12 @@ elif [ "$ENV" = "HOST"  ]; then
     BUILD_NUMBER=10
 fi
 
+# GET PATHS
 source "../0_scripts/get_repo_dir.sh"
-REPO_DIR=$(get_repo_dir)
-
-BACK_REPO_DIR="$REPO_DIR/app/back/source"
-echo "[INFO] REPO_DIR      : $REPO_DIR"
-echo "[INFO] BACK_REPO_DIR : $BACK_REPO_DIR"
+DEVOPS_REPO_DIR=$(get_repo_dir)
+BACK_REPO_DIR=$(get_app_dir $DEVOPS_REPO_DIR "back") 
+echo "[INFO] DEVOPS_REPO_DIR: $DEVOPS_REPO_DIR"
+echo "[INFO] BACK_REPO_DIR  : $BACK_REPO_DIR"
 
 
 git -C $BACK_REPO_DIR log --oneline -n2 --format=%s > ./temp1.txt
