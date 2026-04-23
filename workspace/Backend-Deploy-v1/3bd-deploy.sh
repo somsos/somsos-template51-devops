@@ -26,7 +26,7 @@ echo "[INFO] BACK_REPO_DIR  : $BACK_REPO_DIR"
 
 
 source "../0_scripts/get_tag_name.sh"
-IMAGE_TAG=$(get_tag_name $BACK_REPO_DIR $BUILD_NUMBER)
+IMAGE_TAG=$(get_tag_name $BACK_REPO_DIR $BUILD_NUMBER "back")
 echo "[INFO] IMAGE_TAG      : $IMAGE_TAG"
 
 

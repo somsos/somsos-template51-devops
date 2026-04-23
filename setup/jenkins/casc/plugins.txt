@@ -23,3 +23,5 @@ gitea
 generic-webhook-trigger
 job-dsl
 configuration-as-code
+ansicolor
+

@@ -78,10 +78,14 @@ services:
       # Pipeline variables
       - DB_MIG_REPO=${DB_MIG_REPO}
       - DB_MIG_NAME=${DB_MIG_NAME}
+      
       - BACK_REPO=${BACK_REPO}
       - BACK_NAME=${BACK_NAME}
+      - BACK_IMAGE=${BACK_IMAGE}
+      
       - FRONT_REPO=${FRONT_REPO}
       - FRONT_NAME=${FRONT_NAME}
+      
       - DEVOPS_REPO=${DEVOPS_REPO}
       - VERSION=${VERSION}
       - SHARED_TOKEN=${SHARED_TOKEN}

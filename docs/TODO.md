@@ -2,15 +2,8 @@
 
 ## Doing (First one is the current task)
 
-- [ ] Add in Docker-Control pipeline command to see the containers status
+- [ ] Create image tagging strategy for frontend
 
-- [ ] Research how to use docker image registry for containers app backup
-  - `docker compose build --tag back:${BUILD_NUMBER} back`
-  - `git log -1 --pretty=format:%h`
-  - An image can be tagged several times, so we can refer to the same image with different tags, for example, Note, the first tag is the original/official name, and the second one is the alias.
-    - docker tag back:${BUILD_NUMBER}-${COMMIT_ID} back:1.2.3
-    - docker tag back:${BUILD_NUMBER}-${COMMIT_ID} back:${COMMIT_ID}
-  
 - [ ] Backup Backend
   - [ ] Restore Backend
 - [ ] Backup Frontend
@@ -130,3 +123,11 @@ posible.
 - [X] Create scenarios where I need to use Deploy and Rollback back and database
 - [X] Fix Avoid the creation of extra/multiple back webhooks in gitea entrypoint.
 - [X] Create scenarios where I need to use Deploy and Rollback the 3 layers
+- [X] Add in Docker-Control pipeline command to see the containers status
+- [X] Research how to use docker image registry for containers app backup
+  - `docker compose build --tag back:${BUILD_NUMBER} back`
+  - `git log -1 --pretty=format:%h`
+  - An image can be tagged several times, so we can refer to the same image with different tags, for example, Note, the first tag is the original/official name, and the second one is the alias.
+    - docker tag back:${BUILD_NUMBER}-${COMMIT_ID} back:1.2.3
+    - docker tag back:${BUILD_NUMBER}-${COMMIT_ID} back:${COMMIT_ID}
+- [X] Create image tagging strategy for backend

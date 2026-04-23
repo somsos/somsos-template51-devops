@@ -3,7 +3,6 @@
 jobs:
   - script: >
       pipelineJob('Backend-Deploy-v1') {
-        
         triggers {
           genericTrigger {
             token("${BACK_NAME}-${SHARED_TOKEN}")
@@ -33,6 +32,10 @@ jobs:
             script('''
               pipeline {
                 agent { label 'built-in' }
+                options {
+                    ansiColor('xterm')
+                }
+
                 stages {
                   
                   stage('1/2: Download') {

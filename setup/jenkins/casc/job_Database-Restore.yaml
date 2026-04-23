@@ -12,6 +12,9 @@ jobs:
             script('''
               pipeline {
                 agent { label 'built-in' }
+                options {
+                    ansiColor('xterm')
+                }
                 stages {
                    
                   stage('Guard Rail') {

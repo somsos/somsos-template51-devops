@@ -12,7 +12,10 @@ jobs:
           cps {
             script('''
               pipeline {
-                agent { label 'built-in' }  
+                agent { label 'built-in' }
+                options {
+                    ansiColor('xterm')
+                }
                 stages {
 
                   stage('Download') {

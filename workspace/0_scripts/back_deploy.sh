@@ -26,9 +26,10 @@ function back_deploy {
     fi
 
     # --build
-    echo -e "\e[42m[INFO] Image to deploy: back:$3 \e[0m"
+    echo -e "\e[42m[INFO] Image to deploy: $3 \e[0m"
     set -x
     docker compose -f $1/docker-compose.yml stop back
-    BACK_IMAGE=back:$3 docker compose -f $1/docker-compose.yml up  --force-recreate -d --wait-timeout $2 back
+    # we reference the image by its build tag just to be sure to get the correct one
+    BACK_IMAGE=$3 docker compose -f $1/docker-compose.yml up  --force-recreate -d --wait-timeout $2 back
     set +x
 }

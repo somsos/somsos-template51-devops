@@ -60,7 +60,7 @@ function download_devops_repo {
 
         rm -rf $WORKDIR_BUILD/workspace
         rm -rf $WORKDIR_BUILD/z_artt51
-        rm -rf $WORKDIR_BUILD/.env
+        # rm -rf $WORKDIR_BUILD/.env   # We name it
         rm -rf $WORKDIR_BUILD/.vscode
     fi
     
