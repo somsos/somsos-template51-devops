@@ -4,22 +4,10 @@ set -e
 
 
 # ######## introduction
-if [ -n "$JENKINS_URL" ]; then
-    ENV_TYPE="JENKINS"
-    source /var/jenkins_home/workspace/.env
-
-elif [ -f /.dockerenv ]; then
-    ENV_TYPE="CONTAINER-SHELL"
-    source /var/jenkins_home/workspace/.env
-
-elif [ "$(ps -p 1 -o comm=)" = "systemd" ] || [ "$(ps -p 1 -o comm=)" = "init" ]; then
-    ENV_TYPE="HOST"
-    WORKSPACE="/home/m51/mine/t51/devops/workspace/Database-Rollback-v1"
-    DEVOPS_REPO="ssh://git@gitea.mariomv-local.org:222/mario1/t51DevOps.git"
-    BUILD_NUMBER="0.1"
-fi
-
-echo -e "\e[42m[INFO] Running in: $ENV_TYPE\e[0m"
+source "../0_scripts/get_environment.sh"
+ENV=$(get_environment)
+source "../0_scripts/check_necessary_variables.sh"
+check_necessary_variables "$ENV"
 
 
 # ######## Validate dependencies

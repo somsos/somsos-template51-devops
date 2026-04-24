@@ -23,7 +23,7 @@ jobs:
                 
                 stages {
 
-                  stage('1/2: Download') {
+                  stage('1/3: Download') {
                     steps {
                       sh \'\'\'
                         source $WORKSPACE/1fd-download.sh
@@ -31,10 +31,18 @@ jobs:
                     }
                   }
 
-                  stage('2/2: Deploy') {
+                  stage('2/3: Build Image') {
                     steps {
                       sh \'\'\'
-                        source $WORKSPACE/2fd-deploy.sh
+                        source $WORKSPACE/2fd-build-image.sh
+                      \'\'\'
+                    }
+                  }
+
+                  stage('3/3: Deploy') {
+                    steps {
+                      sh \'\'\'
+                        source $WORKSPACE/3fd-deploy.sh
                       \'\'\'
                     }
                   }

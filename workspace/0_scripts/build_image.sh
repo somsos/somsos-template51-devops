@@ -2,7 +2,10 @@
 set -e
 #set -x
 
-function back_build_image {
+# Note it's almost a copy peste of back_build_image.sh file, so maybe a change
+# here is also required there
+
+function build_image {
     if [ -z "$1" ]; then
         echo "[ERROR] The directory where the main docker-compose is required."
         exit 1
@@ -13,8 +16,18 @@ function back_build_image {
         exit 1
     fi
 
+    if [[ "$3" != "back" && "$3" != "front" ]]; then
+        set -x &&  echo "[ERROR] Required image for what service in build_image function, in function build_image" && set +x
+        exit 1
+    fi
+
     if [ -z "$BACK_NAME" ]; then
         set -x && echo "[ERROR] BACK_NAME not found, it must be gotten through docker-compose-devops.yml env variables"
+        exit 1
+    fi
+
+    if [ -z "$FRONT_NAME" ]; then
+        set -x && echo "[ERROR] FRONT_NAME not found, it must be gotten through docker-compose-devops.yml env variables"
         exit 1
     fi
 

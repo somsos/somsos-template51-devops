@@ -1,22 +1,30 @@
 #!/bin/bash
+set -e
+#set -x
+
 
 # DESCRIPTION
-#   Posible results: JENKINS, CONTAINER-SHELL, HOST
-#   JENKINS: It means it's running in a Jenkins pipeline
-#   CONTAINER-SHELL: It means it's running in a docker container,
-#   HOST: It's running in a host.
-# INPUT
-#   $1
+#   Gets the name of the current environment running.
+# RETURNS:
+#   "JENKINS"         : It means it's running in a Jenkins pipeline
+#   "CONTAINER_SHELL" : It means it's running in a docker container,
+#   "HOST"            : It's running in a host.
 
 function get_environment {
+    RESP="none"
     if [ -n "$JENKINS_URL" ]; then
-        echo "JENKINS"
-        
+        RESP="JENKINS"
     elif [ -f /.dockerenv ]; then
-        echo "CONTAINER-SHELL"
-
+        RESP="CONTAINER_SHELL"
     elif [ "$(ps -p 1 -o comm=)" = "systemd" ] || [ "$(ps -p 1 -o comm=)" = "init" ]; then
-        echo "HOST"
-        
+        RESP="HOST"
     fi
+
+    if [[ "$RESP" == "none" ]]; then
+        set -x && echo "[ERROR] Unknown environment." && set +x
+        exit 1
+    fi
+
+    echo $RESP
 }
+

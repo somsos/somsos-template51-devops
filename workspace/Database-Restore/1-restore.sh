@@ -2,20 +2,10 @@
 set -e
 #set -x # show executed lines
 
-if [ -n "$JENKINS_URL" ]; then
-    ENV_TYPE="JENKINS"
-    source /var/jenkins_home/workspace/.env
-
-elif [ -f /.dockerenv ]; then
-    ENV_TYPE="CONTAINER-SHELL"
-    source /var/jenkins_home/workspace/.env
-
-elif [ "$(ps -p 1 -o comm=)" = "systemd" ] || [ "$(ps -p 1 -o comm=)" = "init" ]; then
-    ENV_TYPE="HOST"
-    DEVOPS_WORKDIR="/home/m51/mine/t51/devops/setup/jenkins/workspace"
-    DEVOPS_REPO="ssh://git@gitea.mariomv-local.org:222/mario1/t51DevOps.git"
-    BUILD_NUMBER="0.1-test"
-fi
+source "../0_scripts/get_environment.sh"
+ENV=$(get_environment)
+source "../0_scripts/check_necessary_variables.sh"
+check_necessary_variables "$ENV"
 
 
 

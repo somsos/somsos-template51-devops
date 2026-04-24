@@ -10,16 +10,16 @@ check_necessary_variables "$ENV"
 
 source "../0_scripts/get_repo_dir.sh"
 DEVOPS_REPO_DIR=$(get_repo_dir)
-BACK_REPO_DIR=$(get_app_dir $DEVOPS_REPO_DIR "back") 
+FRONT_REPO_DIR=$(get_app_dir $DEVOPS_REPO_DIR "front") 
 echo "[INFO] DEVOPS_REPO_DIR: $DEVOPS_REPO_DIR"
-echo "[INFO] BACK_REPO_DIR  : $BACK_REPO_DIR"
+echo "[INFO] FRONT_REPO_DIR  : $FRONT_REPO_DIR"
 
 
 source "../0_scripts/get_tag_name.sh"
-IMAGE_TAG=$(get_tag_name $BACK_REPO_DIR $BUILD_NUMBER "back")
+IMAGE_TAG=$(get_tag_name $FRONT_REPO_DIR $BUILD_NUMBER "front")
 echo "[INFO] IMAGE_TAG      : $IMAGE_TAG"
 
 
 source "../0_scripts/build_image.sh"
-build_image $DEVOPS_REPO_DIR $IMAGE_TAG "back"
+build_image $DEVOPS_REPO_DIR $IMAGE_TAG "front"
 

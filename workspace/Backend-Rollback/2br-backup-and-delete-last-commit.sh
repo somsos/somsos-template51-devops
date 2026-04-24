@@ -3,16 +3,8 @@ set -e
 
 source "../0_scripts/get_environment.sh"
 ENV=$(get_environment)
-if [ "$ENV" = "JENKINS"  ]; then
-    echo "In pipeline"
-elif [ "$ENV" = "CONTAINER-SHELL"  ]; then
-    echo "In container"
-elif [ "$ENV" = "HOST"  ]; then
-    echo "In DOCKER HOST"
-    source "../../.env"
-    WORKSPACE="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-    BUILD_NUMBER=10
-fi
+source "../0_scripts/check_necessary_variables.sh"
+check_necessary_variables "$ENV"
 
 # GET PATHS
 source "../0_scripts/get_repo_dir.sh"
