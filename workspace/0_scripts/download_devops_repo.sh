@@ -1,18 +1,32 @@
 #!/bin/bash
 set -e
 # set -x
-
+source "../0_scripts/get_commit_message.sh" # it looks for the file from it's being executed
 
 # INPUT
-#    $1 : Repo URL
-#    $2 : Directory where to download
+#    $2 : 
 #    $3 : app directory to keep required
 function download_devops_repo {
+    
+    if [ -z "$1" ]; then
+        echo "[ERROR] DevOps Repository URL, not found"
+    fi
+
+    if [ -z "$2" ]; then
+        echo "[ERROR] Directory where to download the front repo, not found"
+    fi
+
+    if [[ "$3" != "back" && "$3" != "front"  && "$3" != "docker-commands" ]]; then
+        echo "[ERROR] Required service name to deploy in argument 4 of function deploy"
+        exit 1
+    fi
+
     rm -fr $2
     mkdir $2
     git clone --quiet --depth=1 --single-branch --branch main "$1" "$2" \
     && echo "[INFO] Devops repo cloned"
-    CURRENT_COMMIT_MESSAGE=$(git -C $2 log --oneline -n1)
+    
+    CURRENT_COMMIT_MESSAGE=$(get_commit_message $2)
     echo -e "\e[42m[INFO] $CURRENT_COMMIT_MESSAGE\e[0m"
 
     # Removing unnecessary folders and files in app
@@ -31,13 +45,23 @@ function download_devops_repo {
     if [ "$3" = "back" ]; then
         rm -rf $2/app/db/
         rm -rf $2/app/front/
-        rm -rf $2/app/utils/    
+        rm -rf $2/app/utils/
+
+        # get sure front folder is empty
+        # ToDo: Avoid using the app dir hardcoded
+        rm -rf $2/app/back/source
+        mkdir $2/app/back/source
     fi
     
     if [ "$3" = "front" ]; then
         rm -rf $2/app/db/
         rm -rf $2/app/back/
-        rm -rf $2/app/utils/    
+        rm -rf $2/app/utils/
+
+        # ToDo: Avoid using the app dir hardcoded
+        # get sure front folder is empty
+        rm -rf $2/app/front/source
+        mkdir $2/app/front/source
     fi
     
 

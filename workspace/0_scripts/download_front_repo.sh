@@ -2,11 +2,7 @@
 set -e
 #set -x
 
-
-if [ -z "$FRONT_REPO" ]; then
-    echo "[ERROR] Variable FRONT_REPO not found."
-    exit 1
-fi
+source "../0_scripts/get_commit_message.sh" # it looks for the file from it's being executed
 
 function download_front_repo {
     if [ -z "$1" ]; then
@@ -25,7 +21,8 @@ function download_front_repo {
     # "depth=2" because perhaps is to do a rollback
     git clone --quiet --depth=2 --single-branch --branch main "$1" "$2" \
     && echo "[INFO] Front repo cloned."
-    CURRENT_COMMIT_MESSAGE=$(git -C $1 log --oneline -n1)
+    
+    CURRENT_COMMIT_MESSAGE=$(get_commit_message $2)
     echo -e "\e[42m[INFO] $CURRENT_COMMIT_MESSAGE\e[0m"
 
     #Careful: on rollback if detects a change, will not do the push to del last commit

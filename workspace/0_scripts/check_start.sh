@@ -14,6 +14,20 @@ function check_start {
         exit 1
     fi
 
+    if [[ "$1" == "back" ]]; then
+        CONTAINER_NAME="$BACK_NAME"
+    fi
+
+    if [[ "$1" == "front" ]]; then
+        CONTAINER_NAME="$FRONT_NAME"
+    fi
+
+    if [ -z "$CONTAINER_NAME" ]; then
+        set -x && echo "[ERROR] CONTAINER_NAME empty, BACK_NAME or FRONT_NAME must be gotten through docker-compose-devops.yml env variables"
+        exit 1
+        
+    fi
+
     
     MESSAGE_BACK_FAILED_1="Application run failed"
     
@@ -60,7 +74,7 @@ function check_start {
             esac
         fi
 
-    done < <(docker logs -f $1)
+    done < <(docker logs -f $CONTAINER_NAME)
 
 
 

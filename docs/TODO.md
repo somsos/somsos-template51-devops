@@ -2,8 +2,6 @@
 
 ## Doing (First one is the current task)
 
-- [ ] Create image tagging strategy for frontend
-
 - [ ] Backup Backend
   - [ ] Restore Backend
 - [ ] Backup Frontend
@@ -131,3 +129,4 @@ posible.
     - docker tag back:${BUILD_NUMBER}-${COMMIT_ID} back:1.2.3
     - docker tag back:${BUILD_NUMBER}-${COMMIT_ID} back:${COMMIT_ID}
 - [X] Create image tagging strategy for backend
+- [X] Create image tagging strategy for frontend

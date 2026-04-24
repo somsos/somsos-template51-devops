@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 #set -x
+source "../0_scripts/get_commit_message.sh" # it looks for the file from it's being executed
 
 # INPUT
 #    $1 : Repo URL
@@ -24,7 +25,8 @@ function download_back_repo {
     # "depth=2" because perhaps is to do a rollback
     git clone --quiet --depth=2 --single-branch --branch main "$1" "$2" \
     && echo "[INFO] Back repo cloned."
-    CURRENT_COMMIT_MESSAGE=$(git -C $2 log --oneline -n1)
+    
+    CURRENT_COMMIT_MESSAGE=$(get_commit_message $2)
     echo -e "\e[42m[INFO] $CURRENT_COMMIT_MESSAGE\e[0m"
 
     if [ ! "$3" = "git" ]; then

@@ -31,20 +31,44 @@ function build_image {
         exit 1
     fi
 
+    if [ -z "$BACK_IMAGE" ]; then
+        set -x && echo "[ERROR] BACK_IMAGE not found, it must be gotten through docker-compose-devops.yml env variables"
+        exit 1
+    fi
+
+    if [ -z "$FRONT_IMAGE" ]; then
+        set -x && echo "[ERROR] FRONT_IMAGE not found, it must be gotten through docker-compose-devops.yml env variables"
+        exit 1
+    fi
+
+
     PATH_MDP=$1 # path Main Docker Compose
     IMAGE_BUILD_TAG=$2
 
-    set -x
+    
     
     # We create the image using the build tag fist and the tag it as latest
     # it seems confusing  but this way we overwrite the latest in an more
     # compressive time
-    BACK_IMAGE=$IMAGE_BUILD_TAG docker compose -f $PATH_MDP/docker-compose.yml build back
-    
-    #in this case the value es he one in env variables of OS
-    docker tag $IMAGE_BUILD_TAG $BACK_IMAGE 
 
-    set +x
+    if [[ "$3" == "back" ]]; then
+        set -x
+        BACK_IMAGE=$IMAGE_BUILD_TAG docker compose -f $PATH_MDP/docker-compose.yml build back        
+        docker tag $IMAGE_BUILD_TAG $BACK_IMAGE 
+        set +x
+    fi
+
+    if [[ "$3" == "front" ]]; then
+        set -x
+        FRONT_IMAGE=$IMAGE_BUILD_TAG docker compose -f $PATH_MDP/docker-compose.yml build front
+        docker tag $IMAGE_BUILD_TAG $FRONT_IMAGE
+        set +x
+    fi
+    
+    
+    
+
+    
 
 }
 

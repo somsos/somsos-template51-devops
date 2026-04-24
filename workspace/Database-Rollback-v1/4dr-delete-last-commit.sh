@@ -9,10 +9,10 @@ check_necessary_variables "$ENV"
 
 
 source "../0_scripts/get_repo_dir.sh"
-REPO_DIR=$(get_repo_dir)
-DB_REPO_DIR="$REPO_DIR/app/db/source"
-echo "[INFO] REPO_DIR: $REPO_DIR"
-echo "[INFO] DB_DIR: $DB_REPO_DIR"
+DEVOPS_REPO_DIR=$(get_repo_dir)
+DB_REPO_DIR=$(get_app_dir $DEVOPS_REPO_DIR "db") 
+echo "[INFO] DEVOPS_REPO_DIR : $DEVOPS_REPO_DIR"
+echo "[INFO] FRONT_REPO_DIR  : $DB_REPO_DIR"
 
 
 USED_PATH=$(git -C $DB_REPO_DIR rev-parse --show-toplevel)

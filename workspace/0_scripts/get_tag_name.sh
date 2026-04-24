@@ -35,7 +35,7 @@ function get_tag_name {
     fi
 
     if [ "$3" == "front" ] ; then
-        BASE_NAME="$FRONT_NAM"
+        BASE_NAME="$FRONT_NAME"
     fi
 
     
