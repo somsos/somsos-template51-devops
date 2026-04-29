@@ -2,14 +2,25 @@
 
 ## Doing (First one is the current task)
 
-- [ ] Backup Backend
-  - [ ] Restore Backend
-- [ ] Backup Frontend
-  - [ ] Restore Frontend
+- [ ] Add tag tag to images to mark production candidates.
+
+- [ ] Purge Images, get rid of images that are not candidates to production.
+
+- [ ] Restore Backend
+- [ ] Restore Frontend
+- [ ] Check the pipelines on offline mode (without internet)
 
 - [ ] Security
   - [ ] Hide .env passwords
     - [ ] Check how it works [varLook](https://github.com/alhenry/varlook)
+
+- [ ] Create pipeline to execute tests and publish a status sticker
+
+- [ ] Decide how to test the UI code (Jest, Cypress, etc)
+  - [ ] Run them on Jenkins
+
+- [ ] Automate Monitoring and Reporting
+  - [ ] Study best approaches for this
 
 ## Resume
 
@@ -129,4 +140,6 @@ posible.
     - docker tag back:${BUILD_NUMBER}-${COMMIT_ID} back:1.2.3
     - docker tag back:${BUILD_NUMBER}-${COMMIT_ID} back:${COMMIT_ID}
 - [X] Create image tagging strategy for backend
+  - [X] Backup Backend (with tagging strategy I also create backups )
 - [X] Create image tagging strategy for frontend
+  - [X] Backup Frontend (with tagging strategy I also create backups )

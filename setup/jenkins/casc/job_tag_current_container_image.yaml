@@ -1,0 +1,60 @@
+jobs:
+  - script: >
+      pipelineJob('Tag-image-and-upload-9') {
+        description('Tag and upload Docker images')
+
+        definition {
+          cps {
+            script("""
+                pipeline {
+                    agent { label 'built-in' }
+                    stages {
+                        stage("Select Image and Tag") {
+                            steps {
+                                script {
+                                    // Get available images dynamically using sh step
+                                    def imageList = sh(
+                                        script: "docker images --format '{{.Repository}}:{{.Tag}}' | grep -E 't51front|t51back'",
+                                        returnStdout: true
+                                    ).trim().split('\\n').collect { it.trim() }.findAll { it }
+
+                                    echo "Images"
+                                    echo imageList.toString()
+
+                                    // Prompt user to select image and enter new tag
+                                    def userInput = input message: 'Select image and enter new tag', ok: 'Confirm',
+                                            parameters: [
+                                                choice(name: 'SELECTED_IMAGE', choices: imageList.join('\\n'), description: 'Available t51 images'),
+                                                text(name: 'NEW_TAG', description: 'New tag name (e.g., 1.0.0 or 3.2.1)')
+                                            ]
+
+                                    env.SELECTED_IMAGE = userInput['SELECTED_IMAGE']
+                                    env.NEW_TAG = userInput['NEW_TAG']
+                                    echo "Selected image: \$SELECTED_IMAGE"
+                                    echo "New tag: \$NEW_TAG"
+                                
+                                }
+                            }
+                        }
+
+                        stage('Tag image') {
+                            steps {
+                                sh '''
+                                    docker tag \$SELECTED_IMAGE \$NEW_TAG
+                                '''
+                            }
+                        }
+
+                        stage('Upload tag') {
+                            steps {
+                                sh '''
+                                    
+                                '''
+                            }
+                        }
+                    }
+                }
+            """.stripIndent())
+          }
+        }
+      }

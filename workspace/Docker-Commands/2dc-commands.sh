@@ -25,7 +25,7 @@ fi
 
 
 if [ "$1" = "status"  ]; then
-    docker ps -a --format 'table {{.Names}}\t{{.Status}}\t{{.Size}}'
+    docker ps -a --format 'table {{.Names}}\t{{.Status}}\t{{.Image}}\t{{.Size}}'
     exit 0
 fi
 

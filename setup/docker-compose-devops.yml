@@ -85,7 +85,7 @@ services:
       
       - FRONT_REPO=${FRONT_REPO}
       - FRONT_NAME=${FRONT_NAME}
-      - FRONT_IMAGE=${FRONT_IMAGE}
+      - ENVIRONMENT=${DEV}
       
       - DEVOPS_REPO=${DEVOPS_REPO}
       - VERSION=${VERSION}
@@ -93,7 +93,6 @@ services:
     expose:
       - "8080"
     volumes:
-
 ####### REPO LOCATIONS ########
       - ./jenkins/vol-jenkins_home:/var/jenkins_home        # all jenkins main
       - ./jenkins/casc:/var/jenkins_home/casc_configs:ro    # CasC (Configuration as Code)
@@ -103,8 +102,6 @@ services:
       - ./secrets/t51_noPass.priv:/var/jenkins_home/.ssh/t51_noPass.priv:ro
       - ./shared/ssh_config:/var/jenkins_home/.ssh/config
       - ./shared/known_hosts:/var/jenkins_home/.ssh/known_hosts
-
-
 ####### SYSTEM LOCATIONS ########
 # Access to docker host
       - /var/run/docker.sock:/var/run/docker.sock
@@ -115,6 +112,7 @@ services:
     networks:
       t51Net:
         ipv4_address: ${JENKINS_IP}
+
 
 
   reverse-proxy:
@@ -156,3 +154,48 @@ services:
         ipv4_address: ${ACME_COMPANION_IP}
 
 
+  registry:
+    profiles: ["devops", "all"]
+    container_name: t51registry
+    image: registry:3.1
+    environment:
+      # Domain and SSL
+      - VIRTUAL_HOST=registry.${MY_DOMAIN}
+      - VIRTUAL_PORT=5000
+      - LETSENCRYPT_HOST=registry.${MY_DOMAIN}
+      - LETSENCRYPT_EMAIL=${MY_EMAIL}
+      # Basic conf
+      - REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/data
+      - REGISTRY_STORAGE_DELETE_ENABLED=true
+      # Auth setup
+      - REGISTRY_AUTH=htpasswd
+      - REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm
+      - REGISTRY_AUTH_HTPASSWD_PATH=/auth/registry.password
+    volumes:
+      - ./registry/registry.password:/auth/registry.password
+      - ./registry/data:/data
+    networks:
+      t51Net:
+        ipv4_address: 172.30.0.214
+    ports:
+      - "5000:5000"
+
+# For security reasons, I better use a Jenkins pipeline to show the available images
+#  registry-ui:
+#    profiles: ["devops", "all"]
+#    container_name: t51registry-ui
+#    image: quiq/registry-ui:0.12.0
+#    environment:
+#      - REGISTRY_HOSTNAME=172.30.0.214:5000
+#      - REGISTRY_INSECURE=true
+#      - TZ=America/Mexico_City
+#      - REGISTRY_USERNAME=${MY_USER}
+#      - REGISTRY_PASSWORD=${MY_PASS}
+#      - ACCESS_CONTROL_ADMINS=[${MY_USER}]
+#    volumes:
+#      - ./registry/config-registry-ui.yml:/opt/config.yml:ro
+#    ports:
+#      - "8000:8000"
+#    networks:
+#      t51Net:
+#        ipv4_address: 172.30.0.215

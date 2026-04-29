@@ -9,6 +9,8 @@ setup/data
 **/backups/*
 !**/backups/*.md
 
+setup/registry/data
+setup/registry/registry.password
 
 **/workspace/*
 
@@ -37,7 +39,6 @@ setup/data
 **/workspace/Docker-Commands/*
 !**/workspace/Docker-Commands/*.sh
 
-
 !**/workspace/Database-Restore/
 **/workspace/Database-Restore/*
 !**/workspace/Database-Restore/*.sh
@@ -46,19 +47,18 @@ setup/data
 **/workspace/Frontend-Rollback/*
 !**/workspace/Frontend-Rollback/*.sh
 
-
-
-
 !**/workspace/Database-Rollback-v1/
 **/workspace/Database-Rollback-v1/*
 !**/workspace/Database-Rollback-v1/*.sh
 !**/workspace/Database-Rollback-v1/*.md
 
-
-
 !**/workspace/Database-Backup/
 **/workspace/Database-Backup/*
 !**/workspace/Database-Backup/*.sh
+
+!**/workspace/Tag-image-and-upload/
+!**/workspace/Tag-image-and-upload/*
+!**/workspace/Tag-image-and-upload*.sh
 
 !**/workspace/0_scripts/
 **/workspace/0_scripts/*
