@@ -6,7 +6,8 @@
 
 
 # Dependencies downloader
-FROM maven:3.9.9-eclipse-temurin-21-alpine AS deps
+ARG IMAGE_MVN
+FROM $IMAGE_MVN AS deps
 
 RUN mkdir /opt/template51
 WORKDIR /opt/template51
@@ -27,7 +28,7 @@ RUN --mount=type=cache,target=/root/.m2 \
 
 
 # Builder
-FROM maven:3.9.9-eclipse-temurin-21-alpine AS builder
+FROM $IMAGE_MVN AS builder
 
 RUN mkdir /opt/template51
 WORKDIR /opt/template51

@@ -91,10 +91,12 @@ function addRepo {
         fi
 
         mkdir -p /tmp/content-$1/ && cd /tmp/content-$1/
-        tar -xJf /tmp/initial_repos/$1.tar.xz -C .
+        tar -xJf $TAR_FILE -C . \
+          && echo "[INFO] Repo poblated: $1 using $TAR_FILE" \
+          || echo "[ERROR] $1 something went wrong uncompressing $TAR_FILE"
         
         # Create first commit
-        git init
+        git init -q && echo "[INFO] Repo init in /tmp/content-$1/" || echo "[ERROR] git init /tmp/content-$1/"
         git branch -M main # rename current branch to main, to be sure when pushing
         git add .
         git commit --quiet -m "Initial commit" &> /dev/null \
@@ -106,7 +108,7 @@ function addRepo {
 
         rm -rf /tmp/repos/$1/$1.tar.xz
 
-        echo "[SUCCESS]: Repo $1 added"
+        echo "[SUCCESS]: Repo added: $1"
 
     elif [ "$RESPONSE" = "409" ] || [ "$RESPONSE" = "422" ]; then
         echo "Repository '$1' already exists. Skipping creation."

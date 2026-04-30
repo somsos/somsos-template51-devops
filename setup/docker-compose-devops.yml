@@ -85,7 +85,6 @@ services:
       
       - FRONT_REPO=${FRONT_REPO}
       - FRONT_NAME=${FRONT_NAME}
-      - ENVIRONMENT=${DEV}
       
       - DEVOPS_REPO=${DEVOPS_REPO}
       - VERSION=${VERSION}
