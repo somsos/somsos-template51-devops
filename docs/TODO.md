@@ -16,6 +16,12 @@
 
 - [ ] Create pipeline to execute tests and publish a status sticker
 
+- [ ] Pre approve pipelines, so the first time the user execute a pipeline, it doesn't give an error ofr this
+
+- [ ] Let clearer or create scripts to set up the initial setup required
+  - [ ] Add custom domain and sub-domain in /etc/hosts
+  - [ ] Add ssh keys
+
 - [ ] Decide how to test the UI code (Jest, Cypress, etc)
   - [ ] Run them on Jenkins
 
