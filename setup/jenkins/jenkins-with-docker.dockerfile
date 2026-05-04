@@ -1,3 +1,5 @@
+# We pass the docker group id as a build argument because it can change between host machines.
+
 # Keep a specific version because I already had a difficulty because of an automatic update
 FROM jenkins/jenkins:2.541.1-lts-jdk21
 
@@ -15,9 +17,6 @@ RUN echo "deb [arch=$(dpkg --print-architecture) \
 
 RUN apt-get update && apt-get install -y docker-ce-cli
 
-# CAREFUL: GID must match host's docker group GID (in my case 999): cat /etc/group | grep docker
-RUN groupadd -g 999 docker && usermod -aG docker jenkins
-
 # Adding plugins to install, including JCasC plugin to add conf. at boot
 COPY ./casc/plugins.txt /usr/share/jenkins/ref/plugins.txt
 RUN jenkins-plugin-cli --plugin-file /usr/share/jenkins/ref/plugins.txt
@@ -32,6 +31,12 @@ RUN rm -rf /var/lib/apt/lists/*
 # pipeline and for developing pipeline, duplicating ways to do the same.
 # COPY --from=liquibase:4.33-alpine /liquibase /liquibase
 # ENV PATH="/liquibase:${PATH}"
+
+# CAREFUL: GID must match host's docker group GID (in my case 999)
+# We can get the GID with the bellow command
+#     docker compose build --build-arg DOCKER_GID=$(getent group docker | cut -d: -f3) jenkins
+ARG DOCKER_GID    
+RUN groupadd -g $DOCKER_GID docker && usermod -aG docker jenkins
 
 
 USER jenkins

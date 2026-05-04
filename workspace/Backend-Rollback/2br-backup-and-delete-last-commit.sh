@@ -19,8 +19,8 @@ TO_DELETE=$(head -n1 temp1.txt)
 TO_RE_DEPLOY=$(tail -n1 temp1.txt)
 rm ./temp1.txt
 
-echo -e "\e[42m[INFO] TO_DELETE     : $TO_DELETE\e[0m"
-echo -e "\e[42m[INFO] TO_RE_DEPLOY  : $TO_RE_DEPLOY\e[0m"
+echo -e "\033[38;5;27;48;5;231m[INFO] TO_DELETE     : $TO_DELETE\033[0m"
+echo -e "\033[38;5;27;48;5;231m[INFO] TO_RE_DEPLOY  : $TO_RE_DEPLOY\033[0m"
 
 # Checking path
 # CAUTION: It happened me that as the path was wrong the command did a revert

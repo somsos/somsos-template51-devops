@@ -17,7 +17,7 @@ echo "[INFO] FRONT_REPO_DIR  : $FRONT_REPO_DIR"
 
 source "../0_scripts/get_tag_name.sh"
 IMAGE_TAG=$(get_tag_name $FRONT_REPO_DIR $BUILD_NUMBER "front")
-echo -e "\e[42m[INFO] IMAGE_TAG to build: $IMAGE_TAG $3 \e[0m"
+echo -e "\033[38;5;27;48;5;231m[INFO] IMAGE_TAG to build: $IMAGE_TAG $3 \033[0m"
 
 
 source "../0_scripts/build_image.sh"

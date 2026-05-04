@@ -13,5 +13,5 @@ echo "[INFO] DEVOPS_REPO_DIR: $DEVOPS_REPO_DIR"
 
 source "../0_scripts/download_devops_repo.sh"
 download_devops_repo $DEVOPS_REPO $DEVOPS_REPO_DIR "docker-commands"
-echo -e "\e[42m[Success] downloaded and cleaned.\e[0m"
+echo -e "\033[38;5;27;48;5;231m[Success] downloaded and cleaned.\033[0m"
 

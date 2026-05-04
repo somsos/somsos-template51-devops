@@ -2,6 +2,14 @@
 
 ## Doing (First one is the current task)
 
+- [ ] Create a initial setup script 
+  - [ ] X. Add local domains to etc/hosts
+  - [ ] X. Build Jenkins passing the docker group id to the build commnad
+  - [ ] X. Build the db_utils container
+  - [ ] X. Build the backend container
+  - [ ] X. Build the front container
+  - [ ] X. Install the schema to the database.
+
 - [ ] Add tag tag to images to mark production candidates.
 
 - [ ] Purge Images, get rid of images that are not candidates to production.

@@ -27,7 +27,7 @@ function download_back_repo {
     && echo "[INFO] Back repo cloned."
     
     CURRENT_COMMIT_MESSAGE=$(get_commit_message $2)
-    echo -e "\e[42m[INFO] $CURRENT_COMMIT_MESSAGE\e[0m"
+    echo -e "\033[38;5;27;48;5;231m[INFO] Backend commit: $CURRENT_COMMIT_MESSAGE\033[0m"
 
     if [ ! "$3" = "git" ]; then
         rm -rf $2/.git/

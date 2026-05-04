@@ -47,7 +47,7 @@ WORKDIR_BUILD="$WORKSPACE/$BUILD_NUMBER"
 
 rm -fr $WORKDIR_BUILD
 git clone --quiet --depth=1 --single-branch --branch main "$DEVOPS_REPO" "$WORKDIR_BUILD" \
-  && echo -e "\e[42m[INFO] Devops repo cloned.\e[0m"
+  && echo -e "\033[38;5;27;48;5;231m[INFO] Devops repo cloned.\033[0m"
 git -C $WORKDIR_BUILD log --oneline -n1
 
 
@@ -72,7 +72,7 @@ rm -rf $WORKDIR_BUILD/app/back/
 rm -rf $WORKDIR_BUILD/app/front/
 rm -rf $WORKDIR_BUILD/app/utils/
 
-echo -e "\e[42m[Success] downloaded and cleaned.\e[0m"
+echo -e "\033[38;5;27;48;5;231m[Success] downloaded and cleaned.\033[0m"
 
 
 

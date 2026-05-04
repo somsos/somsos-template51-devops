@@ -27,7 +27,7 @@ function download_devops_repo {
     && echo "[INFO] Devops repo cloned"
     
     CURRENT_COMMIT_MESSAGE=$(get_commit_message $2)
-    echo -e "\e[42m[INFO] $CURRENT_COMMIT_MESSAGE\e[0m"
+    echo -e "\033[38;5;27;48;5;231m[INFO] DevOps commit: $CURRENT_COMMIT_MESSAGE\033[0m"
 
     # Removing unnecessary folders and files in app
     rm -rf $2/.git/

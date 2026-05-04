@@ -23,7 +23,7 @@ function download_front_repo {
     && echo "[INFO] Front repo cloned."
     
     CURRENT_COMMIT_MESSAGE=$(get_commit_message $2)
-    echo -e "\e[42m[INFO] $CURRENT_COMMIT_MESSAGE\e[0m"
+    echo -e "\033[38;5;27;48;5;231m[INFO] Frontend commit: $CURRENT_COMMIT_MESSAGE\033[0m"
 
     #Careful: on rollback if detects a change, will not do the push to del last commit
     if [ ! "$3" = "git" ]; then
