@@ -4,10 +4,9 @@ services:
   gitea:
     profiles: ["devops", "all"]
     container_name: gitea       # Careful changing it's used to clone the repo in jenkins
-    image: gitea/gitea:1.25
+    image: docker.gitea.com/gitea:1.26.1-rootless
+    user: "1000:1000"
     environment:
-      - USER_UID=1000
-      - USER_GID=1000
       - VIRTUAL_HOST=gitea.${MY_DOMAIN}
       - VIRTUAL_PORT=3000
       - LETSENCRYPT_HOST=gitea.${MY_DOMAIN}
@@ -28,8 +27,9 @@ services:
       - DEVOPS_NAME=${DEVOPS_NAME}
       - SHARED_TOKEN=${SHARED_TOKEN}
     volumes:
-      - ./gitea/vol-data:/data    # Persist data
-      - ./gitea/gitea-entrypoint.sh:/usr/local/bin/gitea-entrypoint.sh:ro   # Config
+      - ./gitea/vol-data:/var/lib/gitea    # Persist data
+      - ./gitea/vol-config-dir:/etc/gitea
+      - ./gitea/gitea-entrypoint.sh:/usr/local/bin/gitea-entrypoint.sh:ro
       - ./secrets/t51_noPass.pub:/data/setup/t51_noPass.pub:ro    # SSH Config
       # Initial repositories
       - ./gitea/initial_repos/${BACK_NAME}.tar.xz:/tmp/initial_repos/${BACK_NAME}.tar.xz
@@ -41,9 +41,10 @@ services:
       - /etc/localtime:/etc/localtime:ro
     entrypoint: ["/bin/sh", "/usr/local/bin/gitea-entrypoint.sh"]
     ports:
-      - "222:22"
+      - "222:2222"
     expose:
-      - "3000"
+      - "3000"    # Web server
+      - "2222"      # to allow another container connections in the same network.
     networks:
       t51Net:
         ipv4_address: ${GITEA_IP}
@@ -51,12 +52,7 @@ services:
 
 
 
-  #C1: CAREFUL: Might give file permissions error, if does run: "sudo chown -R 1000:1000 ./data_jenkins"
-  #C2:--CAREFUL changing the name, is used trigger the webhook from gitea to jenkins.
-  #C2:----./.env
-  #C2:----./data/secrets/ssh/config 
-  #C2:----./workdir/start.sh
-  #C2:----./workdir/database_rollback.sh
+  #CAREFUL changing the name is used to triggering the webhook from gitea to jenkins.
   jenkins:
     profiles: ["devops", "all"]
     container_name: jenkins

@@ -16,7 +16,7 @@ function download_devops_repo {
         echo "[ERROR] Directory where to download the front repo, not found"
     fi
 
-    if [[ "$3" != "back" && "$3" != "front"  && "$3" != "docker-commands" ]]; then
+    if [[ "$3" != "back" && "$3" != "front"  && "$3" != "docker-commands" && "$3" != "db-mig" ]]; then
         echo "[ERROR] Required service name to deploy in argument 4 of function deploy"
         exit 1
     fi
@@ -24,7 +24,9 @@ function download_devops_repo {
     rm -fr $2
     mkdir $2
     git clone --quiet --depth=1 --single-branch --branch main "$1" "$2" \
-    && echo "[INFO] Devops repo cloned"
+        && echo "[INFO] Devops repo cloned" \
+        || echo "[ERROR] Failed to clone DevOps repo, check the URL and your access rights" \
+            && exit 1
     
     CURRENT_COMMIT_MESSAGE=$(get_commit_message $2)
     echo -e "\033[38;5;27;48;5;231m[INFO] DevOps commit: $CURRENT_COMMIT_MESSAGE\033[0m"
@@ -63,29 +65,49 @@ function download_devops_repo {
         rm -rf $2/app/front/source
         mkdir $2/app/front/source
     fi
-    
+
+    if [ "$3" = "db-mig" ]; then
+        rm -rf $2/.git/
+        rm -rf $2/docs/
+        rm -rf $2/z_*
+        rm -rf $2/README.md
+        rm -rf $2/.gitignore
+
+        # setup directory
+        rm -rf $2/setup/gitea
+        rm -rf $2/setup/jenkins
+        rm -rf $2/setup/secrets
+        rm -rf $2/setup/shared
+
+        # app directory
+        # rm -rf $2/app/db/      # We keep this one
+        rm -rf $2/app/back/
+        rm -rf $2/app/front/
+        rm -rf $2/app/utils/
+    fi
+        
 
     if [ "$3" = "docker-commands" ]; then
-        rm -rf $WORKDIR_BUILD/.git/
-        rm -rf $WORKDIR_BUILD/docs/
-        rm -rf $WORKDIR_BUILD/README.md
-        rm -rf $WORKDIR_BUILD/.gitignore
+        rm -rf $2/.git/
+        rm -rf $2/docs/
+        rm -rf $2/README.md
+        rm -rf $2/.gitignore
 
-        rm -rf $WORKDIR_BUILD/app/db/
-        rm -rf $WORKDIR_BUILD/app/back/
-        rm -rf $WORKDIR_BUILD/app/front/
-        rm -rf $WORKDIR_BUILD/app/utils/
+        rm -rf $2/app/db/
+        rm -rf $2/app/back/
+        rm -rf $2/app/front/
+        rm -rf $2/app/utils/
 
-        rm -rf $WORKDIR_BUILD/setup/gitea
-        rm -rf $WORKDIR_BUILD/setup/gitea
-        rm -rf $WORKDIR_BUILD/setup/jenkins
-        rm -rf $WORKDIR_BUILD/setup/secrets
-        rm -rf $WORKDIR_BUILD/setup/shared
+        rm -rf $2/setup/gitea
+        rm -rf $2/setup/gitea
+        rm -rf $2/setup/jenkins
+        rm -rf $2/setup/secrets
+        rm -rf $2/setup/shared
 
-        rm -rf $WORKDIR_BUILD/workspace
-        rm -rf $WORKDIR_BUILD/z_artt51
-        # rm -rf $WORKDIR_BUILD/.env   # We name it
-        rm -rf $WORKDIR_BUILD/.vscode
+        rm -rf $2/workspace
+        rm -rf $2/z_artt51
+        # rm -rf $2/.env   # We name it
+        rm -rf $2/.vscode
     fi
     
     

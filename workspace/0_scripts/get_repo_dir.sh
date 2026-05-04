@@ -22,7 +22,7 @@ function get_app_dir {
         exit 1
     fi
 
-    if [ "$2" = "db" ]; then
+    if [ "$2" = "db-mig" ]; then
         echo "$1/app/db/source"
     fi
 

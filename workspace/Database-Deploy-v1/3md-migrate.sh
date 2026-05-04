@@ -16,10 +16,10 @@ if [[ "$1" != "deploy" && "$1" != "rollback" ]]; then
     exit 1
 fi
 
-WORKDIR_REPO="$WORKSPACE/$BUILD_NUMBER"
-
-cd $WORKDIR_REPO
+source "../0_scripts/get_repo_dir.sh"
+DEVOPS_REPO_DIR=$(get_repo_dir)
+echo "[INFO] DEVOPS_REPO_DIR: $DEVOPS_REPO_DIR"
 
 set -x
-docker compose run --rm --name temp_db_utils db_utils $1
+docker compose -f $DEVOPS_REPO_DIR/docker-compose.yml run --rm --name temp_db_utils db_utils $1
 set +x

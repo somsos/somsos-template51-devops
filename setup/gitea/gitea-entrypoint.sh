@@ -3,54 +3,57 @@
 
 # Start the original Gitea entrypoint in the background
 # This initializes the app and starts the s6 supervisor
-/usr/bin/entrypoint /usr/bin/s6-svscan /etc/s6 &
+#/usr/bin/entrypoint /usr/bin/s6-svscan /etc/s6 &
+/usr/bin/dumb-init -- /usr/local/bin/docker-entrypoint.sh & 
 
 # Wait for the Gitea web service to be reachable
-echo "Waiting for Gitea to start..."
+echo "[INFO] Waiting for Gitea to start..."
 until nc -z localhost 3000; do
   sleep 1
 done
+echo "[INFO] Gitea web server running, starting initialization."
+
 
 ################################################################################
 ####################-CHECK-REQUIRED-GLOBAL-VARIABLES-###########################
 
 if [ -z "$GITEA_ADMIN_USER" ]; then
-  echo "global environment variable GITEA_ADMIN_USER required"
+  echo "[ERROR] global environment variable GITEA_ADMIN_USER required"
   exit 1
 fi
 
 if [ -z "$GITEA_ADMIN_PASSWORD" ]; then
-  echo "global environment variable GITEA_ADMIN_PASSWORD required"
+  echo "[ERROR] global environment variable GITEA_ADMIN_PASSWORD required"
   exit 1
 fi
 
 if [ -z "$GITEA_ADMIN_EMAIL" ]; then
-  echo "global environment variable GITEA_ADMIN_EMAIL required"
+  echo "[ERROR] global environment variable GITEA_ADMIN_EMAIL required"
   exit 1
 fi
 
 if [ -z "$BACK_NAME" ]; then
-  echo "global environment variable BACK_NAME required"
+  echo "[ERROR] global environment variable BACK_NAME required"
   exit 1
 fi
 
 if [ -z "$FRONT_NAME" ]; then
-  echo "global environment variable FRONT_NAME required"
+  echo "[ERROR] global environment variable FRONT_NAME required"
   exit 1
 fi
 
 if [ -z "$DB_MIG_NAME" ]; then
-  echo "global environment variable DB_MIG_NAME required"
+  echo "[ERROR] global environment variable DB_MIG_NAME required"
   exit 1
 fi
 
 if [ -z "$DEVOPS_NAME" ]; then
-  echo "global environment variable DEVOPS_NAME required"
+  echo "[ERROR] global environment variable DEVOPS_NAME required"
   exit 1
 fi
 
 if [ -z "$SHARED_TOKEN" ]; then
-  echo "global environment variable SHARED_TOKEN required"
+  echo "[ERROR] global environment variable SHARED_TOKEN required"
   exit 1
 fi
 
@@ -84,13 +87,13 @@ function add_admin_user_if_required {
   fi
 
   # If the user already exist stop the function
-  su-exec git gitea admin user list | grep -q "$1"
+  gitea admin user list | grep -q "$1"
   if [ $? -eq 0 ]; then
       echo "[INFO] The git admin user already exists, skipping creation."
       return 0
   fi
   
-  su-exec git gitea admin user create \
+  gitea admin user create \
     --admin \
     --username "${1}" \
     --password "${2}" \
@@ -107,7 +110,7 @@ function add_admin_user_if_required {
 # DEPENDS ON 
 #   and admin user already addded defined in fuction add_admin_user_if_required
 function get_token {
-  TOKEN=$(su-exec git gitea admin user generate-access-token \
+  TOKEN=$(gitea admin user generate-access-token \
     --username "${GITEA_ADMIN_USER}" \
     --token-name "$(tr -dc 'a-zA-Z0-9' < /dev/urandom | head -c 10)" \
     | awk '{print $NF}')
@@ -320,26 +323,14 @@ add_git_global_config_if_required $GITEA_ADMIN_EMAIL $GITEA_ADMIN_USER
 
 
 addRepo "$BACK_NAME"
-sleep 1
-
 addRepo "$FRONT_NAME"
-sleep 1
-
 addRepo "$DB_MIG_NAME"
-sleep 1
-
 addRepo "$DEVOPS_NAME"
-sleep 1
 
 
 addWebHook "$BACK_NAME"
-sleep 1
-
 addWebHook "$FRONT_NAME"
-sleep 1
-
 addWebHook "$DB_MIG_NAME"
-sleep 1
 
 
 echo "[INFO] Entrypoint completed."

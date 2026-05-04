@@ -1,102 +1,24 @@
 #!/bin/bash
 set -e
-set -x # show executed lines
+#set -x
 
-
-# ######## introduction
 source "../0_scripts/get_environment.sh"
 ENV=$(get_environment)
 source "../0_scripts/check_necessary_variables.sh"
 check_necessary_variables "$ENV"
 
 
-WORKDIR_DOC="$WORKSPACE/$BUILD_NUMBER"
+source "../0_scripts/get_repo_dir.sh"
+DEVOPS_REPO_DIR=$(get_repo_dir)
+DB_MIG_REPO_DIR=$(get_app_dir $DEVOPS_REPO_DIR "db-mig") 
+echo "[INFO] DEVOPS_REPO_DIR: $DEVOPS_REPO_DIR"
+echo "[INFO] DB_MIG_REPO_DIR  : $DB_MIG_REPO_DIR"
 
 
-
-# ######## Validate dependencies
-if [ -z "$WORKSPACE" ]; then
-  echo "[ERROR] Variable WORKSPACE not found, The path to the devops workdir is required."
-  exit 1
-fi
-
-if [ -z "$BUILD_NUMBER" ]; then
-  echo "[ERROR] Variable BUILD_NUMBER not found, The incremental number of builds is required."
-  exit 1
-fi
-
-if [ -z "$WORKDIR_DOC" ]; then
-  echo "[ERROR] Variable WORKDIR_DOC not found, The path pipeline build workspace is required"
-  exit 1
-fi
-
-if [ -z "$DEVOPS_REPO" ]; then
-  echo "[ERROR] Variable DEVOPS_REPO not found, The URL to the devops project is required."
-  exit 1
-fi
-
-if [ -z "$DB_MIG_REPO" ]; then
-  echo "[ERROR] Variable DB_MIG_REPO not found, The URL to the database migrations project is required."
-  exit 1
-fi
+source "../0_scripts/download_devops_repo.sh"
+download_devops_repo $DEVOPS_REPO $DEVOPS_REPO_DIR "db-mig"
 
 
-
-
-WORKDIR_BUILD="$WORKSPACE/$BUILD_NUMBER"
-
-rm -fr $WORKDIR_BUILD
-git clone --quiet --depth=1 --single-branch --branch main "$DEVOPS_REPO" "$WORKDIR_BUILD" \
-  && echo -e "\033[38;5;27;48;5;231m[INFO] Devops repo cloned.\033[0m"
-git -C $WORKDIR_BUILD log --oneline -n1
-
-
-
-# ######## Remove unnecessary things
-# root directory
-rm -rf $WORKDIR_BUILD/.git/
-rm -rf $WORKDIR_BUILD/docs/
-rm -rf $WORKDIR_BUILD/z_*
-rm -rf $WORKDIR_BUILD/README.md
-rm -rf $WORKDIR_BUILD/.gitignore
-
-# setup directory
-rm -rf $WORKDIR_BUILD/setup/gitea
-rm -rf $WORKDIR_BUILD/setup/jenkins
-rm -rf $WORKDIR_BUILD/setup/secrets
-rm -rf $WORKDIR_BUILD/setup/shared
-
-# app directory
-# rm -rf $WORKDIR_BUILD/app/db/      # We keep this one
-rm -rf $WORKDIR_BUILD/app/back/
-rm -rf $WORKDIR_BUILD/app/front/
-rm -rf $WORKDIR_BUILD/app/utils/
-
-echo -e "\033[38;5;27;48;5;231m[Success] downloaded and cleaned.\033[0m"
-
-
-
-
-# Clone the db-mig repo
-REPO_DIR="$WORKDIR_BUILD/app/db/source"
-mkdir -p $REPO_DIR
-rm -rf $REPO_DIR/*   # between quotes because the last part is confused by groovy as a comment
-git clone --quiet --depth=2 --single-branch --branch main "$DB_MIG_REPO" "$REPO_DIR" \
-  && echo "[INFO] db-mig repository cloned."
-git -C $REPO_DIR log --oneline -n1
-
-# Commented line, so it can work for rollback, because look for the remote url,
-# and git does not detect changes and so will be able to make a push.
-#rm -rf $REPO_DIR/.git/ 
-#rm -rf $REPO_DIR/docs/
-#rm -rf $REPO_DIR/README*
-
-
-sleep 3
-
-
-
-
-
-echo "[SUCCESS] Cloning and preparations done."
+source "../0_scripts/download_db_mig_repo.sh"
+download_db_mig_repo $DB_MIG_REPO $DB_MIG_REPO_DIR "git"
 

@@ -10,19 +10,9 @@ source "../0_scripts/check_necessary_variables.sh"
 check_necessary_variables "$ENV"
 
 
-# ######## Validate dependencies
-if [ -z "$WORKSPACE" ]; then
-  echo "[ERROR] Variable WORKSPACE not found, The path to the devops workdir is required."
-  exit 1
-fi
+source "../0_scripts/get_repo_dir.sh"
+DEVOPS_REPO_DIR=$(get_repo_dir)
+echo "[INFO] DEVOPS_REPO_DIR: $DEVOPS_REPO_DIR"
 
-if [ -z "$BUILD_NUMBER" ]; then
-  echo "[ERROR] Variable BUILD_NUMBER not found, The incremental number of builds is required."
-  exit 1
-fi
 
-WORKDIR_REPO="$WORKSPACE/$BUILD_NUMBER"
-
-cd $WORKDIR_REPO
-
-docker compose build db_utils
+docker compose -f $DEVOPS_REPO_DIR/docker-compose.yml build db_utils
