@@ -77,7 +77,6 @@ services:
       - BACK_REPO=${BACK_REPO}
       - BACK_NAME=${BACK_NAME}
       - BACK_IMAGE=${BACK_IMAGE}
-      - IMAGE_MVN=${IMAGE_MVN}
       
       - FRONT_REPO=${FRONT_REPO}
       - FRONT_NAME=${FRONT_NAME}
