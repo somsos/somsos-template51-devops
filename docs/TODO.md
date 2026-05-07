@@ -9,8 +9,9 @@
   - [ ] X. Build the db_utils container
   - [ ] X. Build the backend container
   - [ ] X. Build the front container
-  
   - [ ] X. Install the schema to the database.
+
+- [ ] Update all the initial_repos, do not forget to keep the same name and remove the .git folder
 
 - [ ] Check that one can start the app by just using Jenkins.
 
