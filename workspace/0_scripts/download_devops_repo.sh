@@ -25,8 +25,8 @@ function download_devops_repo {
     mkdir $2
     git clone --quiet --depth=1 --single-branch --branch main "$1" "$2" \
         && echo "[INFO] Devops repo cloned" \
-        || echo "[ERROR] Failed to clone DevOps repo, check the URL and your access rights" \
-            && exit 1
+        || ( echo "[ERROR] Failed to clone DevOps repo, check the URL and your access rights" && exit 1 )
+            
     
     CURRENT_COMMIT_MESSAGE=$(get_commit_message $2)
     echo -e "\033[38;5;27;48;5;231m[INFO] DevOps commit: $CURRENT_COMMIT_MESSAGE\033[0m"

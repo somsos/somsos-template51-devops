@@ -148,23 +148,18 @@ function add_git_global_config_if_required {
 # DEPENDS ON 
 #   get_token FUNCTION
 function add_public_key {
-  if [[ ! -f "$1" ]]; then
-    echo "[ERROR]: Public key doesn't exist: $1"
-    return 1
+  
+  # docu: shell.md#id{mch4r8mc71mfH1}
+  if [[ ! -f "$1" || ! -r "$1" || ! -s "$1" || $(stat -c%s "$1") -ge $((1 * 1024 * 1024)) ]]; then
+    echo "[ERROR]: There is a problem with the public key file: $1"
+    exit 1
   fi
+
   SSH_KEY_CONTENT=$(cat $1)
   if [[ "$SSH_KEY_CONTENT" = "" ]]; then
     echo "[ERROR]: Public key file is empty: $1"
-    return 1
+    exit 1
   fi
-  if [[ ! -d "/data/setup" ]]; then
-    echo "[ERROR]: Setup directory doesn't exist: /data/setup"
-    return 1
-  fi
-  
-
-  chown -R git:git /data/setup/
-  chown git:git $1
 
   TOKEN=$(get_token)
 
@@ -204,7 +199,7 @@ function addRepo {
         echo "[SUCCESS] Created repository: $1"
 
         # Generate content
-        TAR_FILE="/tmp/initial_repos/$1.tar.xz"
+        TAR_FILE="/tmp/$1.tar.xz"
         if [[ ! -f "$TAR_FILE" ]]; then
           echo "[ERROR]: Compressed file do not exist: $TAR_FILE"
           return 1
@@ -227,8 +222,6 @@ function addRepo {
 
         # Use the token for passwordless push (safer than password)
         git -C $NEW_REPO_DIR push -q http://${TOKEN_TWO}@localhost:3000/${GITEA_ADMIN_USER}/${1}.git main
-
-        rm -rf $TAR_FILE
 
         echo "[SUCCESS]: Repo added: $1"
 
@@ -316,7 +309,7 @@ function addWebHook {
 add_admin_user_if_required $GITEA_ADMIN_USER $GITEA_ADMIN_PASSWORD $GITEA_ADMIN_EMAIL
 
 
-add_public_key "/data/setup/t51_noPass.pub"
+add_public_key "/tmp/t51_noPass.pub"
 
 
 add_git_global_config_if_required $GITEA_ADMIN_EMAIL $GITEA_ADMIN_USER

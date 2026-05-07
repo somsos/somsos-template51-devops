@@ -3,12 +3,16 @@
 ## Doing (First one is the current task)
 
 - [ ] Create a initial setup script 
-  - [ ] X. Add local domains to etc/hosts
+  - [ ] X. Add local domains to etc/hosts ()
+  - [ ] X. Add to jenkins the "ssh-keyscan -p 222 gitea.${MY_DOMAIN} > ./shared/known_hosts"
   - [ ] X. Build Jenkins passing the docker group id to the build commnad
   - [ ] X. Build the db_utils container
   - [ ] X. Build the backend container
   - [ ] X. Build the front container
+  
   - [ ] X. Install the schema to the database.
+
+- [ ] Check that one can start the app by just using Jenkins.
 
 - [ ] Add tag tag to images to mark production candidates.
 

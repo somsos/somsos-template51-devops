@@ -27,19 +27,18 @@ services:
       - DEVOPS_NAME=${DEVOPS_NAME}
       - SHARED_TOKEN=${SHARED_TOKEN}
     volumes:
-      - ./gitea/vol-data:/var/lib/gitea    # Persist data
-      - ./gitea/vol-config-dir:/etc/gitea
-      - ./gitea/gitea-entrypoint.sh:/usr/local/bin/gitea-entrypoint.sh:ro
-      - ./secrets/t51_noPass.pub:/data/setup/t51_noPass.pub:ro    # SSH Config
-      # Initial repositories
-      - ./gitea/initial_repos/${BACK_NAME}.tar.xz:/tmp/initial_repos/${BACK_NAME}.tar.xz
-      - ./gitea/initial_repos/${FRONT_NAME}.tar.xz:/tmp/initial_repos/${FRONT_NAME}.tar.xz
-      - ./gitea/initial_repos/${DB_MIG_NAME}.tar.xz:/tmp/initial_repos/${DB_MIG_NAME}.tar.xz
-      - ./gitea/initial_repos/${DEVOPS_NAME}.tar.xz:/tmp/initial_repos/${DEVOPS_NAME}.tar.xz
+      - ./gitea/vol-data:/var/lib/gitea                         # Persist data
+      - ./gitea/vol-config-dir:/etc/gitea                       # Persist config
+      - ./gitea/gitea-entrypoint.sh:/tmp/gitea-entrypoint.sh:ro
+      - ./gitea/initial_repos/${BACK_NAME}.tar.xz:/tmp/${BACK_NAME}.tar.xz
+      - ./gitea/initial_repos/${FRONT_NAME}.tar.xz:/tmp/${FRONT_NAME}.tar.xz
+      - ./gitea/initial_repos/${DB_MIG_NAME}.tar.xz:/tmp/${DB_MIG_NAME}.tar.xz
+      - ./gitea/initial_repos/${DEVOPS_NAME}.tar.xz:/tmp/${DEVOPS_NAME}.tar.xz
+      - ./secrets/t51_noPass.pub:/tmp/t51_noPass.pub:ro   # SSH Config
       # Time sync
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-    entrypoint: ["/bin/sh", "/usr/local/bin/gitea-entrypoint.sh"]
+    entrypoint: ["/bin/sh", "/tmp/gitea-entrypoint.sh"]
     ports:
       - "222:2222"
     expose:
@@ -96,7 +95,7 @@ services:
 # SSH conf to add gitea as reliable server
       - ./secrets/t51_noPass.priv:/var/jenkins_home/.ssh/t51_noPass.priv:ro
       - ./shared/ssh_config:/var/jenkins_home/.ssh/config
-      # - ./shared/known_hosts:/var/jenkins_home/.ssh/known_hosts  # don't
+      - ./shared/known_hosts:/var/jenkins_home/.ssh/known_hosts:ro
 ####### SYSTEM LOCATIONS ########
 # Access to docker host
       - /var/run/docker.sock:/var/run/docker.sock
