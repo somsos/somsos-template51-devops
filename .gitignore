@@ -65,6 +65,7 @@ setup/registry/registry.password
 !**/workspace/0_scripts/*.sh
 
 app/*/source/*
+app/*/source/.*
 
 !**/README_devops.md
 
