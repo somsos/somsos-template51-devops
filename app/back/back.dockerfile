@@ -28,6 +28,7 @@ RUN --mount=type=cache,target=/root/.m2 \
 
 
 # Builder
+ARG IMAGE_MVN
 FROM $IMAGE_MVN AS builder
 
 RUN mkdir /opt/template51
