@@ -3,17 +3,19 @@
 ## Doing (First one is the current task)
 
 - [ ] Create a initial setup script 
-  - [ ] X. Add local domains to etc/hosts ()
+  - [X] X. Build Jenkins passing the docker group id to the build commnad
+      - `docker compose build --build-arg DOCKER_GID=$(getent group docker | cut -d: -f3) jenkins`
   - [ ] X. Add to jenkins the "ssh-keyscan -p 222 gitea.${MY_DOMAIN} > ./shared/known_hosts"
-  - [ ] X. Build Jenkins passing the docker group id to the build commnad
-  - [ ] X. Build the db_utils container
-  - [ ] X. Build the backend container
-  - [ ] X. Build the front container
-  - [ ] X. Install the schema to the database.
+  
 
-- [ ] Update all the initial_repos, do not forget to keep the same name and remove the .git folder
+- [ ] Check if is in manual.
+  - [ ] X. Add local domains to etc/hosts
 
 - [ ] Check that one can start the app by just using Jenkins.
+  - [ ] X. Install the schema to the database.
+    - [ ] X. Build the db_utils container
+  - [ ] X. Build the backend container
+  - [ ] X. Build the front container
 
 - [ ] Add tag tag to images to mark production candidates.
 
@@ -40,6 +42,8 @@
 
 - [ ] Automate Monitoring and Reporting
   - [ ] Study best approaches for this
+
+- [ ] Create pipeline to add the ssl config.
 
 ## Resume
 
@@ -162,3 +166,4 @@ posible.
   - [X] Backup Backend (with tagging strategy I also create backups )
 - [X] Create image tagging strategy for frontend
   - [X] Backup Frontend (with tagging strategy I also create backups )
+- [X] Update all the initial_repos, do not forget to keep the same name and remove the .git folder

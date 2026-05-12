@@ -58,6 +58,9 @@ services:
     build:
       context: ./jenkins
       dockerfile: jenkins-with-docker.dockerfile
+      args:
+        DOCKER_GID: ${DOCKER_GID}
+    entrypoint: ["/usr/local/bin/jenkins-entrypoint.sh"]
     privileged: true
     environment:
       - JENKINS_JAVA_OPTS="-Dhudson.model.ParametersAction.keepUndefinedParameters=false"
@@ -96,7 +99,7 @@ services:
 # SSH conf to add gitea as reliable server
       - ./secrets/t51_noPass.priv:/var/jenkins_home/.ssh/t51_noPass.priv:ro
       - ./shared/ssh_config:/var/jenkins_home/.ssh/config
-      - ./shared/known_hosts:/var/jenkins_home/.ssh/known_hosts:ro
+      - ./shared/known_hosts:/var/jenkins_home/.ssh/known_hosts
 ####### SYSTEM LOCATIONS ########
 # Access to docker host
       - /var/run/docker.sock:/var/run/docker.sock
