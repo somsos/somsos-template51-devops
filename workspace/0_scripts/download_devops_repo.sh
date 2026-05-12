@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-# set -x
+set -x # for debugging
 source "../0_scripts/get_commit_message.sh" # it looks for the file from it's being executed
 
 # INPUT

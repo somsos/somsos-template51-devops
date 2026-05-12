@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-#set -x
+# set -x # for debugging
 
 source "../0_scripts/get_environment.sh"
 ENV=$(get_environment)

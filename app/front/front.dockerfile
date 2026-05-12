@@ -1,4 +1,7 @@
 ARG IMAGE_NODE
+ARG IMAGE_NGINX
+ARG BACK_URL
+
 FROM $IMAGE_NODE AS build
 
 WORKDIR /app
@@ -17,7 +20,6 @@ RUN echo $CACHE_BUST > /app/BUILD_DATE.txt
 
 COPY ./source .
 
-ARG BACK_URL
 RUN sed -i "s|__BACK_URL__|${BACK_URL}|g" src/environments/environment.ts
 
 RUN ng build -c production
@@ -25,9 +27,6 @@ RUN ng build -c production
 
 
 # RUN
-
-
-ARG IMAGE_NGINX
 FROM $IMAGE_NGINX
 
 COPY --from=build app/dist/mod51io/browser /usr/share/nginx/html

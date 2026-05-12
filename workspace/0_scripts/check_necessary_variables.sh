@@ -25,5 +25,10 @@ function check_necessary_variables {
         source "../../.env"
         WORKSPACE="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
         BUILD_NUMBER=11
+
+        DB_MIG_REPO=ssh://git@localhost:222/${MY_USER}/${DB_MIG_NAME}.git
+        BACK_REPO=ssh://git@localhost:222/${MY_USER}/${BACK_NAME}.git
+        FRONT_REPO=ssh://git@localhost:222/${MY_USER}/${FRONT_NAME}.git
+        DEVOPS_REPO=ssh://git@localhost:222/${MY_USER}/${DEVOPS_NAME}.git
     fi
 }

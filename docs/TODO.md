@@ -2,7 +2,7 @@
 
 ## Doing (First one is the current task)
 
-- [ ] Add tag tag to images to mark production candidates.
+- [ ] Add tag to images to mark production candidates.
   - [ ] Use just Jenkins to tag and list de available images, because an UI requieres wierd secret conf.
 
 - [ ] Purge Images, get rid of images that are not candidates to production.
@@ -17,6 +17,9 @@
 - [ ] Security
   - [ ] Hide .env passwords
     - [ ] Check how it works [varLook](https://github.com/alhenry/varlook)
+
+- [ ] Combine the download_{back|db|devops|front}_repo.sh in just one function
+
 
 - [ ] Create/Prepare to create install script and manual.
   - [ ] Install script

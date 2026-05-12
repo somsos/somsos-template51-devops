@@ -16,8 +16,8 @@ function download_front_repo {
     fi
 
     
-    mkdir -p $1
-    rm -rf $1/*
+    mkdir -p $2
+    rm -rf $2/*
     # "depth=2" because perhaps is to do a rollback
     git clone --quiet --depth=2 --single-branch --branch main "$1" "$2" \
     && echo "[INFO] Front repo cloned."
@@ -27,8 +27,8 @@ function download_front_repo {
 
     #Careful: on rollback if detects a change, will not do the push to del last commit
     if [ ! "$3" = "git" ]; then
-        rm -rf $1/.git/
-        rm -rf $1/docs/
+        rm -rf $2/.git/
+        rm -rf $2/docs/
     fi
 
 }

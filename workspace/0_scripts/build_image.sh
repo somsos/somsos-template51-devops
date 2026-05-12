@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-#set -x
+# set -x # for debugging.
 
 # Note it's almost a copy peste of back_build_image.sh file, so maybe a change
 # here is also required there
