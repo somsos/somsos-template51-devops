@@ -4,7 +4,7 @@ services:
   gitea:
     profiles: ["devops", "all"]
     container_name: gitea       # Careful changing it's used to clone the repo in jenkins
-    image: docker.gitea.com/gitea:1.26.1-rootless
+    image: ${IMAGE_GITEA}
     user: "1000:1000"
     environment:
       - VIRTUAL_HOST=gitea.${MY_DOMAIN}
@@ -59,6 +59,7 @@ services:
       context: ./jenkins
       dockerfile: jenkins-with-docker.dockerfile
       args:
+        IMAGE_JENKINS: ${IMAGE_JENKINS}
         DOCKER_GID: ${DOCKER_GID}
     entrypoint: ["/usr/local/bin/jenkins-entrypoint.sh"]
     privileged: true
@@ -83,10 +84,9 @@ services:
       
       - FRONT_REPO=${FRONT_REPO}
       - FRONT_NAME=${FRONT_NAME}
-      - FRONT_IMAGE=${FRONT_IMAGE}[]
+      - FRONT_IMAGE=${FRONT_IMAGE}
       
       - DEVOPS_REPO=${DEVOPS_REPO}
-      - VERSION=${VERSION}
       - SHARED_TOKEN=${SHARED_TOKEN}
     expose:
       - "8080"
@@ -95,7 +95,6 @@ services:
       - ./jenkins/vol-jenkins_home:/var/jenkins_home        # all jenkins main
       - ./jenkins/casc:/var/jenkins_home/casc_configs:ro    # CasC (Configuration as Code)
       - ../workspace:/var/jenkins_home/workspace                      # executions and generations of DevOps Process
-      - ../.env:/var/jenkins_home/workspace/.env:ro         # for testing scripts in container shell terminal
 # SSH conf to add gitea as reliable server
       - ./secrets/t51_noPass.priv:/var/jenkins_home/.ssh/t51_noPass.priv:ro
       - ./shared/ssh_config:/var/jenkins_home/.ssh/config
@@ -114,7 +113,7 @@ services:
 
 
   reverse-proxy:
-    profiles: ["gateway", "all"]
+    profiles: ["devops", "all"]
     image: nginxproxy/nginx-proxy:1.10-alpine
     container_name: reverse-proxy
     ports:
@@ -133,7 +132,7 @@ services:
 # for automatic SSL certificate management
 # IMPORTANT: run it at the end: 
   acme-companion:
-    profiles: ["gateway"]
+    profiles: ["utils"]
     image: nginxproxy/acme-companion:2.6
     container_name: acme-companion
     depends_on:

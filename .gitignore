@@ -1,6 +1,10 @@
 **/vol-*/*
 
 setup/data
+# setup/shared/known_hosts # git update-index --assume-unchanged setup/shared/known_hosts
+
+setup/registry/data
+setup/registry/registry.password
 
 **/secrets/*
 **/*.secret.*
@@ -8,9 +12,6 @@ setup/data
 
 **/backups/*
 !**/backups/*.md
-
-setup/registry/data
-setup/registry/registry.password
 
 **/workspace/*
 
@@ -68,7 +69,6 @@ app/*/source/*
 app/*/source/.*
 
 !**/README_devops.md
-
 
 **/*.jar
 **/*.zip

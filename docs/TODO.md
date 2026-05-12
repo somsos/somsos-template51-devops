@@ -2,22 +2,8 @@
 
 ## Doing (First one is the current task)
 
-- [ ] Create a initial setup script 
-  - [X] X. Build Jenkins passing the docker group id to the build commnad
-      - `docker compose build --build-arg DOCKER_GID=$(getent group docker | cut -d: -f3) jenkins`
-  - [ ] X. Add to jenkins the "ssh-keyscan -p 222 gitea.${MY_DOMAIN} > ./shared/known_hosts"
-  
-
-- [ ] Check if is in manual.
-  - [ ] X. Add local domains to etc/hosts
-
-- [ ] Check that one can start the app by just using Jenkins.
-  - [ ] X. Install the schema to the database.
-    - [ ] X. Build the db_utils container
-  - [ ] X. Build the backend container
-  - [ ] X. Build the front container
-
 - [ ] Add tag tag to images to mark production candidates.
+  - [ ] Use just Jenkins to tag and list de available images, because an UI requieres wierd secret conf.
 
 - [ ] Purge Images, get rid of images that are not candidates to production.
 
@@ -25,9 +11,36 @@
 - [ ] Restore Frontend
 - [ ] Check the pipelines on offline mode (without internet)
 
+
+- [ ] Separate `.env` for hight profile configs and `config.env` for low profile configs.
+
 - [ ] Security
   - [ ] Hide .env passwords
     - [ ] Check how it works [varLook](https://github.com/alhenry/varlook)
+
+- [ ] Create/Prepare to create install script and manual.
+  - [ ] Install script
+    - [ ] Ask for user/pass, domain, email, env-type(local, stage, prod), 
+    - [ ] Pull images and set them for offline use.
+      - [ ] gitea
+      - [ ] Jenkins
+      - [ ] reverse-proxy
+    - [ ] Start/build gitea
+      - [ ] Check initial repositories.
+    - [ ] Start/build Jenkins
+      - [ ] add `docker compose build --build-arg DOCKER_GID=$(getent group docker | cut -d: -f3) jenkins`
+    - [ ] Start reverse proxy
+  - [ ] MANUAL (using just Jenkins)
+    - [ ] Mention to 
+      - [ ] Add local domains to etc/hosts
+      - [ ] Run Gitea first then Jenkins
+      - [ ] Download the source code in the source code
+    - [ ] X. Database.
+      - [ ] X. Start service
+      - [ ] X. Build the db_utils container
+      - [ ] X. Install schema.
+    - [ ] X. Build/Start the backend container
+    - [ ] X. Build/Start the frontend container
 
 - [ ] Create pipeline to execute tests and publish a status sticker
 
@@ -167,3 +180,8 @@ posible.
 - [X] Create image tagging strategy for frontend
   - [X] Backup Frontend (with tagging strategy I also create backups )
 - [X] Update all the initial_repos, do not forget to keep the same name and remove the .git folder
+- [X] Create a initial setup script 
+  - [X] X. Build Jenkins passing the docker group id to the build commnad
+      - `docker compose build --build-arg DOCKER_GID=$(getent group docker | cut -d: -f3) jenkins`
+  - [X] X. Add to jenkins the "ssh-keyscan -p 222 gitea.${MY_DOMAIN} > ./shared/known_hosts"
+- [X] Put together the used docker images

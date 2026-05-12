@@ -61,7 +61,7 @@ function build_image {
     if [[ "$3" == "front" ]]; then
         set -x
         FRONT_IMAGE=$IMAGE_BUILD_TAG docker compose -f $PATH_MDP/docker-compose.yml build front
-        docker tag $IMAGE_BUILD_TAG $FRONT_IMAGE
+        docker tag $IMAGE_BUILD_TAG $FRONT_IMAGE 
         set +x
     fi
     

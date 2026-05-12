@@ -1,4 +1,5 @@
-FROM node:25.7-alpine3.23 AS build
+ARG IMAGE_NODE
+FROM $IMAGE_NODE AS build
 
 WORKDIR /app
 
@@ -26,8 +27,8 @@ RUN ng build -c production
 # RUN
 
 
-
-FROM nginx:stable-alpine3.23
+ARG IMAGE_NGINX
+FROM $IMAGE_NGINX
 
 COPY --from=build app/dist/mod51io/browser /usr/share/nginx/html
 

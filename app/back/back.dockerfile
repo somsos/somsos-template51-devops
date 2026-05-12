@@ -51,7 +51,8 @@ RUN --mount=type=cache,target=/root/.m2 \
 
 
 # Runner
-FROM eclipse-temurin:21-alpine
+ARG IMAGE_JAVA
+FROM $IMAGE_JAVA AS runner
 
 RUN mkdir /opt/template51
 WORKDIR /opt/template51

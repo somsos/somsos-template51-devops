@@ -21,5 +21,5 @@ echo -e "\033[38;5;27;48;5;231m[INFO] IMAGE_TAG to build: $IMAGE_TAG $3 \033[0m"
 
 
 source "../0_scripts/build_image.sh"
-build_image $DEVOPS_REPO_DIR $IMAGE_TAG "front"
+build_image "$DEVOPS_REPO_DIR" "$IMAGE_TAG" "front"
 

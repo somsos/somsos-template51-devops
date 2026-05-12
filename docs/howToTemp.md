@@ -1,5 +1,13 @@
 # How to temporal
 
+
+## Useful commands
+
+```shell
+psql postgresql://t51DB_user:t51DB_pass@mariomv-local.org:5001/t51DB_schema
+```
+
+
 ## How to recreate build in Jenkins
 
 1. Using an workspace to test quick in local.

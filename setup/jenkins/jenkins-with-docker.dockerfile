@@ -1,7 +1,8 @@
 # We pass the docker group id as a build argument because it can change between host machines.
 
 # Keep a specific version because I already had a difficulty because of an automatic update
-FROM jenkins/jenkins:2.555.1-lts-jdk25
+ARG IMAGE_JENKINS
+FROM ${IMAGE_JENKINS}
 
 USER root
 
