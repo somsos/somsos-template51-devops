@@ -6,6 +6,11 @@ setup/data
 setup/registry/data
 setup/registry/registry.password
 
+.env
+.env.*
+!.env.example
+
+
 **/secrets/*
 **/*.secret.*
 **/*.secret

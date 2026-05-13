@@ -19,3 +19,7 @@
   time will preserve the previous state, but if we recreate the container it's
   going to start with a new state, more details in
   `docker_pitfalls#{id:6fn04mh87}`.
+
+- `docker_pitfalls#id{mcg385nvh502hrc}#` Be careful with the the order of `ARG`
+   and `FROM` in the dockerfile when is passed trought docker-compose.yml using
+   `build.args`

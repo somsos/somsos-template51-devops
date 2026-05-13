@@ -2,6 +2,13 @@
 
 ## Doing (First one is the current task)
 
+- [ ] Security
+  - [ ] Hide .env passwords
+    - [ ] Check how it works [varLook](https://github.com/alhenry/varlook)
+
+
+- [ ] Separate `.env` for hight profile configs and `config.env` for low profile configs.
+
 - [ ] Add tag to images to mark production candidates.
   - [ ] Use just Jenkins to tag and list de available images, because an UI requieres wierd secret conf.
 
@@ -10,13 +17,6 @@
 - [ ] Restore Backend
 - [ ] Restore Frontend
 - [ ] Check the pipelines on offline mode (without internet)
-
-
-- [ ] Separate `.env` for hight profile configs and `config.env` for low profile configs.
-
-- [ ] Security
-  - [ ] Hide .env passwords
-    - [ ] Check how it works [varLook](https://github.com/alhenry/varlook)
 
 - [ ] Combine the download_{back|db|devops|front}_repo.sh in just one function
 
@@ -35,6 +35,7 @@
     - [ ] Start reverse proxy
   - [ ] MANUAL (using just Jenkins)
     - [ ] Mention to 
+      - [ ] create the .env file using as template the .env.example file because for security is ignored in git
       - [ ] Add local domains to etc/hosts
       - [ ] Run Gitea first then Jenkins
       - [ ] Download the source code in the source code
