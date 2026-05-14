@@ -70,6 +70,7 @@ services:
       - LETSENCRYPT_EMAIL=${MY_EMAIL}
       - VIRTUAL_PORT=8080
       # JCasC (Jenkins Code as Configuration)
+      - MY_ENV=${MY_ENV}
       - MY_USER=${MY_USER}
       - MY_PASS=${MY_PASS}
       - MY_DOMAIN=${MY_DOMAIN}
@@ -109,6 +110,8 @@ services:
     networks:
       t51Net:
         ipv4_address: ${JENKINS_IP}
+    extra_hosts:
+      - "registry.${MY_DOMAIN}:${REGISTRY_IP}"
 
 
 
@@ -165,17 +168,18 @@ services:
       - REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/data
       - REGISTRY_STORAGE_DELETE_ENABLED=true
       # Auth setup
-      - REGISTRY_AUTH=htpasswd
-      - REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm
-      - REGISTRY_AUTH_HTPASSWD_PATH=/auth/registry.password
+      #- REGISTRY_AUTH=htpasswd
+      #- REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm
+      #- REGISTRY_AUTH_HTPASSWD_PATH=/auth/registry.password
     volumes:
-      - ./registry/registry.password:/auth/registry.password
+      # - ./secrets/registry.password:/auth/registry.password
       - ./registry/data:/data
+    ports:
+      - "5000:5000"        # Do not expose because does not require credentials.
     networks:
       t51Net:
-        ipv4_address: 172.30.0.214
-    ports:
-      - "5000:5000"
+        ipv4_address: ${REGISTRY_IP}
+    
 
 # For security reasons, I better use a Jenkins pipeline to show the available images
 #  registry-ui:
@@ -183,7 +187,7 @@ services:
 #    container_name: t51registry-ui
 #    image: quiq/registry-ui:0.12.0
 #    environment:
-#      - REGISTRY_HOSTNAME=172.30.0.214:5000
+#      - REGISTRY_HOSTNAME=${REGISTRY_IP}:5000
 #      - REGISTRY_INSECURE=true
 #      - TZ=America/Mexico_City
 #      - REGISTRY_USERNAME=${MY_USER}

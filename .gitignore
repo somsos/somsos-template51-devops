@@ -62,9 +62,9 @@ setup/registry/registry.password
 **/workspace/Database-Backup/*
 !**/workspace/Database-Backup/*.sh
 
-!**/workspace/Tag-image-and-upload/
-!**/workspace/Tag-image-and-upload/*
-!**/workspace/Tag-image-and-upload*.sh
+!**/workspace/Registry-actions/
+!**/workspace/Registry-actions/*
+!**/workspace/Registry-actions*.sh
 
 !**/workspace/0_scripts/
 **/workspace/0_scripts/*
@@ -73,7 +73,7 @@ setup/registry/registry.password
 app/*/source/*
 app/*/source/.*
 
-!**/README_devops.md
+!**/README_*.md
 
 **/*.jar
 **/*.zip

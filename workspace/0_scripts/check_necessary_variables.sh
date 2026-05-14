@@ -25,6 +25,8 @@ function check_necessary_variables {
         source "../../.env"
         WORKSPACE="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
         BUILD_NUMBER=11
+        MY_ENV=local
+        MY_DOMAIN=mariomv-local.org
 
         DB_MIG_REPO=ssh://git@localhost:222/${MY_USER}/${DB_MIG_NAME}.git
         BACK_REPO=ssh://git@localhost:222/${MY_USER}/${BACK_NAME}.git

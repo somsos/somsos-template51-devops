@@ -2,14 +2,10 @@
 
 ## Doing (First one is the current task)
 
-- [ ] Security
-  - [ ] Hide .env passwords
-    - [ ] Check how it works [varLook](https://github.com/alhenry/varlook)
-
-
-- [ ] Separate `.env` for hight profile configs and `config.env` for low profile configs.
+- [ ] Add credentials for docker login in Registry-actions pipeline
 
 - [ ] Add tag to images to mark production candidates.
+  - [ ] List Images
   - [ ] Use just Jenkins to tag and list de available images, because an UI requieres wierd secret conf.
 
 - [ ] Purge Images, get rid of images that are not candidates to production.
@@ -37,8 +33,10 @@
     - [ ] Mention to 
       - [ ] create the .env file using as template the .env.example file because for security is ignored in git
       - [ ] Add local domains to etc/hosts
+      - [ ] Create secrets reading `setup/secrets/README_secrets.md`
       - [ ] Run Gitea first then Jenkins
-      - [ ] Download the source code in the source code
+      - [ ] Download the source code in the source directories
+      - [ ] Pre approve pipelines, so the first time the user execute a pipeline, it doesn't give an error ofr this
     - [ ] X. Database.
       - [ ] X. Start service
       - [ ] X. Build the db_utils container
@@ -46,13 +44,8 @@
     - [ ] X. Build/Start the backend container
     - [ ] X. Build/Start the frontend container
 
+
 - [ ] Create pipeline to execute tests and publish a status sticker
-
-- [ ] Pre approve pipelines, so the first time the user execute a pipeline, it doesn't give an error ofr this
-
-- [ ] Let clearer or create scripts to set up the initial setup required
-  - [ ] Add custom domain and sub-domain in /etc/hosts
-  - [ ] Add ssh keys
 
 - [ ] Decide how to test the UI code (Jest, Cypress, etc)
   - [ ] Run them on Jenkins
@@ -60,7 +53,7 @@
 - [ ] Automate Monitoring and Reporting
   - [ ] Study best approaches for this
 
-- [ ] Create pipeline to add the ssl config.
+- [ ] Create pipeline to add the HTTPS/SSL config.
 
 ## Resume
 
@@ -189,3 +182,4 @@ posible.
       - `docker compose build --build-arg DOCKER_GID=$(getent group docker | cut -d: -f3) jenkins`
   - [X] X. Add to jenkins the "ssh-keyscan -p 222 gitea.${MY_DOMAIN} > ./shared/known_hosts"
 - [X] Put together the used docker images
+- [X] Security Hide .env passwords

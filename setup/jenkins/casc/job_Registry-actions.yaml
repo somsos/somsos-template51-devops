@@ -1,0 +1,54 @@
+jobs:
+  - script: >
+      pipelineJob('Registry-actions') {
+        description('Registry management')
+        parameters {
+            choiceParam('SERVICE', ['status', 'db', 'back', 'front' ], 'Select service')
+        }
+
+        definition {
+          cps {
+            script('''
+                pipeline {
+                    agent { label 'built-in' }
+                    options {
+                        ansiColor('xterm')
+                    }
+
+                    stages {
+                        stage('Select Image and Tag') {
+                            steps {
+                                sh "source $WORKSPACE/1ra-list-images.sh ^${params.SERVICE}" 
+                            }
+                        }
+
+                        
+                        stage("Input image ID and new tag") {
+                            steps {
+                                script {
+                                    def userInput = input message: 'Select image and enter new tag', ok: 'Confirm',
+                                            parameters: [
+                                                text(name: 'IMAGE_ID', description: 'Image ID'),
+                                                text(name: 'NEW_TAG', description: 'New tag name (e.g., 1.0.0 or 3.2.1)')
+                                            ]
+
+                                    env.IMAGE_ID = userInput['IMAGE_ID']
+                                    env.NEW_TAG = userInput['NEW_TAG']
+                                    echo "Selected image: \$IMAGE_ID"
+                                    echo "New tag: \$NEW_TAG"
+                                }
+                            }
+                        }
+
+                        stage('Tag and upload') {
+                            steps {
+                                sh "source $WORKSPACE/1ra-tag-and-upload.sh ^${params.SERVICE} $IMAGE_ID $NEW_TAG" 
+                            }
+                        }
+
+                    }
+                }
+            '''.stripIndent())
+          }
+        }
+      }
