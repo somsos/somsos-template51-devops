@@ -95,7 +95,8 @@ services:
 ####### REPO LOCATIONS ########
       - ./jenkins/vol-jenkins_home:/var/jenkins_home        # all jenkins main
       - ./jenkins/casc:/var/jenkins_home/casc_configs:ro    # CasC (Configuration as Code)
-      - ../workspace:/var/jenkins_home/workspace                      # executions and generations of DevOps Process
+# Others
+      - ../workspace:/var/jenkins_home/workspace                                 # executions and generations of DevOps Process
 # SSH conf to add gitea as reliable server
       - ./secrets/t51_noPass.priv:/var/jenkins_home/.ssh/t51_noPass.priv:ro
       - ./shared/ssh_config:/var/jenkins_home/.ssh/config
@@ -168,11 +169,11 @@ services:
       - REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY=/data
       - REGISTRY_STORAGE_DELETE_ENABLED=true
       # Auth setup
-      #- REGISTRY_AUTH=htpasswd
-      #- REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm
-      #- REGISTRY_AUTH_HTPASSWD_PATH=/auth/registry.password
+      - REGISTRY_AUTH=htpasswd
+      - REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm
+      - REGISTRY_AUTH_HTPASSWD_PATH=/auth/registry.password
     volumes:
-      # - ./secrets/registry.password:/auth/registry.password
+      - ./secrets/registry.password:/auth/registry.password
       - ./registry/data:/data
     ports:
       - "5000:5000"        # Do not expose because does not require credentials.

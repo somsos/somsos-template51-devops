@@ -1,4 +1,6 @@
 # syntax=docker/dockerfile:1.6
+ARG IMAGE_MVN
+ARG IMAGE_JAVA
 
 # How to build: "docker build -t template51_backend:0.0.1 . "
 
@@ -6,7 +8,6 @@
 
 
 # Dependencies downloader
-ARG IMAGE_MVN
 FROM $IMAGE_MVN AS deps
 
 RUN mkdir /opt/template51
@@ -28,7 +29,6 @@ RUN --mount=type=cache,target=/root/.m2 \
 
 
 # Builder
-ARG IMAGE_MVN
 FROM $IMAGE_MVN AS builder
 
 RUN mkdir /opt/template51
@@ -51,7 +51,6 @@ RUN --mount=type=cache,target=/root/.m2 \
 
 
 # Runner
-ARG IMAGE_JAVA
 FROM $IMAGE_JAVA AS runner
 
 RUN mkdir /opt/template51

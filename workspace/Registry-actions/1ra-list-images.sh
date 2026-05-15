@@ -1,6 +1,18 @@
 #!/bin/bash
 set -e
 #set -x # debug mode
+set +x # Jenkins by default sets -x, we disable it for cleaner output.
+
+function print_app_images {
+    echo "■■■■■■■■■■■■■■■■■■■■■■■■■-app-images-■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■"
+    docker images --format 'table {{.Repository}}:{{.Tag}}\t{{.ID}}\t{{.Size}}\t{{.CreatedAt}}' | grep -E "front|back" | grep -v "registry" | sort -k4,5
+    echo -e "■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■\n\n"
+}
+
+################# END OF FUNCTION DEFINITIONS #################
+
+
+
 
 source "../0_scripts/get_environment.sh"
 ENV=$(get_environment)
@@ -13,10 +25,28 @@ if [ -z "$MY_ENV" ]; then
 fi
 
 LAYER="$1"
-if [ "$LAYER" != "back" ] && [ "$LAYER" != "front" ]; then
-    echo "[ERROR] File argument LAYER (\$1) required: 'back' or 'front'"
+if [ "$LAYER" != "back" ] && [ "$LAYER" != "front" ] && [ "$LAYER" != "status" ]; then
+    echo "[ERROR] File argument LAYER (\$1) required: 'back', 'front', or 'status'"
     exit 1
 fi
 
-docker images --format 'table {{.Repository}}:{{.Tag}}\t{{.ID}}\t{{.Size}}\t{{.CreatedAt}}' | grep "$LAYER" | sort -k4,5
+if [ "$LAYER" == "back" ] || [ "$LAYER" == "front" ]; then
+    print_app_images
+fi
 
+if [ "$LAYER" == "status" ]; then
+    
+    print_app_images
+
+    echo "■■■■■■■■■■■■■■■■■■■■■■■■■-images-in-registry-■■■■■■■■■■■■■■■■■■■■■■■■■■■"
+    docker images --format 'table {{.Repository}}:{{.Tag}}\t{{.ID}}\t{{.Size}}\t{{.CreatedAt}}' | grep "registry." | grep -E "front|back" | sort -k4,5
+    echo -e "■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■\n\n"
+
+    echo "■■■■■■■■■■■■■■■■■■■■■■■■■-other-images-■■■■■■■■■■■■■■■■■■■■■■■■■■■■"
+    docker images --format 'table {{.Repository}}:{{.Tag}}\t{{.ID}}\t{{.Size}}\t{{.CreatedAt}}' | grep -vE "front|back" | sort -k4,5
+    echo -e "■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■\n\n"
+
+    echo "■■■■■■■■■■■■■■■■■■■■■■■■■-dangling-images-■■■■■■■■■■■■■■■■■■■■■■■■■■■■"
+    docker images -f dangling=true
+    echo -e "■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■\n\n"
+fi

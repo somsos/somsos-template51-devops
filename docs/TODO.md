@@ -2,11 +2,11 @@
 
 ## Doing (First one is the current task)
 
-- [ ] Add credentials for docker login in Registry-actions pipeline
-
 - [ ] Add tag to images to mark production candidates.
-  - [ ] List Images
-  - [ ] Use just Jenkins to tag and list de available images, because an UI requieres wierd secret conf.
+  - [ ] Add credentials for docker login in Registry-actions pipeline
+  - [X] List Images
+  - [X] Use just Jenkins to tag and list de available images, because an UI requieres wierd secret conf.
+  
 
 - [ ] Purge Images, get rid of images that are not candidates to production.
 
@@ -37,6 +37,7 @@
       - [ ] Run Gitea first then Jenkins
       - [ ] Download the source code in the source directories
       - [ ] Pre approve pipelines, so the first time the user execute a pipeline, it doesn't give an error ofr this
+      - [ ] Add in `/etc/docker/daemon.json` the content `{ "insecure-registries": ["registry.$MY_DOMAIN:5000"] }` for docker login
     - [ ] X. Database.
       - [ ] X. Start service
       - [ ] X. Build the db_utils container

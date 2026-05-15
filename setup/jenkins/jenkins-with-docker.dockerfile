@@ -42,8 +42,7 @@ RUN test -n "$DOCKER_GID" || \
 RUN groupadd -g $DOCKER_GID docker && usermod -aG docker jenkins
 
 
-COPY ./jenkins.entrypoint.sh /usr/local/bin/jenkins-entrypoint.sh
-RUN chmod +x /usr/local/bin/jenkins-entrypoint.sh
-RUN chown jenkins:jenkins /usr/local/bin/jenkins-entrypoint.sh
+COPY ./jenkins-entrypoint.sh /usr/local/bin/jenkins-entrypoint.sh
+RUN chmod +x /usr/local/bin/jenkins-entrypoint.sh && chown jenkins:jenkins /usr/local/bin/jenkins-entrypoint.sh
 
 USER jenkins

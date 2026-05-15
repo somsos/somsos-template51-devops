@@ -3,7 +3,7 @@ jobs:
       pipelineJob('Registry-actions') {
         description('Registry management')
         parameters {
-            choiceParam('SERVICE', ['status', 'db', 'back', 'front' ], 'Select service')
+            choiceParam('SERVICE', ['status', 'back', 'front', 'db' ], 'Select service')
         }
 
         definition {
@@ -24,6 +24,7 @@ jobs:
 
                         
                         stage("Input image ID and new tag") {
+                            when { expression { return params.SERVICE != 'status' } }
                             steps {
                                 script {
                                     def userInput = input message: 'Select image and enter new tag', ok: 'Confirm',
@@ -41,6 +42,7 @@ jobs:
                         }
 
                         stage('Tag and upload') {
+                            when { expression { return params.SERVICE != 'status' } }
                             steps {
                                 sh "source $WORKSPACE/1ra-tag-and-upload.sh ^${params.SERVICE} $IMAGE_ID $NEW_TAG" 
                             }
