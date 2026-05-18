@@ -2,6 +2,8 @@
 
 ## TL:DR
 
+- Make the secret management first, if you do it after you will have to test again.
+
 - Keep the files host and volumes the same, because will need DinD, but if they
   are different you will have problems on syncing files.
 

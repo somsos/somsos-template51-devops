@@ -20,8 +20,9 @@ COPY source/adapter/pom.xml       /opt/template51/adapter/pom.xml
 COPY source/pom.xml               /opt/template51/pom.xml
 COPY source/pom-spring-boot.xml   /opt/template51/pom-spring-boot.xml
 
-RUN --mount=type=cache,target=/root/.m2 \
-  mvn -B -e org.apache.maven.plugins:maven-dependency-plugin:3.1.2:go-offline
+# --mount=type=cache,target=/root/.m2 \
+RUN mvn -B -e org.apache.maven.plugins:maven-dependency-plugin:3.1.2:go-offline
+  
 
 
 
@@ -44,8 +45,9 @@ COPY source/user/src     /opt/template51/user/src
 COPY source/product/src  /opt/template51/product/src
 COPY source/adapter/src  /opt/template51/adapter/src
 
-RUN --mount=type=cache,target=/root/.m2 \
-   mvn -B -e clean install -DskipTests
+# --mount=type=cache,target=/root/.m2 \
+RUN mvn -B -e clean install -DskipTests
+  
 
 
 

@@ -27,6 +27,7 @@ function check_necessary_variables {
         BUILD_NUMBER=11
         MY_ENV=local
         MY_DOMAIN=mariomv-local.org
+        ENV_FILE="/home/mario/mine/t51/.env"
 
         DB_MIG_REPO=ssh://git@localhost:222/${MY_USER}/${DB_MIG_NAME}.git
         BACK_REPO=ssh://git@localhost:222/${MY_USER}/${BACK_NAME}.git
