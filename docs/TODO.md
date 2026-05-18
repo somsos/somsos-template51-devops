@@ -2,6 +2,14 @@
 
 ## Doing (First one is the current task)
 
+- [ ] CHeck the use of .env in pipelines because I deleted it from the repo.
+
+- [ ] Check how to avoid `docker exec jenkins printenv | grep PASS` using docker 
+  secrets that still can see them using `docker exec jenkins cat /run/secrets/my_secret` 
+  but is not available for all proccesses
+    - What happens if in my entrypoint I do this `export MY_PASS="$(cat /run/secrets/my_pass_secret)"` and then UNSET or override
+    - What happends if i edit `jenkins.sh` the official file to start jenkins
+
 - [ ] Add tag to images to mark production candidates.
   - [ ] Add credentials for docker login in Registry-actions pipeline
   - [X] List Images

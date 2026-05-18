@@ -19,6 +19,9 @@ source "../0_scripts/get_tag_name.sh"
 IMAGE_TAG=$(get_tag_name $BACK_REPO_DIR $BUILD_NUMBER "back")
 echo "[INFO] IMAGE_TAG      : $IMAGE_TAG"
 
+source "../0_scripts/temp_env_file_functions.sh"
+create_temp_env_file "deploy" "$BACK_REPO_DIR/.env" "back"
+
 
 TIMEOUT_SEC="300"
 source "../0_scripts/deploy.sh"
@@ -27,4 +30,6 @@ deploy $DEVOPS_REPO_DIR $TIMEOUT_SEC $IMAGE_TAG "back"
 
 source "../0_scripts/check_start.sh"
 check_start "back" "$TIMEOUT_SEC"
+
+remove_temp_env_file "$BACK_REPO_DIR/.env"
 

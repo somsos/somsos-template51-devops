@@ -46,7 +46,5 @@ docker_login_to_registry
 
 add_gitea_to_known_hosts
 
-
-(sleep 30 && unset MY_PASS && echo "Unsetting pass variable") &
-
 exec /usr/bin/tini -- /usr/local/bin/jenkins.sh
+

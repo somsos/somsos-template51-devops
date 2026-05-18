@@ -144,7 +144,7 @@ function add_git_global_config_if_required {
 }
 
 # INPUT
-#   $1: path to public key file without passkey, e.g. "/data/setup/t51_noPass.pub"
+#   $1: path to public key file without passkey, e.g. "/data/setup/ssh_key.pub"
 # DEPENDS ON 
 #   get_token FUNCTION
 function add_public_key {
@@ -309,7 +309,7 @@ function addWebHook {
 add_admin_user_if_required $GITEA_ADMIN_USER $GITEA_ADMIN_PASSWORD $GITEA_ADMIN_EMAIL
 
 
-add_public_key "/tmp/t51_noPass.pub"
+add_public_key "/tmp/ssh_key.pub"
 
 
 add_git_global_config_if_required $GITEA_ADMIN_EMAIL $GITEA_ADMIN_USER

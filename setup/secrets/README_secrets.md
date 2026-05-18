@@ -9,8 +9,8 @@ generate this files.
 
 ```sh
 ./setup/secrets
-├── t51_noPass.priv
-├── t51_noPass.pub
+├── ssh_key.priv
+├── ssh_key.pub
 └── registry.password
 ```
 
@@ -20,8 +20,8 @@ The following files are required for the SSH setup:
 
 ```shell
 # at root project level
-ssh-keygen -t ed25519 -N '' -f  ./setup/secrets/t51_noPass.priv
-mv ./setup/secrets/t51_noPass.priv.pub ./setup/secrets/t51_noPass.pub
+ssh-keygen -t ed25519 -N '' -f  ./setup/secrets/ssh_key.priv
+mv ./setup/secrets/ssh_key.priv.pub ./setup/secrets/ssh_key.pub
 ```
 
 ## Generate registry.password

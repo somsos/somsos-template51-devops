@@ -34,7 +34,7 @@ services:
       - ./gitea/initial_repos/${FRONT_NAME}.tar.xz:/tmp/${FRONT_NAME}.tar.xz
       - ./gitea/initial_repos/${DB_MIG_NAME}.tar.xz:/tmp/${DB_MIG_NAME}.tar.xz
       - ./gitea/initial_repos/${DEVOPS_NAME}.tar.xz:/tmp/${DEVOPS_NAME}.tar.xz
-      - ./secrets/t51_noPass.pub:/tmp/t51_noPass.pub:ro   # SSH Config
+      - ./secrets/ssh_key.pub:/tmp/ssh_key.pub:ro   # SSH Config
       # Time sync
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
@@ -75,6 +75,7 @@ services:
       - MY_PASS=${MY_PASS}
       - MY_DOMAIN=${MY_DOMAIN}
       - CASC_JENKINS_CONFIG=/var/jenkins_home/casc_configs
+      - ENV_FILE=/var/jenkins_home/workspace/.env           # Keep it in sync with volume
       # Pipeline variables
       - DB_MIG_REPO=${DB_MIG_REPO}
       - DB_MIG_NAME=${DB_MIG_NAME}
@@ -97,8 +98,9 @@ services:
       - ./jenkins/casc:/var/jenkins_home/casc_configs:ro    # CasC (Configuration as Code)
 # Others
       - ../workspace:/var/jenkins_home/workspace                                 # executions and generations of DevOps Process
+      - ../.env:/var/jenkins_home/workspace/.env:ro                             # Keep it in sync with ENV_FILE env var.
 # SSH conf to add gitea as reliable server
-      - ./secrets/t51_noPass.priv:/var/jenkins_home/.ssh/t51_noPass.priv:ro
+      - ./secrets/ssh_key.priv:/var/jenkins_home/.ssh/ssh_key.priv:ro
       - ./shared/ssh_config:/var/jenkins_home/.ssh/config
       - ./shared/known_hosts:/var/jenkins_home/.ssh/known_hosts
 ####### SYSTEM LOCATIONS ########
