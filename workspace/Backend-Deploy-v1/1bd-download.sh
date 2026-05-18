@@ -21,3 +21,4 @@ download_devops_repo $DEVOPS_REPO $DEVOPS_REPO_DIR "back"
 source "../0_scripts/download_back_repo.sh"
 download_back_repo $BACK_REPO $BACK_REPO_DIR "git"
 
+echo "[SUCCESS] Backend repository downloaded successfully."
