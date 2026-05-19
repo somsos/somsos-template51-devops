@@ -28,5 +28,10 @@ deploy $DEVOPS_REPO_DIR $TIMEOUT_SEC $IMAGE_TAG "back"
 source "../0_scripts/check_start.sh"
 check_start "back" "$TIMEOUT_SEC"
 
-remove_temp_env_file "$BACK_REPO_DIR/.env"
+
+source "../0_scripts/temp_env_file_functions.sh"
+remove_copied_env_file "$DEVOPS_REPO_DIR/.env"
+
+
+echo "[SUCCESS] Backend service deployed successfully."
 
