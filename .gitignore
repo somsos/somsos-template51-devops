@@ -62,9 +62,13 @@ setup/registry/registry.password
 **/workspace/Database-Backup/*
 !**/workspace/Database-Backup/*.sh
 
+!**/workspace/Image-actions/
+!**/workspace/Image-actions/*
+!**/workspace/Image-actions/*.sh
+
 !**/workspace/Registry-actions/
 !**/workspace/Registry-actions/*
-!**/workspace/Registry-actions*.sh
+!**/workspace/Registry-actions/*.sh
 
 !**/workspace/0_scripts/
 **/workspace/0_scripts/*

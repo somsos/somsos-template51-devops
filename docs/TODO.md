@@ -1,22 +1,10 @@
 # ToDo
 
 ## Doing (First one is the current task)
-
-- [ ] CHeck the use of .env in pipelines because I deleted it from the repo.
-
-- [ ] Check how to avoid `docker exec jenkins printenv | grep PASS` using docker 
-  secrets that still can see them using `docker exec jenkins cat /run/secrets/my_secret` 
-  but is not available for all proccesses
-    - What happens if in my entrypoint I do this `export MY_PASS="$(cat /run/secrets/my_pass_secret)"` and then UNSET or override
-    - What happends if i edit `jenkins.sh` the official file to start jenkins
-
-- [ ] Add tag to images to mark production candidates.
-  - [ ] Add credentials for docker login in Registry-actions pipeline
-  - [X] List Images
-  - [X] Use just Jenkins to tag and list de available images, because an UI requieres wierd secret conf.
   
-
 - [ ] Purge Images, get rid of images that are not candidates to production.
+  - [X] Delete Dangling images
+  - [ ] Delete images selected by the user
 
 - [ ] Restore Backend
 - [ ] Restore Frontend
@@ -55,6 +43,14 @@
 
 
 - [ ] Create pipeline to execute tests and publish a status sticker
+
+- [ ] Check how to avoid exposing secrets for example
+  - `docker exec jenkins printenv | grep PASS`
+  - `docker exec gitea printenv | grep PASS`
+  secrets that still can see them using `docker exec jenkins cat /run/secrets/my_secret` 
+  but is not available for all proccesses
+    - What happens if in my entrypoint I do this `export MY_PASS="$(cat /run/secrets/my_pass_secret)"` and then UNSET or override
+    - What happends if i edit `jenkins.sh` the official file to start jenkins
 
 - [ ] Decide how to test the UI code (Jest, Cypress, etc)
   - [ ] Run them on Jenkins
@@ -192,3 +188,8 @@ posible.
   - [X] X. Add to jenkins the "ssh-keyscan -p 222 gitea.${MY_DOMAIN} > ./shared/known_hosts"
 - [X] Put together the used docker images
 - [X] Security Hide .env passwords
+- [X] CHeck the use of .env in pipelines because I deleted it from the repo.
+- [X] Add tag to images to mark production candidates.
+  - [X] Add credentials for docker login in Registry-actions pipeline
+  - [X] List Images
+  - [X] Use just Jenkins to tag and list de available images, because an UI requieres wierd secret conf.

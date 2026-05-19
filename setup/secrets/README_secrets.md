@@ -29,6 +29,8 @@ mv ./setup/secrets/ssh_key.priv.pub ./setup/secrets/ssh_key.pub
 To generate the "registry.password" file in this folder, we use the following
 command
 
+Note: The content we see after the user name is a one-way cryptographic hash.
+
 ```bash
 # at root project level
 docker run --rm httpd:2 htpasswd -Bbn ${MY_USER} ${MY_PASS} >> ./setup/registry/registry.password

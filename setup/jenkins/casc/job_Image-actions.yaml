@@ -1,0 +1,52 @@
+jobs:
+  - script: >
+      pipelineJob('Image-actions') {
+        description('Image management')
+        parameters {
+            choiceParam('SERVICE', ['delete-dangling', 'delete-images-list' ], 'Select action to perform')
+        }
+
+        definition {
+          cps {
+            script('''
+                pipeline {
+                    agent { label 'built-in' }
+                    options {
+                        ansiColor('xterm')
+                    }
+
+                    stages {
+                        stage('Delete dangling images') {
+                            when { expression { return params.SERVICE == 'delete-dangling' } }
+                            steps {
+                                sh "source $WORKSPACE/2ra-delete-dangling-images.sh ^${params.SERVICE}" 
+                                script {
+                                    currentBuild.result = 'SUCCESS'
+                                }
+                                sh 'exit 0'
+                            }
+                        }
+
+                        stage('Delete a input user list of images') {
+                            when { expression { return params.SERVICE == 'delete-images-list' } }
+                            steps {
+                                sh "source $WORKSPACE/1ra-list-images.sh status" 
+                                script {
+                                    def idsList = input message: 'Select image to delete', ok: 'Continue',
+                                            parameters: [ string(name: 'idsList', trim: true, description: 'A list of image IDs space separated (e.g., abc 123 def)') ]
+                                    env.IDS_LIST = idsList
+                                    echo "Selected images: \$IDS_LIST"
+                                }
+                                sh "source $WORKSPACE/2ra-delete-selected-images.sh '^${IDS_LIST}'"
+                                script {
+                                    currentBuild.result = 'SUCCESS'
+                                }
+                                sh 'exit 0'
+                            }
+                        }
+                    }
+                }
+            '''.stripIndent())
+          }
+        }
+      }
