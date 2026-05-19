@@ -28,3 +28,7 @@ deploy $DEVOPS_REPO_DIR $TIMEOUT_SEC $IMAGE_TAG "front"
 source "../0_scripts/check_start.sh"
 check_start "front" "$TIMEOUT_SEC"
 
+
+source "../0_scripts/temp_env_file_functions.sh"
+remove_copied_env_file "$DEVOPS_REPO_DIR/.env"
+

@@ -19,6 +19,8 @@ source "../0_scripts/get_tag_name.sh"
 IMAGE_TAG=$(get_tag_name $FRONT_REPO_DIR $BUILD_NUMBER "front")
 echo -e "\033[38;5;27;48;5;231m[INFO] IMAGE_TAG to build: $IMAGE_TAG $3 \033[0m"
 
+source "../0_scripts/temp_env_file_functions.sh"
+copy_env_file "$DEVOPS_REPO_DIR/.env"
 
 source "../0_scripts/build_image.sh"
 build_image "$DEVOPS_REPO_DIR" "$IMAGE_TAG" "front"

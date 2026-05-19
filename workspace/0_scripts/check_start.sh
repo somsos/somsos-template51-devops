@@ -52,13 +52,13 @@ function check_start {
             case "$line" in
                 *"$MESSAGE_BACK_STARTED"* )
                 echo "Backend deploy success"
-                exit 0 
+                return 0 
                 ;;
             esac
 
             case "$line" in
                 *"$MESSAGE_BACK_FAILED_1"* )
-                echo "[ERROR] deploy failed."
+                echo "[ERROR] deploy backend failed."
                 exit 1
                 ;;
             esac
@@ -69,7 +69,7 @@ function check_start {
             case "$line" in
                 *"$MESSAGE_FRONT_STARTED"* )
                 echo "Frontend deploy success"
-                exit 0 
+                return 0 
                 ;;
             esac
         fi
