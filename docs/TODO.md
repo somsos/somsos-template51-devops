@@ -1,30 +1,12 @@
 # ToDo
 
 ## Doing (First one is the current task)
-  
-- [ ] Purge Images, get rid of images that are not candidates to production.
-  - [X] Delete Dangling images
-  - [ ] Delete images selected by the user
 
 - [ ] Restore Backend
 - [ ] Restore Frontend
 - [ ] Check the pipelines on offline mode (without internet)
 
-- [ ] Combine the download_{back|db|devops|front}_repo.sh in just one function
-
-
 - [ ] Create/Prepare to create install script and manual.
-  - [ ] Install script
-    - [ ] Ask for user/pass, domain, email, env-type(local, stage, prod), 
-    - [ ] Pull images and set them for offline use.
-      - [ ] gitea
-      - [ ] Jenkins
-      - [ ] reverse-proxy
-    - [ ] Start/build gitea
-      - [ ] Check initial repositories.
-    - [ ] Start/build Jenkins
-      - [ ] add `docker compose build --build-arg DOCKER_GID=$(getent group docker | cut -d: -f3) jenkins`
-    - [ ] Start reverse proxy
   - [ ] MANUAL (using just Jenkins)
     - [ ] Mention to 
       - [ ] create the .env file using as template the .env.example file because for security is ignored in git
@@ -40,6 +22,17 @@
       - [ ] X. Install schema.
     - [ ] X. Build/Start the backend container
     - [ ] X. Build/Start the frontend container
+  - [ ] Install script
+    - [ ] Ask for user/pass, domain, email, env-type(local, stage, prod), 
+    - [ ] Pull images and set them for offline use.
+      - [ ] gitea
+      - [ ] Jenkins
+      - [ ] reverse-proxy
+    - [ ] Start/build gitea
+      - [ ] Check initial repositories.
+    - [ ] Start/build Jenkins
+      - [ ] add `docker compose build --build-arg DOCKER_GID=$(getent group docker | cut -d: -f3) jenkins`
+    - [ ] Start reverse proxy
 
 
 - [ ] Create pipeline to execute tests and publish a status sticker
@@ -59,6 +52,8 @@
   - [ ] Study best approaches for this
 
 - [ ] Create pipeline to add the HTTPS/SSL config.
+
+- [ ] Combine the download_{back|db|devops|front}_repo.sh in just one function
 
 ## Resume
 
@@ -193,3 +188,7 @@ posible.
   - [X] Add credentials for docker login in Registry-actions pipeline
   - [X] List Images
   - [X] Use just Jenkins to tag and list de available images, because an UI requieres wierd secret conf.
+- [X] Purge Images, get rid of images that are not candidates to production.
+  - [X] Delete Dangling images
+  - [X] Delete images selected by the user
+
