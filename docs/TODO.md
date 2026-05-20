@@ -9,9 +9,9 @@
 - [ ] Create/Prepare to create install script and manual.
   - [ ] MANUAL (using just Jenkins)
     - [ ] Mention to 
-      - [ ] create the .env file using as template the .env.example file because for security is ignored in git
+      - [X] create the .env file using as template the .env.example file because for security is ignored in git
       - [ ] Add local domains to etc/hosts
-      - [ ] Create secrets reading `setup/secrets/README_secrets.md`
+      - [X] Create secrets reading `setup/secrets/README_secrets.md`
       - [ ] Run Gitea first then Jenkins
       - [ ] Download the source code in the source directories
       - [ ] Pre approve pipelines, so the first time the user execute a pipeline, it doesn't give an error ofr this

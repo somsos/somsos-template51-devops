@@ -10,6 +10,7 @@ setup/registry/registry.password
 .env.*
 !.env.example
 
+dep_data
 
 **/secrets/*
 **/*.secret.*
