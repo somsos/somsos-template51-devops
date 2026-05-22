@@ -2,38 +2,34 @@
 
 ## Doing (First one is the current task)
 
-- [ ] Restore Backend
-- [ ] Restore Frontend
-- [ ] Check the pipelines on offline mode (without internet)
-
 - [ ] Create/Prepare to create install script and manual.
+  - [ ] Install script
+    - [X] Ask for user/pass, domain, email, env-type(local, stage, prod), 
+    - [X] Pull images and set them for offline use.
+    - [X] Start/build gitea
+      - [X] Check initial repositories.
+    - [X] Start/build Jenkins
+      - [X] add `docker compose build --build-arg DOCKER_GID=$(getent group docker | cut -d: -f3) jenkins`
+    - [X] Start reverse proxy
   - [ ] MANUAL (using just Jenkins)
     - [ ] Mention to 
-      - [X] create the .env file using as template the .env.example file because for security is ignored in git
-      - [ ] Add local domains to etc/hosts
-      - [X] Create secrets reading `setup/secrets/README_secrets.md`
       - [ ] Run Gitea first then Jenkins
       - [ ] Download the source code in the source directories
+      - [ ] create the .env file using as template the .env.example file because for security is ignored in git
+      - [ ] Add local domains to etc/hosts
+      - [ ] Create secrets reading `setup/secrets/README_secrets.md`
       - [ ] Pre approve pipelines, so the first time the user execute a pipeline, it doesn't give an error ofr this
       - [ ] Add in `/etc/docker/daemon.json` the content `{ "insecure-registries": ["registry.$MY_DOMAIN:5000"] }` for docker login
-    - [ ] X. Database.
-      - [ ] X. Start service
-      - [ ] X. Build the db_utils container
-      - [ ] X. Install schema.
-    - [ ] X. Build/Start the backend container
-    - [ ] X. Build/Start the frontend container
-  - [ ] Install script
-    - [ ] Ask for user/pass, domain, email, env-type(local, stage, prod), 
-    - [ ] Pull images and set them for offline use.
-      - [ ] gitea
-      - [ ] Jenkins
-      - [ ] reverse-proxy
-    - [ ] Start/build gitea
-      - [ ] Check initial repositories.
-    - [ ] Start/build Jenkins
-      - [ ] add `docker compose build --build-arg DOCKER_GID=$(getent group docker | cut -d: -f3) jenkins`
-    - [ ] Start reverse proxy
+    - [X] X. Database.
+      - [X] X. Start service
+      - [X] X. Build the db_utils container
+      - [X] X. Install schema.
+    - [X] X. Build/Start the backend container
+    - [X] X. Build/Start the frontend container
 
+- [ ] Check the pipelines on offline mode (without internet)
+- [ ] Restore Backend
+- [ ] Restore Frontend
 
 - [ ] Create pipeline to execute tests and publish a status sticker
 
@@ -191,4 +187,4 @@ posible.
 - [X] Purge Images, get rid of images that are not candidates to production.
   - [X] Delete Dangling images
   - [X] Delete images selected by the user
-
+- [X] Add healthcheck to gitea, jenkins, reverse-proxy, registry

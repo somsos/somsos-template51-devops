@@ -39,6 +39,11 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     entrypoint: ["/bin/sh", "/tmp/gitea-entrypoint.sh"]
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     ports:
       - "222:2222"
     expose:
@@ -110,6 +115,11 @@ services:
 #Sync time
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:8080/login"]
+      interval: 60s
+      timeout: 10s
+      retries: 5
     networks:
       t51Net:
         ipv4_address: ${JENKINS_IP}
@@ -127,9 +137,15 @@ services:
       - "443:443"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ./data/reverse-proxy/certs:/etc/nginx/certs:rw
-      - ./data/reverse-proxy/vhost.d:/etc/nginx/vhost.d
-      - ./data/reverse-proxy/html:/usr/share/nginx/html
+      - ./reverse-proxy/certs:/etc/nginx/certs:rw
+      #- ./reverse-proxy/vhost.d:/etc/nginx/vhost.d
+      - ./reverse-proxy/conf.d:/etc/nginx/conf.d
+      - ./reverse-proxy/html:/usr/share/nginx/html
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
     networks:
       t51Net:
         ipv4_address: ${REVERSE_PROXY_IP}
@@ -148,10 +164,11 @@ services:
       - NGINX_PROXY_CONTAINER=reverse-proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./data/reverse-proxy/certs:/etc/nginx/certs:rw
-      - ./data/reverse-proxy/vhost.d:/etc/nginx/vhost.d
-      - ./data/reverse-proxy/html:/usr/share/nginx/html
-      - ./data/reverse-proxy/acme:/etc/acme.sh
+      - ./reverse-proxy/certs:/etc/nginx/certs:rw
+      #- ./reverse-proxy/vhost.d:/etc/nginx/vhost.d
+      - ./reverse-proxy/conf.d:/etc/nginx/conf.d
+      - ./reverse-proxy/html:/usr/share/nginx/html
+      - ./reverse-proxy/acme:/etc/acme.sh
     networks:
       t51Net:
         ipv4_address: ${ACME_COMPANION_IP}
@@ -161,6 +178,11 @@ services:
     profiles: ["devops", "all"]
     container_name: t51registry
     image: registry:3.1
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     environment:
       # Domain and SSL
       - VIRTUAL_HOST=registry.${MY_DOMAIN}

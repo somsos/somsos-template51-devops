@@ -5,6 +5,9 @@ setup/data
 
 setup/registry/data
 setup/registry/registry.password
+setup/reverse-proxy/conf.d/default.conf
+setup/reverse-proxy/vhost.d
+setup/reverse-proxy/certs
 
 .env
 .env.*
@@ -82,3 +85,4 @@ app/*/source/.*
 
 **/*.jar
 **/*.zip
+**/*.log
