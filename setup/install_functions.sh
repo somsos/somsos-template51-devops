@@ -443,7 +443,7 @@ function clone_repository {
         exit 1
     fi
     if [ -z "$(ls -A $2)" ]; then
-        if git -q clone $1 $2; then
+        if git clone -q $1 $2; then
             echo "[INFO] Repository $1 cloned successfully."
         else
             echo "[ERROR] Failed to clone repository $1. Please check the repository URL and your network connection, then try again."
