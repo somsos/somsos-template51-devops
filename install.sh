@@ -21,18 +21,18 @@ download_save_and_load_image $DB_MIG_IMAGE "DB_MIG_IMAGE"
 create_ssh_keys
 create_registry_auth
 
-start_and_check_health_devops_service gitea
-start_and_check_health_devops_service jenkins
-start_and_check_health_devops_service registry
-docker compose up -d reverse-proxy
-
-
 # root access required to add entries to /etc/hosts file
 add_domain_to_hosts_file $MY_DOMAIN
 add_domain_to_hosts_file api.$MY_DOMAIN
 add_domain_to_hosts_file gitea.$MY_DOMAIN
 add_domain_to_hosts_file jenkins.$MY_DOMAIN
 add_domain_to_hosts_file registry.$MY_DOMAIN
+
+start_and_check_health_devops_service gitea
+start_and_check_health_devops_service jenkins
+start_and_check_health_devops_service registry
+docker compose up -d reverse-proxy
+
 
 
 clone_repository $BACK_REPO ./app/back/source

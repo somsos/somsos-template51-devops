@@ -1,4 +1,5 @@
 **/vol-*/*
+!**/vol-*/*.md
 
 setup/data
 # setup/shared/known_hosts # git update-index --assume-unchanged setup/shared/known_hosts

@@ -208,9 +208,9 @@ function create_env_file_and_load_it {
 
 
 
-    read -p "Enter the registry username: " MY_USER
+    read -p "Enter the App username: " MY_USER
     if ! [[ "$MY_USER" =~ ^[a-zA-Z0-9]{3,16}+$ ]]; then
-        echo "[ERROR] Registry username must be a valid username (only letters and numbers and between 3 and 16 characters)."
+        echo "[ERROR] App username must be a valid username (only letters and numbers and between 3 and 16 characters)."
         exit 1
     fi
     if ! grep -q "MY_USER=■■■" $ENV_EXAMPLE_FILE; then
@@ -220,9 +220,9 @@ function create_env_file_and_load_it {
 
 
 
-    read -s -p "Enter the registry password: " MY_PASS
+    read -s -p "Enter the App password: " MY_PASS
     if [[ -z "$MY_PASS" || ${#MY_PASS} =~ ^[a-zA-Z0-9]{3,16}+$ ]]; then
-        echo "[ERROR] Registry password is required and must be between 6 and 16 characters."
+        echo "[ERROR] App password is required and must be between 6 and 16 characters."
         exit 1
     fi
     if ! grep -q "MY_PASS=■■■" $ENV_EXAMPLE_FILE; then
@@ -230,7 +230,7 @@ function create_env_file_and_load_it {
         exit 1
     fi
     echo ""
-    read -s -p "Repeat the registry password: " MY_PASS_CONFIRM
+    read -s -p "Repeat the App password: " MY_PASS_CONFIRM
     if [[ "$MY_PASS" != "$MY_PASS_CONFIRM" ]]; then
         echo -e "\n[ERROR] Passwords do not match. Please try again."
         exit 1
@@ -240,9 +240,9 @@ function create_env_file_and_load_it {
 
 
     
-    read -p "Enter the registry email: " MY_EMAIL
+    read -p "Enter the App email: " MY_EMAIL
     if [[ -z "$MY_EMAIL" || ! "$MY_EMAIL" =~ ^[a-zA-Z0-9_+-]{2,16}+@[a-zA-Z0-9-]{2,16}+\.[a-zA-Z]{2,16}$ ]]; then
-        echo "[ERROR] Registry email is required and must be between 6 and 40 characters, and must be a valid email address."
+        echo "[ERROR] App email is required and must be between 6 and 40 characters, and must be a valid email address."
         exit 1
     fi
     if ! grep -q "MY_EMAIL=■■■" $ENV_EXAMPLE_FILE; then
@@ -341,17 +341,17 @@ function download_save_and_load_image {
     TAR_FILE_PATH="$DEP_DATA_DIR/$2.tar"
 
     if [ -f $TAR_FILE_PATH ]; then
-        echo "[INFO] $TAR_FILE_PATH file already exists."
+        echo "[INFO] $TAR_FILE_PATH file already exists, loading from tar file."
+        # check if is already loaded
+        if docker images --format "{{.Repository}}:{{.Tag}}" | grep -q "^$IMAGE_NAME$"; then
+            echo "[INFO] $IMAGE_NAME image is already loaded in Docker. Skipping loading from tar file."
+            return
+        fi
+        docker load --input $TAR_FILE_PATH
     else
         docker pull $IMAGE_NAME
         docker save --output $TAR_FILE_PATH $IMAGE_NAME
     fi
-    # check if is already loaded
-    if docker images --format "{{.Repository}}:{{.Tag}}" | grep -q "^$IMAGE_NAME$"; then
-        echo "[INFO] $IMAGE_NAME image is already loaded in Docker. Skipping loading from tar file."
-        return
-    fi
-    docker load --input $TAR_FILE_PATH
 
 }
 
