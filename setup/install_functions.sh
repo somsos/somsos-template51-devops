@@ -442,8 +442,10 @@ function clone_repository {
         echo "[ERROR] Directory path is required as the second argument to the clone_repository function."
         exit 1
     fi
+    ORIGINAL_URL=$1
+    MODIFIED_URL=$(echo $ORIGINAL_URL | sed 's|gitea:2222|localhost:222|g')
     if [ -z "$(ls -A $2)" ]; then
-        if git clone -q $1 $2; then
+        if git clone -q $MODIFIED_URL $2; then
             echo "[INFO] Repository $1 cloned successfully."
         else
             echo "[ERROR] Failed to clone repository $1. Please check the repository URL and your network connection, then try again."
