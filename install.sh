@@ -28,9 +28,9 @@ add_domain_to_hosts_file gitea.$MY_DOMAIN
 add_domain_to_hosts_file jenkins.$MY_DOMAIN
 add_domain_to_hosts_file registry.$MY_DOMAIN
 
+start_and_check_health_devops_service registry
 start_and_check_health_devops_service gitea
 start_and_check_health_devops_service jenkins
-start_and_check_health_devops_service registry
 docker compose up -d reverse-proxy
 
 
