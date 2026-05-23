@@ -146,6 +146,15 @@ function check_repository_state {
         echo "[ERROR] registry service not found in docker-compose-devops.yml file. Please make sure the service is defined and try again."
         exit 1
     fi
+
+    if [ ! -f "setup/shared/known_hosts" ]; then
+        echo "[WARN] known_hosts file not found in setup/shared creating it"
+        touch setup/shared/known_hosts
+    fi
+
+    git update-index --assume-unchanged setup/shared/known_hosts
+
+    
 }
 
 
