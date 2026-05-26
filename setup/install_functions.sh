@@ -43,6 +43,11 @@ function check_dependencies {
         exit 1
     fi
 
+    if ! command -v realpath &> /dev/null; then
+        echo "[ERROR] realpath command is not available. Please install the necessary package (e.g., coreutils) and try again."
+        exit 1
+    fi
+
     if ! command -v getent &> /dev/null; then
         set -x && echo "[ERROR] getent command is not available. Please install the necessary package (e.g., libc-bin) and try again." && set +x
         exit 1
@@ -379,6 +384,47 @@ function create_ssh_keys {
 
     echo "[INFO] SSH keys generated and saved to $KEY_DIR directory."
 }
+
+
+function add_project_ssh_public_key_to_docker_host_ssh_config {
+    is_env_file_loaded_or_exit_with_error
+    if [ -z $KEY_DIR ]; then
+        echo "[ERROR] KEY_DIR variable not set. Please set it to a valid directory path."
+        exit 1
+    fi
+    PUB_KEY_FILE="$KEY_DIR/ssh_key.pub"
+    PUB_KEY_FILE=$(realpath $PUB_KEY_FILE)
+    if [ ! -f $PUB_KEY_FILE ]; then
+        echo "[ERROR] SSH public key file not found at $PUB_KEY_FILE. Please generate the SSH keys first."
+        exit 1
+    fi
+
+    set -x
+    USER_HOME=$(eval echo ~)
+    DOCKER_HOST_SSH_CONFIG_FILE="$USER_HOME/.ssh/config"
+    if [ ! -f $DOCKER_HOST_SSH_CONFIG_FILE ]; then
+        touch $DOCKER_HOST_SSH_CONFIG_FILE
+    fi
+
+    GITEA_DOMAIN="gitea.${MY_DOMAIN}"
+    HOST_DOES_NOT_EXIST=$(grep -c "Host ${GITEA_DOMAIN}" $DOCKER_HOST_SSH_CONFIG_FILE || true)
+    SSH_KEY_DOES_NOT_EXIST=$(grep -c "    IdentityFile $PUB_KEY_FILE" $DOCKER_HOST_SSH_CONFIG_FILE || true)
+    if [[ "$HOST_DOES_NOT_EXIST" -eq 0 && "$SSH_KEY_DOES_NOT_EXIST" -eq 0 ]]; then
+        {
+            echo ""
+            echo "Host ${GITEA_DOMAIN}"
+            echo "    HostName gitea.${MY_DOMAIN}"
+            echo "    Port 2222"
+            echo "    User root"
+            echo "    IdentityFile $PUB_KEY_FILE"
+        } | sudo tee -a $DOCKER_HOST_SSH_CONFIG_FILE > /dev/null
+        echo "[INFO] Added SSH public key to Docker host SSH config."
+    else
+        echo "[INFO] Docker host SSH config already contains the project SSH public key for $GITEA_DOMAIN."
+    fi
+}
+
+
 
 function create_registry_auth {
     is_env_file_loaded_or_exit_with_error

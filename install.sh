@@ -19,6 +19,9 @@ download_save_and_load_image $DB_IMAGE "DB_IMAGE"
 download_save_and_load_image $DB_MIG_IMAGE "DB_MIG_IMAGE"
 
 create_ssh_keys
+# root access required to add entries to ~/.ssh/config file.
+add_project_ssh_public_key_to_docker_host_ssh_config
+
 create_registry_auth
 
 # root access required to add entries to /etc/hosts file

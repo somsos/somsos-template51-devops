@@ -4,6 +4,7 @@
 
 - [ ] Create/Prepare to create install script and manual.
   - [ ] Install script
+    - [ ] Add host public key to gitea so the docker host can clone.
     - [X] Ask for user/pass, domain, email, env-type(local, stage, prod), 
     - [X] Pull images and set them for offline use.
     - [X] Start/build gitea
