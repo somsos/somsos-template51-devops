@@ -410,11 +410,11 @@ function add_project_ssh_public_key_to_docker_host_ssh_config {
     USER_HOME=$(eval echo ~)
     DOCKER_HOST_SSH_CONFIG_FILE="$USER_HOME/.ssh/config"
     if [ ! -d "$USER_HOME/.ssh" ]; then
-        mkdir -p "$USER_HOME/.ssh"
+        sudo mkdir -p "$USER_HOME/.ssh"
         sudo chmod 700 "$USER_HOME/.ssh"
     fi
     if [ ! -f $DOCKER_HOST_SSH_CONFIG_FILE ]; then
-        touch $DOCKER_HOST_SSH_CONFIG_FILE
+        sudo touch $DOCKER_HOST_SSH_CONFIG_FILE
     fi
 
     GITEA_DOMAIN="gitea.${MY_DOMAIN}"
