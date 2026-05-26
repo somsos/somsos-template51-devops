@@ -399,7 +399,6 @@ function add_project_ssh_public_key_to_docker_host_ssh_config {
         exit 1
     fi
 
-    set -x
     USER_HOME=$(eval echo ~)
     DOCKER_HOST_SSH_CONFIG_FILE="$USER_HOME/.ssh/config"
     if [ ! -f $DOCKER_HOST_SSH_CONFIG_FILE ]; then
@@ -480,6 +479,7 @@ function start_and_check_health_devops_service {
 }
 
 function clone_repository {
+    is_env_file_loaded_or_exit_with_error
     if [ -z "$1" ]; then
         echo "[ERROR] Repository URL is required as the first argument to the clone_repository function."
         exit 1
@@ -489,7 +489,8 @@ function clone_repository {
         exit 1
     fi
     ORIGINAL_URL=$1
-    MODIFIED_URL=$(echo $ORIGINAL_URL | sed 's|gitea:2222|localhost:222|g')
+    GITEA_DOMAIN="gitea.${MY_DOMAIN}"
+    MODIFIED_URL=$(echo $ORIGINAL_URL | sed "s|gitea:2222|${GITEA_DOMAIN}:222|g")
     if [ -z "$(ls -A $2)" ]; then
         if git clone -q $MODIFIED_URL $2; then
             echo "[INFO] Repository $1 cloned successfully."
