@@ -388,7 +388,7 @@ function create_ssh_keys {
     ssh-keygen -t ed25519 -N '' -f  $KEY_FILE
     mv $KEY_FILE.pub $KEY_DIR/ssh_key.pub
     sudo chmod 600 $KEY_FILE
-    sudo chmod 644 $KEY_DIR/ssh_key.pub
+    sudo chmod 640 $KEY_DIR/ssh_key.pub
 
     echo "[INFO] SSH keys generated and saved to $KEY_DIR directory."
 }
@@ -400,10 +400,10 @@ function add_project_ssh_public_key_to_docker_host_ssh_config {
         echo "[ERROR] KEY_DIR variable not set. Please set it to a valid directory path."
         exit 1
     fi
-    PUB_KEY_FILE="$KEY_DIR/ssh_key.pub"
-    PUB_KEY_FILE=$(realpath $PUB_KEY_FILE)
-    if [ ! -f $PUB_KEY_FILE ]; then
-        echo "[ERROR] SSH public key file not found at $PUB_KEY_FILE. Please generate the SSH keys first."
+    PRIV_KEY_FILE="$KEY_DIR/ssh_key.priv"
+    PRIV_KEY_FILE=$(realpath $PRIV_KEY_FILE)
+    if [ ! -f $PRIV_KEY_FILE ]; then
+        echo "[ERROR] SSH private key file not found at $PRIV_KEY_FILE. Please generate the SSH keys first."
         exit 1
     fi
 
@@ -422,7 +422,7 @@ function add_project_ssh_public_key_to_docker_host_ssh_config {
             echo "    HostName gitea.${MY_DOMAIN}"
             echo "    Port 222"
             echo "    User git"
-            echo "    IdentityFile $PUB_KEY_FILE"
+            echo "    IdentityFile $PRIV_KEY_FILE"
         } | sudo tee -a $DOCKER_HOST_SSH_CONFIG_FILE > /dev/null
         echo "[INFO] Added SSH public key to Docker host SSH config."
     else
