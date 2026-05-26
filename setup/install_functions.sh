@@ -491,7 +491,7 @@ function clone_repository {
     GITEA_DOMAIN="gitea.${MY_DOMAIN}"
     MODIFIED_URL=$(echo $ORIGINAL_URL | sed "s|gitea:2222|${GITEA_DOMAIN}:222|g")
     if [ -z "$(ls -A $2)" ]; then
-        if git clone -q $MODIFIED_URL $2; then
+        if GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" git clone -q $MODIFIED_URL $2; then
             echo "[INFO] Repository $1 cloned successfully."
         else
             echo "[ERROR] Failed to clone repository $1. Please check the repository URL and your network connection, then try again."
