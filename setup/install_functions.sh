@@ -381,6 +381,7 @@ function create_ssh_keys {
     fi
     ssh-keygen -t ed25519 -N '' -f  $KEY_FILE
     mv $KEY_FILE.pub $KEY_DIR/ssh_key.pub
+    sudo chmod 0644 $KEY_DIR/ssh_key.pub
 
     echo "[INFO] SSH keys generated and saved to $KEY_DIR directory."
 }
