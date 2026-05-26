@@ -461,7 +461,8 @@ function add_domain_to_hosts_file {
     fi
     NEW_DOMAIN=$1
     if ! grep -q "$NEW_DOMAIN" /etc/hosts; then
-        echo "127.0.0.1 $NEW_DOMAIN" | sudo tee -a /etc/hosts
+        echo "127.0.0.1 $NEW_DOMAIN" | sudo tee -a /etc/hosts > /dev/null
+        echo "[INFO] Domain $NEW_DOMAIN added to /etc/hosts file."
     else
         echo "[INFO] Domain $NEW_DOMAIN already exists in /etc/hosts file. Skipping adding it."
     fi
@@ -506,9 +507,9 @@ function clone_repository {
     rm -f $2/README_devops.md
     if [ -z "$(ls -A $2)" ]; then
         if GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no" git clone -q $MODIFIED_URL $2; then
-            echo "[INFO] Repository $1 cloned successfully."
+            echo "[INFO] Repository $MODIFIED_URL cloned successfully."
         else
-            echo "[ERROR] Failed to clone repository $1. Please check the repository URL and your network connection, then try again."
+            echo "[ERROR] Failed to clone repository $MODIFIED_URL. Please check the repository URL and your network connection, then try again."
             exit 1
         fi
     else
