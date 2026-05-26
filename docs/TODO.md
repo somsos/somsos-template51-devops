@@ -30,6 +30,8 @@
     - [X] X. Build/Start the frontend container
 
 - [ ] Check the pipelines on offline mode (without internet)
+    - [ ] Update Maven dependencies and copy .m2 on build image for building
+    - [ ] Update Node dependencies and copy node_modules on build image for building
 - [ ] Restore Backend
 - [ ] Restore Frontend
 
