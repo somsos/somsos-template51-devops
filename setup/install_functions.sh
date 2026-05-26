@@ -418,7 +418,7 @@ function add_project_ssh_public_key_to_docker_host_ssh_config {
     fi
 
     GITEA_DOMAIN="gitea.${MY_DOMAIN}"
-    HOST_DOES_NOT_EXIST=$(grep -c "Host ${GITEA_DOMAIN}" $DOCKER_HOST_SSH_CONFIG_FILE || true)
+    HOST_DOES_NOT_EXIST=$(sudo grep -c "Host ${GITEA_DOMAIN}" $DOCKER_HOST_SSH_CONFIG_FILE || true)
     if [[ "$HOST_DOES_NOT_EXIST" -eq 0 ]]; then
         {
             echo ""
