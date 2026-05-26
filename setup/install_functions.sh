@@ -342,6 +342,12 @@ function download_save_and_load_image {
     if [ ! -d $DEP_DATA_DIR ]; then
         mkdir $DEP_DATA_DIR
     fi
+    # check MY_DOMAIN
+    if [ -z $MY_DOMAIN ]; then
+        echo "[ERROR] MY_DOMAIN variable not set. Please set it in the environment file."
+        exit 1
+    fi
+    
 
     if [ -z "$1" ]; then
         echo "[ERROR] Image name is required as an argument to the download_save_and_load_image function."
@@ -413,8 +419,8 @@ function add_project_ssh_public_key_to_docker_host_ssh_config {
             echo ""
             echo "Host ${GITEA_DOMAIN}"
             echo "    HostName gitea.${MY_DOMAIN}"
-            echo "    Port 2222"
-            echo "    User root"
+            echo "    Port 222"
+            echo "    User git"
             echo "    IdentityFile $PUB_KEY_FILE"
         } | sudo tee -a $DOCKER_HOST_SSH_CONFIG_FILE > /dev/null
         echo "[INFO] Added SSH public key to Docker host SSH config."
