@@ -410,11 +410,11 @@ function add_project_ssh_public_key_to_docker_host_ssh_config {
     USER_HOME=$(eval echo ~)
     DOCKER_HOST_SSH_CONFIG_FILE="$USER_HOME/.ssh/config"
     if [ ! -d "$USER_HOME/.ssh" ]; then
-        sudo mkdir -p "$USER_HOME/.ssh"
+        mkdir -p "$USER_HOME/.ssh"
         sudo chmod 744 "$USER_HOME/.ssh"
     fi
     if [ ! -f $DOCKER_HOST_SSH_CONFIG_FILE ]; then
-        sudo touch $DOCKER_HOST_SSH_CONFIG_FILE
+        touch $DOCKER_HOST_SSH_CONFIG_FILE
         sudo chmod 744 $DOCKER_HOST_SSH_CONFIG_FILE
     fi
 
