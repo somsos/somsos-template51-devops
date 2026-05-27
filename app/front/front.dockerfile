@@ -1,7 +1,8 @@
 ARG IMAGE_NODE
 ARG IMAGE_NGINX
-ARG BACK_URL
-
+# ARG BACK_URL  CAREFUL the variables are reset after a FROM between stages.
+#               So if we put BACK_URL here it will not be available after the
+#               the FROM sentence,
 FROM $IMAGE_NODE AS build
 
 WORKDIR /app
@@ -20,6 +21,8 @@ RUN echo $CACHE_BUST > /app/BUILD_DATE.txt
 
 COPY ./source .
 
+ARG BACK_URL
+RUN test -n "$BACK_URL" || (echo "ERROR: BACK_URL required." && exit 1)
 RUN sed -i "s|__BACK_URL__|${BACK_URL}|g" src/environments/environment.ts
 
 RUN ng build -c production

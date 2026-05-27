@@ -35,6 +35,8 @@
 - [ ] Restore Backend
 - [ ] Restore Frontend
 
+- [ ] Check the timeout in building/deploy backend for slow hosts as redlap
+
 - [ ] Create pipeline to execute tests and publish a status sticker
 
 - [ ] Check how to avoid exposing secrets for example
@@ -192,3 +194,4 @@ posible.
   - [X] Delete Dangling images
   - [X] Delete images selected by the user
 - [X] Add healthcheck to gitea, jenkins, reverse-proxy, registry
+- [X] Check why in redlap the backend URL is wrong, it does not have the "api" subdomain part

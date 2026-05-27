@@ -17,27 +17,27 @@ function build_image {
     fi
 
     if [[ "$3" != "back" && "$3" != "front" ]]; then
-        set -x &&  echo "[ERROR] Required image for what service in build_image function, in function build_image" && set +x
+         echo "[ERROR] Required image for what service in build_image function, in function build_image"
         exit 1
     fi
 
     if [ -z "$BACK_NAME" ]; then
-        set -x && echo "[ERROR] BACK_NAME not found, it must be gotten through docker-compose-devops.yml env variables"
+        echo "[ERROR] BACK_NAME not found, it must be gotten through docker-compose-devops.yml env variables"
         exit 1
     fi
 
     if [ -z "$FRONT_NAME" ]; then
-        set -x && echo "[ERROR] FRONT_NAME not found, it must be gotten through docker-compose-devops.yml env variables"
+        echo "[ERROR] FRONT_NAME not found, it must be gotten through docker-compose-devops.yml env variables"
         exit 1
     fi
 
     if [ -z "$BACK_IMAGE" ]; then
-        set -x && echo "[ERROR] BACK_IMAGE not found, it must be gotten through docker-compose-devops.yml env variables"
+        echo "[ERROR] BACK_IMAGE not found, it must be gotten through docker-compose-devops.yml env variables"
         exit 1
     fi
 
     if [ -z "$FRONT_IMAGE" ]; then
-        set -x && echo "[ERROR] FRONT_IMAGE not found, it must be gotten through docker-compose-devops.yml env variables"
+        echo "[ERROR] FRONT_IMAGE not found, it must be gotten through docker-compose-devops.yml env variables"
         exit 1
     fi
 
@@ -45,7 +45,15 @@ function build_image {
     PATH_MDP=$1 # path Main Docker Compose
     IMAGE_BUILD_TAG=$2
 
-    
+    if [ ! -f "$PATH_MDP/.env" ]; then
+        echo "[ERROR] .env file not found in $PATH_MDP, it must be copied from the devops repo before building the image"
+        exit 1
+    fi
+    if [ ! -f "$PATH_MDP/docker-compose.yml" ]; then
+        echo "[ERROR] docker-compose.yml file not found in $PATH_MDP, it must be copied from the devops repo before building the image"
+        exit 1
+    fi
+
     
     # We create the image using the build tag fist and the tag it as latest
     # it seems confusing  but this way we overwrite the latest in an more
@@ -60,6 +68,7 @@ function build_image {
 
     if [[ "$3" == "front" ]]; then
         set -x
+        # docker compose -f $PATH_MDP/docker-compose.yml config front # for debugging
         FRONT_IMAGE=$IMAGE_BUILD_TAG docker compose -f $PATH_MDP/docker-compose.yml build front
         docker tag $IMAGE_BUILD_TAG $FRONT_IMAGE 
         set +x
