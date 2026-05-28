@@ -17,6 +17,9 @@ download_save_and_load_image $IMAGE_NGINX "IMAGE_NGINX"
 download_save_and_load_image $IMAGE_HTTPD "IMAGE_HTTPD"
 download_save_and_load_image $DB_IMAGE "DB_IMAGE"
 download_save_and_load_image $DB_MIG_IMAGE "DB_MIG_IMAGE"
+download_save_and_load_image $IMAGE_REVERSE_PROXY "IMAGE_REVERSE_PROXY"
+download_save_and_load_image $IMAGE_ACME_COMPANION "IMAGE_ACME_COMPANION"
+download_save_and_load_image $IMAGE_REGISTRY "IMAGE_REGISTRY"
 
 create_ssh_keys
 # root access required to add entries to ~/.ssh/config file.

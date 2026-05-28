@@ -130,7 +130,7 @@ services:
 
   reverse-proxy:
     profiles: ["devops", "all"]
-    image: nginxproxy/nginx-proxy:1.10-alpine
+    image: ${IMAGE_REVERSE_PROXY}
     container_name: reverse-proxy
     ports:
       - "80:80"
@@ -155,7 +155,7 @@ services:
 # IMPORTANT: run it at the end: 
   acme-companion:
     profiles: ["utils"]
-    image: nginxproxy/acme-companion:2.6
+    image: ${IMAGE_ACME_COMPANION}
     container_name: acme-companion
     depends_on:
       - reverse-proxy
@@ -177,7 +177,7 @@ services:
   registry:
     profiles: ["devops", "all"]
     container_name: t51registry
-    image: registry:3.1
+    image: ${IMAGE_REGISTRY}
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:5000/"]
       interval: 30s
