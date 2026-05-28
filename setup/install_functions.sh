@@ -196,7 +196,6 @@ function create_env_file_and_load_it {
         set -x && echo "[ERROR] Docker group not found. Please make sure Docker is installed and the docker group exists." && set +x
         exit 1
     fi
-    sed -i "s/DOCKER_GID=■■■/DOCKER_GID=$DOCKER_GID/g" $ENV_EXAMPLE_FILE
 
     read -p "Enter the environment (local, test, qa, stage, PROD): " MY_ENV
     if [[ -z "$MY_ENV" || ! "$MY_ENV" =~ ^(local|test|qa|stage|PROD)$ ]]; then
@@ -289,12 +288,14 @@ function create_env_file_and_load_it {
     fi
 
 
-    
-    read -p "Enter the database username: " DB_USER
-    if [[ -z "$DB_USER" || ${#DB_USER}  =~ ^[a-zA-Z0-9]{3,16}+$ ]]; then
-        echo "[ERROR] Database username is required and must be less than 40 characters."
-        exit 1
-    fi
+
+    # we take the same username in MY_USER for simplicity.
+    #read -p "Enter the database username: " DB_USER
+    #if [[ -z "$DB_USER" || ${#DB_USER}  =~ ^[a-zA-Z0-9]{3,16}+$ ]]; then
+    #    echo "[ERROR] Database username is required and must be less than 40 characters."
+    #    exit 1
+    #fi
+    DB_USER=$MY_USER
     if ! grep -q "DB_USER=■■■" $ENV_EXAMPLE_FILE; then
         echo "[ERROR] DB_USER variable not found in $ENV_EXAMPLE_FILE file. Please check the $ENV_EXAMPLE_FILE file and make sure it contains the line 'DB_USER=■■■'."
         exit 1
@@ -302,11 +303,13 @@ function create_env_file_and_load_it {
 
 
     
-    read -p "Enter the database password: " DB_PASS
-    if [[ -z "$DB_PASS" || ${#DB_PASS}  =~ ^[a-zA-Z0-9]{3,16}+$ ]]; then
-        echo "[ERROR] Database password is required and must be less than 40 characters."
-        exit 1
-    fi
+    # we take the same password in MY_PASS for simplicity.
+    #read -p "Enter the database password: " DB_PASS
+    #if [[ -z "$DB_PASS" || ${#DB_PASS}  =~ ^[a-zA-Z0-9]{3,16}+$ ]]; then
+    #    echo "[ERROR] Database password is required and must be less than 40 characters."
+    #    exit 1
+    #fi
+    DB_PASS=$MY_PASS
     if ! grep -q "DB_PASS=■■■" $ENV_EXAMPLE_FILE; then
         echo "[ERROR] DB_PASS variable not found in $ENV_EXAMPLE_FILE file. Please check the $ENV_EXAMPLE_FILE file and make sure it contains the line 'DB_PASS=■■■'."
         exit 1
@@ -329,6 +332,7 @@ function create_env_file_and_load_it {
     sed -i "s/DB_SCHEMA=■■■/DB_SCHEMA=$DB_SCHEMA/g" $NEW_ENV_FILE
     sed -i "s/DB_USER=■■■/DB_USER=$DB_USER/g" $NEW_ENV_FILE
     sed -i "s/DB_PASS=■■■/DB_PASS=$DB_PASS/g" $NEW_ENV_FILE
+    sed -i "s/DOCKER_GID=■■■/DOCKER_GID=$DOCKER_GID/g" $NEW_ENV_FILE
 
     source $NEW_ENV_FILE
 }

@@ -2,6 +2,8 @@
 
 ## Doing (First one is the current task)
 
+- [ ] Avoid in install command edit the .env.example, because it might be added an undesired change to the repo.
+
 - [ ] Create/Prepare to create install script and manual.
   - [ ] Install script
     - [ ] Last tests in PC and start test in redlap
