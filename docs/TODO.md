@@ -2,7 +2,16 @@
 
 ## Doing (First one is the current task)
 
-- [ ] Avoid in install command edit the .env.example, because it might be added an undesired change to the repo.
+- [ ] Check the pipelines on offline mode (without internet)
+    - [ ] Update Maven dependencies and copy .m2 on build image for building
+      - COPY host/path/.m2 container/path/.m2
+    - [ ] Update Node dependencies and copy node_modules on build image for building
+      - COPY host/path/node_modules container/path/node_modules
+
+- [ ] Create a state/backup folder which takes the one called latest to start up,
+  - [ ] Restore Database
+  - [ ] Restore Backend
+  - [ ] Restore Frontend
 
 - [ ] Create/Prepare to create install script and manual.
   - [ ] Install script
@@ -30,14 +39,6 @@
       - [X] X. Install schema.
     - [X] X. Build/Start the backend container
     - [X] X. Build/Start the frontend container
-
-- [ ] Check the pipelines on offline mode (without internet)
-    - [ ] Update Maven dependencies and copy .m2 on build image for building
-    - [ ] Update Node dependencies and copy node_modules on build image for building
-- [ ] Restore Backend
-- [ ] Restore Frontend
-
-- [ ] Check the timeout in building/deploy backend for slow hosts as redlap
 
 - [ ] Create pipeline to execute tests and publish a status sticker
 
@@ -197,3 +198,5 @@ posible.
   - [X] Delete images selected by the user
 - [X] Add healthcheck to gitea, jenkins, reverse-proxy, registry
 - [X] Check why in redlap the backend URL is wrong, it does not have the "api" subdomain part
+- [X] Avoid in install command edit the .env.example, because it might be added an undesired change to the repo.
+- [X] Check the timeout in building/deploy backend for slow hosts as redlap

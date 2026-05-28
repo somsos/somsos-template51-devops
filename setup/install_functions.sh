@@ -491,7 +491,7 @@ function start_and_check_health_devops_service {
         echo "Waiting for $SERVICE_NAME to be up..."
         sleep 3
     done
-    echo "URL available: $SERVICE_URL"
+    echo "[INFO] URL available: $SERVICE_URL"
 
 }
 
@@ -534,7 +534,7 @@ function start_app_database_service_and_install_schema {
     
     tries=0
     until  nc -zv  localhost $DB_PORT &> /dev/null; do
-        echo "Waiting for App Database to be up..."
+        echo "[INFO] Waiting for App Database to be up..."
         tries=$((tries + 1))
         if [ $tries -ge 20 ]; then
             echo "[ERROR] App Database did not start within expected time. Please check the Docker containers and try again."
@@ -565,14 +565,13 @@ function start_app_backend_service {
         return
     fi
 
-    docker compose up -d --wait --wait-timeout 30 back
-
+    docker compose up -d --wait --wait-timeout 240 back
     
     until curl -I --retry 5 --retry-max-time 30 $BACK_URL > /dev/null 2>&1; do
-        echo "Waiting for App Backend to be up..."
+        echo "[INFO] Waiting for App Backend to be up..."
         sleep 3
     done
-    echo "URL available: $BACK_URL"
+    echo "[INFO] URL available: $BACK_URL"
 }
 
 function start_app_frontend_service {
@@ -585,12 +584,12 @@ function start_app_frontend_service {
         return
     fi
 
-    docker compose up -d --wait --wait-timeout 30 front
+    docker compose up -d --wait --wait-timeout 240 front
 
     until curl -I --retry 5 --retry-max-time 30 $FRONT_URL > /dev/null 2>&1; do
-        echo "Waiting for App Frontend to be up..."
+        echo "[INFO] Waiting for App Frontend to be up..."
         sleep 3
     done
-    echo "URL available: $FRONT_URL"
+    echo "[INFO] URL available: $FRONT_URL"
 }
 
