@@ -1,14 +1,7 @@
+!**/README_*.md
+
 **/vol-*/*
 !**/vol-*/*.md
-
-setup/data
-# setup/shared/known_hosts # git update-index --assume-unchanged setup/shared/known_hosts
-
-setup/registry/data
-setup/registry/registry.password
-setup/reverse-proxy/conf.d/default.conf
-setup/reverse-proxy/vhost.d
-setup/reverse-proxy/certs
 
 .env
 .env.*
@@ -17,73 +10,27 @@ setup/reverse-proxy/certs
 dep_data
 
 **/secrets/*
-**/*.secret.*
-**/*.secret
 
 **/backups/*
 !**/backups/*.md
 
-**/workspace/*
-
-!**/workspace/Backend-Deploy-v1/
-**/workspace/Backend-Deploy-v1/*
-!**/workspace/Backend-Deploy-v1/*.sh
-
-!**/workspace/Backend-Rollback/
-**/workspace/Backend-Rollback/*
-!**/workspace/Backend-Rollback/*.sh
-!**/workspace/Backend-Rollback/*.md
-
-!**/workspace/Frontend-Deploy-v1/
-**/workspace/Frontend-Deploy-v1/*
-!**/workspace/Frontend-Deploy-v1/*.sh
-
-!**/workspace/Database-Rollback-v1/
-**/workspace/Database-Rollback-v1/*
-!**/workspace/Database-Rollback-v1/*.sh
-
-!**/workspace/Database-Deploy-v1/
-**/workspace/Database-Deploy-v1/*
-!**/workspace/Database-Deploy-v1/*.sh
-
-!**/workspace/Docker-Commands/
-**/workspace/Docker-Commands/*
-!**/workspace/Docker-Commands/*.sh
-
-!**/workspace/Database-Restore/
-**/workspace/Database-Restore/*
-!**/workspace/Database-Restore/*.sh
-
-!**/workspace/Frontend-Rollback/
-**/workspace/Frontend-Rollback/*
-!**/workspace/Frontend-Rollback/*.sh
-
-!**/workspace/Database-Rollback-v1/
-**/workspace/Database-Rollback-v1/*
-!**/workspace/Database-Rollback-v1/*.sh
-!**/workspace/Database-Rollback-v1/*.md
-
-!**/workspace/Database-Backup/
-**/workspace/Database-Backup/*
-!**/workspace/Database-Backup/*.sh
-
-!**/workspace/Image-actions/
-!**/workspace/Image-actions/*
-!**/workspace/Image-actions/*.sh
-
-!**/workspace/Registry-actions/
-!**/workspace/Registry-actions/*
-!**/workspace/Registry-actions/*.sh
-
-!**/workspace/0_scripts/
-**/workspace/0_scripts/*
-!**/workspace/0_scripts/*.sh
+!**/workspace/*/
+**/workspace/*/*
+!**/workspace/*/*.sh
+!**/workspace/*/*.md
 
 app/*/source/*
 app/*/source/.*
 
-!**/README_*.md
+# setup/shared/known_hosts # git update-index --assume-unchanged setup/shared/known_hosts
+setup/reverse-proxy/conf.d/default.conf
+setup/reverse-proxy/vhost.d
+setup/reverse-proxy/certs
 
 **/*.jar
 **/*.zip
 **/*.log
+**/.m2
+
+app/back/test_reports/*/*
+!app/back/test_reports/*/*.md

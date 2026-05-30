@@ -96,10 +96,10 @@ services:
 #   volumes makes things complicated. It happened me that it was working and
 #   suddenly stopped working. better use temporal images.
 # OPTIONS: 
-#   docker compose run --rm --build --name temp db_utils deploy
-#   docker compose run --rm --build --name temp db_utils rollback
-#   docker compose run --rm --build --name temp db_utils backup
-#   docker compose run --rm --build --name temp db_utils restore
+#   docker compose run --rm --build db_utils deploy
+#   docker compose run --rm --build db_utils rollback
+#   docker compose run --rm --build db_utils backup
+#   docker compose run --rm --build db_utils restore
   db_utils:
     profiles: ["devops-util"]
     container_name: temp_db_migrate
@@ -131,3 +131,40 @@ services:
     #  db:                              # AVOID THIS, IT MIGHT RECREATE THE DATABASE VOLUME ¡¡DELETING!! ALL
     #    condition: service_healthy
 
+
+# OPTIONS: 
+#   docker compose run --rm --build back_utils unitary_tests
+#   docker compose run --rm --build back_utils integration_tests
+#   docker compose run --rm --build back_utils e2e_tests
+  back_utils:
+    profiles: ["devops-util"]
+    container_name: temp_back_tests
+    image: back_utils:1
+    user: "${UID}:${GID}"
+    build:
+      context: ./back
+      dockerfile: back_utils.dockerfile
+      args:
+        IMAGE_MVN: ${IMAGE_MVN}
+        IMAGE_JAVA: ${IMAGE_JAVA}
+    volumes:
+      - ./back/back_utils.entrypoint.sh:/opt/back_utils.entrypoint.sh:ro
+      - ./back/.m2:/root/.m2
+      # REPORTS
+      - ./back/test_reports/0overall:/opt/template51/tests_overall
+      - ./back/test_reports/adapter:/opt/template51/adapter/target/surefire-reports
+      - ./back/test_reports/common:/opt/template51/common/target/surefire-reports
+      - ./back/test_reports/product:/opt/template51/product/target/surefire-reports
+      - ./back/test_reports/user:/opt/template51/user/target/surefire-reports
+      - ./back/test_reports/t51-parent-commons:/opt/template51/t51-parent-commons/target/surefire-reports
+      
+    entrypoint: [ "bash", "/opt/back_utils.entrypoint.sh" ]
+    #environment:
+      # DB connection data
+      #- DB_SERVER_TEST=${DB_SERVER}
+      #- DB_SCHEMA_TEST=${DB_SCHEMA}
+      #- DB_USER_TEST=${DB_USER}
+      #- DB_PASS_TEST=${DB_PASS}
+    #networks:
+    #  t51Net:
+    #    ipv4_address: ${BACK_IP}

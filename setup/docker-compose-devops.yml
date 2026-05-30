@@ -198,7 +198,7 @@ services:
       - REGISTRY_AUTH_HTPASSWD_PATH=/auth/registry.password
     volumes:
       - ./secrets/registry.password:/auth/registry.password
-      - ./registry/data:/data
+      - ./registry/vol-data:/data
     ports:
       - "5000:5000"        # Do not expose because does not require credentials.
     networks:

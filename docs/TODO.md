@@ -2,16 +2,22 @@
 
 ## Doing (First one is the current task)
 
-- [ ] Check the pipelines on offline mode (without internet)
-    - [ ] Update Maven dependencies and copy .m2 on build image for building
-      - COPY host/path/.m2 container/path/.m2
-    - [ ] Update Node dependencies and copy node_modules on build image for building
-      - COPY host/path/node_modules container/path/node_modules
+- [ ] Create pipeline to execute tests and publish a status sticker
 
 - [ ] Create a state/backup folder which takes the one called latest to start up,
   - [ ] Restore Database
   - [ ] Restore Backend
   - [ ] Restore Frontend
+
+- [ ] Set a Maven Repository Manager service e.g., Sonatype Nexus or JFrog.
+
+- [ ] Decide how to test the UI code (Jest, Cypress, etc)
+  - [ ] Run them on Jenkins
+
+- [ ] Add to installer `sudo pacman -S docker-buildx` abd 
+
+
+- [ ] Create pipeline to add the HTTPS/SSL config.
 
 - [ ] Create/Prepare to create install script and manual.
   - [ ] Install script
@@ -40,8 +46,6 @@
     - [X] X. Build/Start the backend container
     - [X] X. Build/Start the frontend container
 
-- [ ] Create pipeline to execute tests and publish a status sticker
-
 - [ ] Check how to avoid exposing secrets for example
   - `docker exec jenkins printenv | grep PASS`
   - `docker exec gitea printenv | grep PASS`
@@ -50,22 +54,12 @@
     - What happens if in my entrypoint I do this `export MY_PASS="$(cat /run/secrets/my_pass_secret)"` and then UNSET or override
     - What happends if i edit `jenkins.sh` the official file to start jenkins
 
-- [ ] Decide how to test the UI code (Jest, Cypress, etc)
-  - [ ] Run them on Jenkins
+- [ ] Combine the download_{back|db|devops|front}_repo.sh in just one function
 
 - [ ] Automate Monitoring and Reporting
   - [ ] Study best approaches for this
 
-- [ ] Create pipeline to add the HTTPS/SSL config.
-
-- [ ] Combine the download_{back|db|devops|front}_repo.sh in just one function
-
 ## Resume
-
-### Write a manual of how to start the project
-
-Make an manual of how to start the project from an .zip file, and then
-upload the manual and the file to github or linkedin.
 
 ### My Git flow
 
@@ -200,3 +194,7 @@ posible.
 - [X] Check why in redlap the backend URL is wrong, it does not have the "api" subdomain part
 - [X] Avoid in install command edit the .env.example, because it might be added an undesired change to the repo.
 - [X] Check the timeout in building/deploy backend for slow hosts as redlap
+- [X] Check the pipelines on offline mode (without internet)
+    - ■■■ BAD IDEA: IT REDUCE THE PORTABILITY AND CREATE WEIRD FILE INTEGRITY ERRORS. ■■■
+    - [X] Update Maven dependencies and copy .m2 on build image for building
+    - [X] Update Node dependencies and copy node_modules on build image for building
