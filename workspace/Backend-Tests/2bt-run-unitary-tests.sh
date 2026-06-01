@@ -17,6 +17,7 @@ echo "[INFO] BACK_REPO_DIR  : $BACK_REPO_DIR"
 source "../0_scripts/temp_env_file_functions.sh"
 copy_env_file "$DEVOPS_REPO_DIR/.env"
 
+set -x
 docker compose -f $DEVOPS_REPO_DIR/docker-compose.yml run --rm --build back_utils unitary_tests
 
 remove_copied_env_file "$DEVOPS_REPO_DIR/.env"
