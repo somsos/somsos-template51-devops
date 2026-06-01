@@ -1,0 +1,62 @@
+
+jobs:
+  - script: >
+      pipelineJob('Backend-Tests') {
+        definition {
+          cps {
+            script('''
+              pipeline {
+                agent { label 'built-in' }
+                options {
+                    ansiColor('xterm')
+                }
+                stages {
+                  stage('1/X: Download DevOps and Backend') {
+                    steps {
+                      sh \'\'\'
+                        bash $WORKSPACE/../Backend-Deploy-v1/1bd-download.sh
+                      \'\'\'
+                    }
+                  }
+
+                  stage('2/X: unitary tests') {
+                    steps {
+                      sh \'\'\'
+                        bash $WORKSPACE/2bt-run-unitary-tests.sh
+                      \'\'\'
+                    }
+                  }
+                } // end stages
+                post {
+                    always {
+                        sh \'\'\'
+                            mkdir -p $JENKINS_HOME/userContent
+                        \'\'\'
+                    }
+                    success {
+                        sh \'\'\'
+                            cat > $JENKINS_HOME/userContent/backend-tests-result.svg <<EOF
+                            <svg xmlns="http://www.w3.org/2000/svg" width="110" height="20">
+                                <text x="10" y="14">Tests: PASS</text>
+                            </svg>
+                            EOF
+                        \'\'\'
+                    }
+
+                    failure {
+                        sh \'\'\'
+                            cat > $JENKINS_HOME/userContent/backend-tests-result.svg <<EOF
+                            <svg xmlns="http://www.w3.org/2000/svg" width="110" height="20">
+                                <text x="10" y="14">Tests: FAIL</text>
+                            </svg>
+                            EOF
+                        \'\'\'
+                    }
+                    
+                }
+              }
+            '''.stripIndent())
+          }
+        }
+      }
+

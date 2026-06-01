@@ -3,6 +3,9 @@
 ## Doing (First one is the current task)
 
 - [ ] Create pipeline to execute tests and publish a status sticker
+  - [ ] make the pipeline can get the positive or negative result
+  - [ ] Publish an static URL with a changing image
+  - [ ] 
 
 - [ ] Create a state/backup folder which takes the one called latest to start up,
   - [ ] Restore Database

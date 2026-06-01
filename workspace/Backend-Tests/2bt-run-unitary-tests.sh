@@ -14,4 +14,9 @@ BACK_REPO_DIR=$(get_app_dir $DEVOPS_REPO_DIR "back")
 echo "[INFO] DEVOPS_REPO_DIR: $DEVOPS_REPO_DIR"
 echo "[INFO] BACK_REPO_DIR  : $BACK_REPO_DIR"
 
-docker compose run --rm --build back_utils unitary_tests
+source "../0_scripts/temp_env_file_functions.sh"
+copy_env_file "$DEVOPS_REPO_DIR/.env"
+
+docker compose -f $DEVOPS_REPO_DIR/docker-compose.yml run --rm --build back_utils unitary_tests
+
+remove_copied_env_file "$DEVOPS_REPO_DIR/.env"
