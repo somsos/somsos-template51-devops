@@ -149,6 +149,7 @@ services:
         IMAGE_JAVA: ${IMAGE_JAVA}
     volumes:
       # - ./back/back_utils.entrypoint.sh:/opt/back_utils.entrypoint.sh:ro        # AVOID THIS, IN DnD IT MIGHT NOT WORK, BETTER COPY IT IN THE DOCKERFILE
+      -  ${HOME}/.m2:/root/.m2
       # REPORTS
       - ./back/test_reports/0overall:/opt/template51/tests_overall
       - ./back/test_reports/adapter:/opt/template51/adapter/target/surefire-reports

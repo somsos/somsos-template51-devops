@@ -15,6 +15,7 @@ function check_necessary_variables {
     
     if [ "$1" = "JENKINS"  ]; then
         echo "In pipeline"
+        HOME=/home/jenkins
     
     elif [ "$1" = "CONTAINER-SHELL"  ]; then
         echo "In container"

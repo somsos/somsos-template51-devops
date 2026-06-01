@@ -34,17 +34,15 @@ jobs:
                             rm -f $WORKSPACE/.env
                         \'\'\'
                     }
-                    // the file is published in http://jenkins.<DOMAIN>/userContent/backend-tests-result.svg
-                    // in my case http://jenkins.mariomv-local.org/userContent/backend-tests-result.svg
+                    // the file is published in http://jenkins.<DOMAIN>/userContent/backend-tests-result.svg in my case http://jenkins.mariomv-local.org/userContent/backend-tests-result.svg
                     success {
                         sh \'\'\'
-                            cat > $JENKINS_HOME/userContent/backend-tests-result.svg '<svg xmlns="http://www.w3.org/2000/svg" width="110" height="20"><text x="10" y="14">Tests: PASS</text></svg>'
+                            echo '<svg xmlns="http://www.w3.org/2000/svg" width="110" height="20"><text x="10" y="14">Tests: PASS</text></svg>' > $JENKINS_HOME/userContent/backend-tests-result.svg
                         \'\'\'
                     }
-
                     failure {
                         sh \'\'\'
-                            cat > $JENKINS_HOME/userContent/backend-tests-result.svg  '<svg xmlns="http://www.w3.org/2000/svg" width="110" height="20"><text x="10" y="14">Tests: FAIL</text></svg>'
+                            echo '<svg xmlns="http://www.w3.org/2000/svg" width="110" height="20"><text x="10" y="14">Tests: FAIL</text></svg>' > $JENKINS_HOME/userContent/backend-tests-result.svg
                         \'\'\'
                     }
                     
