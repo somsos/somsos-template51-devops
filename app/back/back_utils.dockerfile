@@ -46,6 +46,8 @@ COPY --from=dep_downloader /opt/template51/                     /opt/template51
 COPY --from=dep_downloader /opt/template51/pom.xml              /opt/template51/pom.xml
 COPY --from=dep_downloader /opt/template51/pom-spring-boot.xml  /opt/template51/pom-spring-boot.xml
 
+COPY ./back_utils.entrypoint.sh  /opt/back_utils.entrypoint.sh
+
 COPY source/common/src   /opt/template51/common/src
 COPY source/user/src     /opt/template51/user/src
 COPY source/product/src  /opt/template51/product/src
