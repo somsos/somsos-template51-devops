@@ -4,6 +4,8 @@
 
 - [ ] Create a named volume for jenkins, I'm having problems with DinD
 
+- [ ] Add to copy_env_file an arg to delete the password to the copied filed, if is not required
+
 - [ ] Create pipeline to execute tests and publish a status sticker
   - [ ] make the pipeline can get the positive or negative result
   - [ ] Publish an static URL with a changing image

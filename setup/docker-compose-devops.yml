@@ -102,6 +102,7 @@ services:
       - ./jenkins/vol-jenkins_home:/var/jenkins_home        # all jenkins main
       - ./jenkins/casc:/var/jenkins_home/casc_configs:ro    # CasC (Configuration as Code)
       - ../workspace:/var/jenkins_home/workspace            # executions and generations of DevOps Process
+      - ../.env:/var/jenkins_home/workspace/.env:ro
 # SSH conf to add gitea as reliable server
       - ./secrets/ssh_key.priv:/var/jenkins_home/.ssh/ssh_key.priv:ro
       - ./shared/ssh_config:/var/jenkins_home/.ssh/config
