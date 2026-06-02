@@ -2,6 +2,8 @@
 
 ## Doing (First one is the current task)
 
+- [ ] Create a named volume for jenkins, I'm having problems with DinD
+
 - [ ] Create pipeline to execute tests and publish a status sticker
   - [ ] make the pipeline can get the positive or negative result
   - [ ] Publish an static URL with a changing image

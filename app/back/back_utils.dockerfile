@@ -40,7 +40,6 @@ RUN groupadd -g ${GROUP_ID} user1 && useradd -u ${USER_ID} -g user1 -m user1
 RUN mkdir /opt/template51 && chown -R user1:user1 /opt/template51 
 WORKDIR /opt/template51
 
-USER user1
 
 COPY --from=dep_downloader /opt/template51/                     /opt/template51
 COPY --from=dep_downloader /opt/template51/pom.xml              /opt/template51/pom.xml
@@ -53,6 +52,9 @@ COPY source/user/src     /opt/template51/user/src
 COPY source/product/src  /opt/template51/product/src
 COPY source/adapter/src  /opt/template51/adapter/src
 
+RUN chown -R user1:user1 /opt/template51
+
+USER user1
 
 #RUN mvn -B -e clean install -DskipTests
   
