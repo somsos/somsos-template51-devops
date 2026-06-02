@@ -15,6 +15,7 @@ networks:
 
 volumes:
   t51DB_vol1:
+  t51m2_vol2:
 #   external: true  # Avoid this so docker compose creates the volume automatically.
 
 
