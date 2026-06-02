@@ -149,14 +149,13 @@ services:
         IMAGE_JAVA: ${IMAGE_JAVA}
     volumes:
       # - ./back/back_utils.entrypoint.sh:/opt/back_utils.entrypoint.sh:ro        # AVOID THIS, IN DnD IT MIGHT NOT WORK, BETTER COPY IT IN THE DOCKERFILE
-      -  ${HOME}/.m2:/root/.m2
+      -  ${HOME}/.m2:/root/.m2:rw
       # REPORTS
-      - ./back/test_reports/0overall:/opt/template51/tests_overall
-      - ./back/test_reports/adapter:/opt/template51/adapter/target/surefire-reports
-      - ./back/test_reports/common:/opt/template51/common/target/surefire-reports
-      - ./back/test_reports/product:/opt/template51/product/target/surefire-reports
-      - ./back/test_reports/user:/opt/template51/user/target/surefire-reports
-      - ./back/test_reports/t51-parent-commons:/opt/template51/t51-parent-commons/target/surefire-reports
+      # /opt/template51/adapter/target/surefire-reports
+      # /opt/template51/common/target/surefire-reports
+      # /opt/template51/product/target/surefire-reports
+      # /opt/template51/user/target/surefire-reports
+      # parent-commons:/opt/template51/t51-parent-commons/target/surefire-reports
       
     entrypoint: [ "bash", "/opt/back_utils.entrypoint.sh" ]
     #environment:
