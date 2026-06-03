@@ -11,6 +11,9 @@ source "../0_scripts/get_repo_dir.sh"
 DEVOPS_REPO_DIR=$(get_repo_dir)
 echo "[INFO] DEVOPS_REPO_DIR: $DEVOPS_REPO_DIR"
 
+source "../0_scripts/temp_env_file_functions.sh"
+copy_env_file "$DEVOPS_REPO_DIR/.env" "keep_passwords"
+
 if [ -z "$1" ]; then
     echo "[ERROR] File argument 1 required: main action. e.g. 'status', 'db', 'back', 'front', etc"
     exit 1
@@ -55,3 +58,6 @@ fi
 if [ "$CHECK_STATUS" = "true" ]; then
   docker ps -a --format 'table {{.Names}}\t{{.Status}}\t{{.Size}}'
 fi
+
+source "../0_scripts/temp_env_file_functions.sh"
+remove_copied_env_file "$DEVOPS_REPO_DIR/.env"

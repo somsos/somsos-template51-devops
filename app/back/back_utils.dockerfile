@@ -62,7 +62,7 @@ COPY source/product/src  /opt/template51/product/src
 COPY source/adapter/src  /opt/template51/adapter/src
 
 RUN mkdir -p /home/user1/.m2/repository
-RUN chown -R user1:user1 /home/user1/.m2
+RUN chown -R user1:user1 /home/user1
 RUN chown -R user1:user1 /opt/template51
 USER user1
 

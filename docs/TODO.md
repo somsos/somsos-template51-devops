@@ -2,22 +2,19 @@
 
 ## Doing (First one is the current task)
 
-- [ ] Create a named volume for jenkins, I'm having problems with DinD
-
-- [ ] Add to copy_env_file an arg to delete the password to the copied filed, if is not required
-
-- [ ] Create a named volume for m2 and node_modules
-
 - [ ] Create pipeline to execute tests and publish a status sticker
-  - [ ] make the pipeline can get the positive or negative result
+  - [X] Make the java tests pass
+  - [X] make the pipeline can get the positive or negative result
+  - [ ] Use `badge_XXX.svg` to create the icon to publish
   - [ ] Publish an static URL with a changing image
+  - [ ] Add URL to repository and see that the status match.
+
+- [ ] Create a named volume for node_modules.
 
 - [ ] Create a state/backup folder which takes the one called latest to start up,
   - [ ] Restore Database
   - [ ] Restore Backend
   - [ ] Restore Frontend
-
-- [ ] Set a Maven Repository Manager service e.g., Sonatype Nexus or JFrog.
 
 - [ ] Decide how to test the UI code (Jest, Cypress, etc)
   - [ ] Run them on Jenkins
@@ -206,3 +203,7 @@ posible.
     - ■■■ BAD IDEA: IT REDUCE THE PORTABILITY AND CREATE WEIRD FILE INTEGRITY ERRORS. ■■■
     - [X] Update Maven dependencies and copy .m2 on build image for building
     - [X] Update Node dependencies and copy node_modules on build image for building
+- [X] Create a named volume for m2.
+- [■] CANCELED Create a named volume for jenkins, I'm having problems with DinD
+  - CANCELED BECAUSE A LOT OF WORK
+- [X] Add to copy_env_file an arg to delete the password to the copied filed, if is not required

@@ -2,6 +2,17 @@
 
 ## TL:DR
 
+- When you create a `dockerfile` make sure you are creating and switching user,
+  because by default use root and if create files this files belong to root and
+  it's always a headache.
+
+- When a folder does not exist in the container `docker run --rm -v ./not-exists:...`
+  the folder `./not-exists` is created by the daemon (which runs as root).
+  So thats why `./not-exists` will belong to `root`, the standard way to avoid
+  this is by run a `mkdir` before running the Docker command, so the daemon does
+  have to create the folder. and using either way `--user $(id -u):$(id -g)` or
+  `user: "${UID}:${GID}"`.
+
 - Make the secret management first, if you do it after you will have to test again.
 
 - Keep the files host and volumes the same, because will need DinD, but if they
@@ -22,6 +33,6 @@
   going to start with a new state, more details in
   `docker_pitfalls#{id:6fn04mh87}`.
 
-- Be careful with the the order of `ARG`
-   and `FROM` in the dockerfile when is passed trought docker-compose.yml using
-   `build.args` `docker_pitfalls#id{mcg385nvh502hrc}#`
+- Be careful with the the order of `ARG` and `FROM` in the dockerfile when is
+   passed trought docker-compose.yml using `build.args`
+   `docker_pitfalls#id{mcg385nvh502hrc}#`

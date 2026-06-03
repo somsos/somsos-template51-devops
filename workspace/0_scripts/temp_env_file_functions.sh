@@ -21,6 +21,11 @@ function copy_env_file {
     local TEMP_ENV_FILE="$1"
 
     cp -v $ENV_FILE $TEMP_ENV_FILE
+
+    if [ "$2" != "keep_passwords" ]; then
+        sed -i 's/MY_PASS=.*/MY_PASS=overwritten_for_security_purposes/g' $TEMP_ENV_FILE
+        sed -i 's/DB_PASS=.*/DB_PASS=overwritten_for_security_purposes/g' $TEMP_ENV_FILE
+    fi
 }
 
 
@@ -34,5 +39,6 @@ function remove_copied_env_file {
 
     local TEMP_ENV_FILE="$1"
 
-    echo "overwritten for security purposes" > "$TEMP_ENV_FILE"
+    sed -i 's/MY_PASS=.*/MY_PASS=overwritten_for_security_purposes/g' $TEMP_ENV_FILE
+    sed -i 's/DB_PASS=.*/DB_PASS=overwritten_for_security_purposes/g' $TEMP_ENV_FILE
 }

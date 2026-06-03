@@ -48,6 +48,16 @@ jobs:
                   }
 
                 }
+
+                post {
+                  failure {
+                    sh \'\'\'
+                      source "/var/jenkins_home/workspace/0_scripts/temp_env_file_functions.sh"
+                      remove_copied_env_file "$WORKSPACE/$BUILD_NUMBER/.env"
+                    \'\'\'
+                  }
+                }
+                
               }
             '''.stripIndent())
           }
