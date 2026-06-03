@@ -31,18 +31,21 @@ jobs:
                     always {
                         sh \'\'\'
                             mkdir -p $JENKINS_HOME/userContent
-                            rm -f $WORKSPACE/.env
+                            source "/var/jenkins_home/workspace/0_scripts/temp_env_file_functions.sh"
+                            remove_copied_env_file "$WORKSPACE/$BUILD_NUMBER/.env"
                         \'\'\'
                     }
                     // the file is published in http://jenkins.<DOMAIN>/userContent/backend-tests-result.svg in my case http://jenkins.mariomv-local.org/userContent/backend-tests-result.svg
                     success {
                         sh \'\'\'
-                            echo '<svg xmlns="http://www.w3.org/2000/svg" width="110" height="20"><text x="10" y="14">Tests: PASS</text></svg>' > $JENKINS_HOME/userContent/backend-tests-result.svg
+                            cat "/var/jenkins_home/workspace/0_static/badge_success.svg" > \
+                                $JENKINS_HOME/userContent/backend-tests-result.svg
                         \'\'\'
                     }
                     failure {
                         sh \'\'\'
-                            echo '<svg xmlns="http://www.w3.org/2000/svg" width="110" height="20"><text x="10" y="14">Tests: FAIL</text></svg>' > $JENKINS_HOME/userContent/backend-tests-result.svg
+                            cat "/var/jenkins_home/workspace/0_static/badge_failing.svg" > \ 
+                                $JENKINS_HOME/userContent/backend-tests-result.svg
                         \'\'\'
                     }
                     

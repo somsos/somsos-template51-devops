@@ -18,6 +18,7 @@ dep_data
 **/workspace/*/*
 !**/workspace/*/*.sh
 !**/workspace/*/*.md
+!**/workspace/*/*.svg
 
 app/*/source/*
 app/*/source/.*
