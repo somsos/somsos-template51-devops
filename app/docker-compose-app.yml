@@ -47,7 +47,7 @@ services:
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
     volumes:
-    - t51m2_vol2:/home/user1/.m2:rw
+      - t51m2_vol2:/home/user1/.m2:rw
     networks:
       t51Net:
         ipv4_address: ${BACK_IP}

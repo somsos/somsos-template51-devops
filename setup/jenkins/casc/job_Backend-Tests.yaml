@@ -35,22 +35,23 @@ jobs:
                             remove_copied_env_file "$WORKSPACE/$BUILD_NUMBER/.env"
                         \'\'\'
                     }
-                    // the file is published in http://jenkins.<DOMAIN>/userContent/backend-tests-result.svg in my case http://jenkins.mariomv-local.org/userContent/backend-tests-result.svg
                     success {
                         sh \'\'\'
-                            cat "/var/jenkins_home/workspace/0_static/badge_success.svg" > \
+                            cat "/var/jenkins_home/workspace/0_static/badge_success.svg" > \\
                                 $JENKINS_HOME/userContent/backend-tests-result.svg
+                            echo "published badge to: ^${JENKINS_URL}userContent/backend-tests-result.svg"
                         \'\'\'
                     }
                     failure {
                         sh \'\'\'
-                            cat "/var/jenkins_home/workspace/0_static/badge_failing.svg" > \ 
+                            cat "/var/jenkins_home/workspace/0_static/badge_failing.svg" > \\ 
                                 $JENKINS_HOME/userContent/backend-tests-result.svg
+                            echo "published badge to: ^${JENKINS_URL}userContent/backend-tests-result.svg"
                         \'\'\'
                     }
                     
-                }
               }
+                }
             '''.stripIndent())
           }
         }
