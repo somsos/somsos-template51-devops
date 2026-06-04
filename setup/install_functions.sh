@@ -246,7 +246,7 @@ function create_env_file_and_load_it {
 
 
     read -s -p "Enter the App password: " MY_PASS
-    if [[ -z "$MY_PASS" || ${#MY_PASS} =~ ^[a-zA-Z0-9]{3,16}+$ ]]; then
+    if [[ -z "$MY_PASS" || ${MY_PASS} =~ ^[a-zA-Z0-9]{3,16}+$ ]]; then
         echo "[ERROR] App password is required and must be between 6 and 16 characters."
         exit 1
     fi
@@ -345,8 +345,8 @@ function create_env_file_and_load_it {
     sed -i "s/DB_USER=■■■/DB_USER=$DB_USER/g" $NEW_ENV_FILE
     sed -i "s/DB_PASS=■■■/DB_PASS=$DB_PASS/g" $NEW_ENV_FILE
     sed -i "s/DOCKER_GID=■■■/DOCKER_GID=$DOCKER_GID/g" $NEW_ENV_FILE
-    sed -i "s/UID=■■■/UID=$UID_TEMP/g" $NEW_ENV_FILE
-    sed -i "s/GID=■■■/GID=$GID_TEMP/g" $NEW_ENV_FILE
+    sed -i "s/MY_UID=■■■/MY_UID=$UID_TEMP/g" $NEW_ENV_FILE
+    sed -i "s/MY_GID=■■■/MY_GID=$GID_TEMP/g" $NEW_ENV_FILE
 
     source $NEW_ENV_FILE
 }
