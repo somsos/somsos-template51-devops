@@ -193,7 +193,17 @@ function create_env_file_and_load_it {
 
     local DOCKER_GID=$(getent group docker | cut -d: -f3)
     if [ -z "$DOCKER_GID" ]; then
-        set -x && echo "[ERROR] Docker group not found. Please make sure Docker is installed and the docker group exists." && set +x
+        echo "[ERROR] Docker group not found. Please make sure Docker is installed and the docker group exists."
+        exit 1
+    fi
+
+    local UID=$(id -u)
+    local GID=$(id -g)
+    if [ "$UID" -ne 0 ] && [ "$GID" -ne 0 ]; then
+        DOCKER_GID=$GID
+    fi
+    if [ "$UID" == "" ] || [ "$GID" == "" ]; then
+        echo "[ERROR] Failed to get current user UID and GID. Please make sure you have the necessary permissions and try again."
         exit 1
     fi
 
@@ -333,6 +343,8 @@ function create_env_file_and_load_it {
     sed -i "s/DB_USER=■■■/DB_USER=$DB_USER/g" $NEW_ENV_FILE
     sed -i "s/DB_PASS=■■■/DB_PASS=$DB_PASS/g" $NEW_ENV_FILE
     sed -i "s/DOCKER_GID=■■■/DOCKER_GID=$DOCKER_GID/g" $NEW_ENV_FILE
+    sed -i "s/UID=■■■/UID=$UID/g" $NEW_ENV_FILE
+    sed -i "s/GID=■■■/GID=$GID/g" $NEW_ENV_FILE
 
     source $NEW_ENV_FILE
 }
