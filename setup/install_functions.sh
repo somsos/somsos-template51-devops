@@ -33,6 +33,12 @@ function check_dependencies {
         exit 1
     fi
 
+    if ! docker buildx version &> /dev/null; then
+        echo "[ERROR] Docker Buildx is not available. Please make sure you have Docker Buildx installed and try again."
+        echo "          sudo pacman -S docker-buildx (Arch Linux) or sudo apt install docker-buildx-plugin (Debian/Ubuntu) or sudo dnf install docker-buildx-plugin (Fedora)."
+        exit 1
+    fi
+
     if ! command -v ssh-keygen &> /dev/null; then
         echo "[ERROR] ssh-keygen is not installed. Please install the necessary package (e.g., openssh-client) and try again."
         exit 1
@@ -246,8 +252,8 @@ function create_env_file_and_load_it {
 
 
     read -s -p "Enter the App password: " MY_PASS
-    if [[ -z "$MY_PASS" || ${MY_PASS} =~ ^[a-zA-Z0-9]{3,16}+$ ]]; then
-        echo "[ERROR] App password is required and must be between 6 and 16 characters."
+    if [[ -z "$MY_PASS" || ! "$MY_PASS" =~ ^[a-zA-Z0-9]{8,16}+$ ]]; then
+        echo "[ERROR] App password is required and must be between 8 and 16 characters."
         exit 1
     fi
     if ! grep -q "MY_PASS=■■■" $ENV_EXAMPLE_FILE; then
@@ -278,7 +284,7 @@ function create_env_file_and_load_it {
 
     
     read -p "Enter the shared token: " SHARED_TOKEN
-    if [[ -z "$SHARED_TOKEN" || ${#SHARED_TOKEN} =~ ^[a-zA-Z0-9]{3,16}+$ ]]; then
+    if [[ -z "$SHARED_TOKEN" || ! "$SHARED_TOKEN" =~ ^[a-zA-Z0-9]{3,16}+$ ]]; then
         echo "[ERROR] Shared token is required and must be less than 40 characters."
         exit 1
     fi
@@ -290,7 +296,7 @@ function create_env_file_and_load_it {
 
     
     read -p "Enter the database schema name: " DB_SCHEMA
-    if [[ -z "$DB_SCHEMA" || ${#DB_SCHEMA}  =~ ^[a-zA-Z0-9_-]{3,16}+$ ]]; then
+    if [[ -z "$DB_SCHEMA" || ! "$DB_SCHEMA" =~ ^[a-zA-Z0-9_-]{3,16}+$ ]]; then
         echo "[ERROR] Database schema name is required and must be less than 40 characters."
         exit 1
     fi
@@ -303,7 +309,7 @@ function create_env_file_and_load_it {
 
     # we take the same username in MY_USER for simplicity.
     #read -p "Enter the database username: " DB_USER
-    #if [[ -z "$DB_USER" || ${#DB_USER}  =~ ^[a-zA-Z0-9]{3,16}+$ ]]; then
+    #if [[ -z "$DB_USER" || ! "$DB_USER" =~ ^[a-zA-Z0-9]{3,16}+$ ]]; then
     #    echo "[ERROR] Database username is required and must be less than 40 characters."
     #    exit 1
     #fi
@@ -317,7 +323,7 @@ function create_env_file_and_load_it {
     
     # we take the same password in MY_PASS for simplicity.
     #read -p "Enter the database password: " DB_PASS
-    #if [[ -z "$DB_PASS" || ${#DB_PASS}  =~ ^[a-zA-Z0-9]{3,16}+$ ]]; then
+    #if [[ -z "$DB_PASS" || ! "$DB_PASS" =~ ^[a-zA-Z0-9]{3,16}+$ ]]; then
     #    echo "[ERROR] Database password is required and must be less than 40 characters."
     #    exit 1
     #fi
@@ -329,7 +335,7 @@ function create_env_file_and_load_it {
 
     if [ ! -f $NEW_ENV_FILE ]; then
         cp $ENV_EXAMPLE_FILE $NEW_ENV_FILE
-        echo "Created $NEW_ENV_FILE file from $ENV_EXAMPLE_FILE. Please edit the $NEW_ENV_FILE file with your configuration."
+        echo "Created $NEW_ENV_FILE file from $ENV_EXAMPLE_FILE."
     else
         echo "[ERROR] $NEW_ENV_FILE file already exists. Skipping creation."
         exit 1
@@ -486,6 +492,56 @@ function add_domain_to_hosts_file {
     fi
 }
 
+
+function install_nexus {
+    # uncompress setup/nexus/nexus-pre-initialized.tar.xz to setup/nexus/vol-data
+    NEXUS_VOL_DIR="./setup/nexus/vol-data"
+    PRE_INITIALIZED_TAR="./setup/nexus/nexus-pre-initialized.tar.xz"
+    BACK_XML_TEMPLATE="setup/nexus/mvn-settings-template.xml"
+
+    if [ ! -f "$PRE_INITIALIZED_TAR" ]; then
+        echo "[ERROR] Nexus pre-initialized tar file not found at $PRE_INITIALIZED_TAR. Please make sure the file exists and try again."
+        exit 1
+    fi
+    if [ ! -d "$NEXUS_VOL_DIR" ]; then
+        mkdir -p $NEXUS_VOL_DIR
+    fi
+    if ! grep -q "\${env.MY_USER}" $BACK_XML_TEMPLATE; then
+        echo "[ERROR] \${env.MY_USER} variable placeholder not found in $BACK_XML_TEMPLATE file."
+        exit 1
+    fi
+    if ! grep -q "\${env.MY_PASS}" $BACK_XML_TEMPLATE; then
+        echo "[ERROR] \${env.MY_PASS} variable placeholder not found in $BACK_XML_TEMPLATE file."
+        exit 1
+    fi
+    if ! grep -q "\${env.NEXUS_URL}" $BACK_XML_TEMPLATE; then
+        echo "[ERROR] \${env.NEXUS_URL} variable placeholder not found in $BACK_XML_TEMPLATE file."
+        exit 1
+    fi
+    
+    if [ ! -n "$(ls -A $NEXUS_VOL_DIR | grep .md -v)" ]; then
+        tar -xf $PRE_INITIALIZED_TAR -C $NEXUS_VOL_DIR
+        rm -f $NEXUS_VOL_DIR/credentials.txt
+        echo "[INFO] Nexus pre-initialized data extracted to $NEXUS_VOL_DIR directory."
+    fi
+
+    BACK_XML="app/back/mvn-settings.xml"
+    if [ ! -f $BACK_XML ]; then
+        cp $BACK_XML_TEMPLATE $BACK_XML
+        echo "[INFO] Maven settings file created at $BACK_XML."
+    fi
+    
+}
+
+
+function configure_nexus {
+    docker compose run --rm --build nexus_configurator
+}
+
+
+
+
+
 function start_and_check_health_devops_service {
     if [ -z "$1" ]; then
         echo "[ERROR] Service name is required as an argument to the start_and_check_health_devops_service function."
@@ -493,6 +549,11 @@ function start_and_check_health_devops_service {
     fi
     SERVICE_NAME=$1
     SERVICE_URL="http://$SERVICE_NAME.$MY_DOMAIN"
+
+    if [ "$SERVICE_NAME" == "nexus" ]; then
+        install_nexus
+    fi
+
     
     if docker compose ps --services --filter "status=running" | grep -q "^$SERVICE_NAME$"; then
         echo "[INFO] $SERVICE_NAME already available on \"$SERVICE_URL\"."
@@ -505,6 +566,11 @@ function start_and_check_health_devops_service {
         echo "Waiting for $SERVICE_NAME to be up..."
         sleep 3
     done
+
+    if [ "$SERVICE_NAME" == "nexus" ]; then
+        configure_nexus
+    fi
+
     echo "[INFO] URL available: $SERVICE_URL"
 
 }
@@ -568,6 +634,7 @@ function start_app_database_service_and_install_schema {
     fi
 
     echo "[INFO] Database schema installed successfully."
+    echo "[INFO] Database already available on \"psql postgresql://$DB_USER:<DB_PASS>@localhost:5001/$DB_SCHEMA\"."
 }
 
 function start_app_backend_service {

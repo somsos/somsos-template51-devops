@@ -20,6 +20,8 @@ download_save_and_load_image $DB_MIG_IMAGE "DB_MIG_IMAGE"
 download_save_and_load_image $IMAGE_REVERSE_PROXY "IMAGE_REVERSE_PROXY"
 download_save_and_load_image $IMAGE_ACME_COMPANION "IMAGE_ACME_COMPANION"
 download_save_and_load_image $IMAGE_REGISTRY "IMAGE_REGISTRY"
+download_save_and_load_image $IMAGE_NEXUS "IMAGE_NEXUS"
+download_save_and_load_image $IMAGE_CURL "IMAGE_CURL"
 
 create_ssh_keys
 # root access required to add entries to ~/.ssh/config file.
@@ -33,12 +35,13 @@ add_domain_to_hosts_file api.$MY_DOMAIN
 add_domain_to_hosts_file gitea.$MY_DOMAIN
 add_domain_to_hosts_file jenkins.$MY_DOMAIN
 add_domain_to_hosts_file registry.$MY_DOMAIN
+add_domain_to_hosts_file nexus.$MY_DOMAIN
 
 docker compose up -d reverse-proxy
 start_and_check_health_devops_service gitea
 start_and_check_health_devops_service jenkins
 start_and_check_health_devops_service registry
-
+start_and_check_health_devops_service nexus
 
 
 clone_repository $BACK_REPO ./app/back/source

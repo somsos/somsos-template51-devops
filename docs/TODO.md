@@ -2,7 +2,17 @@
 
 ## Doing (First one is the current task)
 
-- [ ] Create an offline installer.
+- [ ] Check documentation of https://help.sonatype.com/en/sonatype-product-overview.html
+
+- [ ] offline mode.
+  - [ ] Set up a Sonatype Nexus Repository.
+    - [X] Add a compressed file to the repo with a pre-initialized nexus instance.
+    - [X] add to Jenkins the public domain of nexus, so no change is required between envs.
+      - [X] Check that I can connect from Jenkins to nexus
+    - [ ] Use it in the install.sh to uncompress it in the volume host folder.
+    - [ ] 
+    - Copy dependencies already downloaded to a new nexus instance
+    - Create tar `tar -czf nexus-blobs.tar.gz setup/nexus/vol-data/blobs/`
 
 - [ ] Create a state/backup folder which takes the one called latest to start up,
   - [ ] Restore Database

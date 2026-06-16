@@ -24,14 +24,27 @@ COPY source/product/pom.xml       /opt/template51/product/pom.xml
 COPY source/adapter/pom.xml       /opt/template51/adapter/pom.xml
 COPY source/pom.xml               /opt/template51/pom.xml
 COPY source/pom-spring-boot.xml   /opt/template51/pom-spring-boot.xml
+COPY mvn-settings.xml             /home/user1/.m2/settings.xml
+
+
+ARG MY_USER
+ARG MY_PASS
+ARG NEXUS_URL
+RUN test -n "$MY_USER" || (echo "ERROR: MY_USER required." && exit 1)
+RUN test -n "$MY_PASS" || (echo "ERROR: MY_PASS required." && exit 1)
+RUN test -n "$NEXUS_URL" || (echo "ERROR: NEXUS_URL required." && exit 1)
+
+RUN test -f /home/user1/.m2/settings.xml && \
+    test $(stat -c%s /home/user1/.m2/settings.xml) -ge 900 \
+    || (echo "ERROR: mvn-settings.xml not found or too small." && exit 1)
 
 RUN mkdir -p /home/user1/.m2/repository
 RUN chown -R user1:user1 /home/user1/.m2
 RUN chown -R user1:user1 /opt/template51
 USER user1
 
-# --mount=type=cache,target=/root/.m2 \
-RUN mvn -B -e org.apache.maven.plugins:maven-dependency-plugin:3.1.2:go-offline
+RUN --mount=type=cache,target=/root/.m2 \
+    mvn -B -e org.apache.maven.plugins:maven-dependency-plugin:3.1.2:go-offline
   
 
 
@@ -58,15 +71,22 @@ COPY source/common/src   /opt/template51/common/src
 COPY source/user/src     /opt/template51/user/src
 COPY source/product/src  /opt/template51/product/src
 COPY source/adapter/src  /opt/template51/adapter/src
+COPY mvn-settings.xml    /home/user1/.m2/settings.xml
+
+ARG MY_USER
+ARG MY_PASS
+ARG NEXUS_URL
+RUN test -n "$MY_USER" || (echo "ERROR: MY_USER required." && exit 1)
+RUN test -n "$MY_PASS" || (echo "ERROR: MY_PASS required." && exit 1)
+RUN test -n "$NEXUS_URL" || (echo "ERROR: NEXUS_URL required." && exit 1)
 
 RUN mkdir -p /home/user1/.m2/repository
 RUN chown -R user1:user1 /home/user1/.m2
 RUN chown -R user1:user1 /opt/template51
 USER user1
 
-# --mount=type=cache,target=/root/.m2 \
-RUN mvn -B -e clean install -DskipTests
-  
+RUN --mount=type=cache,target=/root/.m2 \
+    mvn -B -e clean install -DskipTests
 
 
 

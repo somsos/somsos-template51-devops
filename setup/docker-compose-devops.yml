@@ -124,6 +124,7 @@ services:
         ipv4_address: ${JENKINS_IP}
     extra_hosts:
       - "registry.${MY_DOMAIN}:${REGISTRY_IP}"
+      - "nexus.${MY_DOMAIN}:${NEXUS_IP}"
 
 
 
@@ -204,6 +205,45 @@ services:
       t51Net:
         ipv4_address: ${REGISTRY_IP}
     
+  nexus:
+    profiles: ["devops", "all"]
+    user: "${MY_UID}:${MY_GID}"
+    image: ${IMAGE_NEXUS}
+    container_name: nexus
+    ports:
+      - "${NEXUS_PORT}:8081"
+    environment:
+      # Domain and SSL
+      - VIRTUAL_HOST=nexus.${MY_DOMAIN}
+      - VIRTUAL_PORT=${NEXUS_PORT}
+    volumes:
+      - ./nexus/vol-data:/nexus-data
+    networks:
+      t51Net:
+        ipv4_address: ${NEXUS_IP}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/service/rest/v1/status"]
+      interval: 10s
+      retries: 5
+    #restart: unless-stopped
+
+  # docker compose run --rm --build nexus_configurator
+  nexus_configurator:
+    profiles: ["devops", "all"]
+    image: ${IMAGE_CURL}
+    container_name: temp_nexus_configurator
+    environment:
+      - NEW_NEXUS_USER=${MY_USER}
+      - NEW_NEXUS_PASS=${MY_PASS}
+    depends_on:
+      nexus:
+        condition: service_healthy
+    volumes:
+      - ./nexus/nexus-entrypoint.sh:/nexus-entrypoint.sh:ro
+    entrypoint: sh /nexus-entrypoint.sh
+    networks:
+      - t51Net
+
 
 # For security reasons, I better use a Jenkins pipeline to show the available images
 #  registry-ui:

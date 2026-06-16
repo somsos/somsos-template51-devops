@@ -4,6 +4,7 @@
         "workdir/devops*/**": true,
     },
     "cSpell.words": [
+        "configurator",
         "healthcheck",
         "isready",
         "jdbc",
