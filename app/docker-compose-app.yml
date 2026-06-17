@@ -31,9 +31,14 @@ services:
     build:
       context: ./back
       dockerfile: back.dockerfile
+      network: host
       args:
         IMAGE_MVN: ${IMAGE_MVN}
         IMAGE_JAVA: ${IMAGE_JAVA}
+        # Nexus conn
+        MY_USER: ${MY_USER}
+        MY_PASS: ${MY_PASS}
+        NEXUS_URL: ${NEXUS_URL}
     expose:
       - "8080"
     environment:
@@ -46,8 +51,8 @@ services:
       - DB_SCHEMA=${DB_SCHEMA}
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
-    volumes:
-      - t51m2_vol2:/home/user1/.m2:rw
+    #volumes:
+    #  - t51m2_vol2:/home/user1/.m2:rw  # avoid this, the big context slow all
     networks:
       t51Net:
         ipv4_address: ${BACK_IP}
@@ -66,10 +71,14 @@ services:
     container_name: ${FRONT_NAME}
     build:
       context: ./front
+      network: host
       args:
         BACK_URL: ${BACK_URL}
         IMAGE_NODE: ${IMAGE_NODE}
         IMAGE_NGINX: ${IMAGE_NGINX}
+        MY_USER: ${MY_USER}
+        MY_PASS: ${MY_PASS}
+        NEXUS_GW: 172.30.0.1                                       # gateway IP
       dockerfile: front.dockerfile
     image: ${FRONT_IMAGE}
     expose:
@@ -146,6 +155,7 @@ services:
     build:
       context: ./back
       dockerfile: back_utils.dockerfile
+      network: host
       args:
         IMAGE_MVN: ${IMAGE_MVN}
         IMAGE_JAVA: ${IMAGE_JAVA}

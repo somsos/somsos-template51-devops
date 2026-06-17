@@ -2,17 +2,12 @@
 
 ## Doing (First one is the current task)
 
-- [ ] Check documentation of https://help.sonatype.com/en/sonatype-product-overview.html
+- [ ] offline mode using nexus.
+  - [ ] Create a pre-configurated compressed file with maven and npm dependencies
+        already downloaded
+  - [ ] Use install.sh to copy the downloaded dependencies if exists `tar -czf nexus-blobs.tar.gz setup/nexus/vol-data/`
+  - [ ] Check that it can be created the new user with the full-compressed file
 
-- [ ] offline mode.
-  - [ ] Set up a Sonatype Nexus Repository.
-    - [X] Add a compressed file to the repo with a pre-initialized nexus instance.
-    - [X] add to Jenkins the public domain of nexus, so no change is required between envs.
-      - [X] Check that I can connect from Jenkins to nexus
-    - [ ] Use it in the install.sh to uncompress it in the volume host folder.
-    - [ ] 
-    - Copy dependencies already downloaded to a new nexus instance
-    - Create tar `tar -czf nexus-blobs.tar.gz setup/nexus/vol-data/blobs/`
 
 - [ ] Create a state/backup folder which takes the one called latest to start up,
   - [ ] Restore Database
@@ -26,6 +21,7 @@
 
 - [ ] Add to installer `sudo pacman -S docker-buildx` abd 
 
+- [ ] Check documentation of https://help.sonatype.com/en/sonatype-product-overview.html
 
 - [ ] Create pipeline to add the HTTPS/SSL config.
 
@@ -218,3 +214,15 @@ posible.
   - [X] Use `badge_XXX.svg` to create the icon to publish
   - [X] Publish an static URL with a changing image
   - [X] Add URL to repository and see that the status match.
+- [X] Set up a Sonatype Nexus Repository for maven.
+  - [X] Add a compressed file to the repo with a pre-initialized nexus instance.
+  - [X] add to Jenkins the public domain of nexus, so no change is required between envs.
+    - [X] Check that I can connect from Jenkins to nexus
+  - [X] use install.sh to uncompress it in the volume host folder.
+  - [X] Use install.sh create an user with the credentials of app user.
+  - [X] Add maven config to back.dockerfile
+  - [X] Check that still builds in CLI and Jenkins
+- [X] Set up a Sonatype Nexus Repository for `npm`.
+  - [X] Use install.sh the necesary npm repositories
+  - [X] Add npm-nexus config to front.dockerfile
+  - [X] Check that still builds in CLI and Jenkins

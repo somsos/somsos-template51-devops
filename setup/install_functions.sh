@@ -547,6 +547,11 @@ function start_and_check_health_devops_service {
         echo "[ERROR] Service name is required as an argument to the start_and_check_health_devops_service function."
         exit 1
     fi
+    if [ -z "$MY_DOMAIN" ]; then
+        echo "[ERROR] MY_DOMAIN required but not declared."
+        exit 1
+    fi
+    
     SERVICE_NAME=$1
     SERVICE_URL="http://$SERVICE_NAME.$MY_DOMAIN"
 

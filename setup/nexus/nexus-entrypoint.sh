@@ -5,6 +5,7 @@ set -x
 
 NEXUS_URL="http://nexus:8081"
 NEXUS_API="$NEXUS_URL/service/rest/v1/security/users"
+NEXUS_REPO_API="$NEXUS_URL/service/rest/v1/repositories"
 
 DEFAULT_USER="admin"
 DEFAULT_PASS="admin123"
@@ -95,6 +96,94 @@ function delete_default_admin_user {
 }
 
 
+function create_npm_proxy_repo {
+  echo "Creating npm proxy repository..."
+  curl -s -o /dev/null -w "%{http_code}" \
+    -X POST "$NEXUS_REPO_API/npm/proxy" \
+    -u "$NEW_NEXUS_USER:$NEW_NEXUS_PASS" \
+    -H "Content-Type: application/json" \
+    -d '{
+      "name": "npm-proxy",
+      "online": true,
+      "storage": {
+        "blobStoreName": "default",
+        "strictContentTypeValidation": true
+      },
+      "proxy": {
+        "remoteUrl": "https://registry.npmjs.org",
+        "contentMaxAge": 1440,
+        "metadataMaxAge": 1440
+      },
+      "negativeCache": {
+        "enabled": true,
+        "timeToLive": 1440
+      },
+      "httpClient": {
+        "blocked": false,
+        "autoBlock": true
+      }
+    }'
+  echo " npm-proxy created."
+}
+
+function create_npm_hosted_repo {
+  echo "Creating npm hosted repository..."
+  curl -s -o /dev/null -w "%{http_code}" \
+    -X POST "$NEXUS_REPO_API/npm/hosted" \
+    -u "$NEW_NEXUS_USER:$NEW_NEXUS_PASS" \
+    -H "Content-Type: application/json" \
+    -d '{
+      "name": "npm-hosted",
+      "online": true,
+      "storage": {
+        "blobStoreName": "default",
+        "strictContentTypeValidation": true,
+        "writePolicy": "allow_once"
+      }
+    }'
+  echo " npm-hosted created."
+}
+
+function create_npm_group_repo {
+  echo "Creating npm group repository..."
+  curl -s -o /dev/null -w "%{http_code}" \
+    -X POST "$NEXUS_REPO_API/npm/group" \
+    -u "$NEW_NEXUS_USER:$NEW_NEXUS_PASS" \
+    -H "Content-Type: application/json" \
+    -d '{
+      "name": "npm-public",
+      "online": true,
+      "storage": {
+        "blobStoreName": "default",
+        "strictContentTypeValidation": true
+      },
+      "group": {
+        "memberNames": ["npm-hosted", "npm-proxy"]
+      }
+    }'
+  echo " npm-public group created."
+}
+
+function create_npm_repositories {
+  create_npm_proxy_repo
+  create_npm_hosted_repo
+  create_npm_group_repo
+}
+
+function if_npm_repos_exist_skip {
+  RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \
+    "$NEXUS_REPO_API/npm/proxy/npm-proxy" \
+    -u "$NEW_NEXUS_USER:$NEW_NEXUS_PASS")
+  if [ "$RESPONSE" == "200" ]; then
+    echo "npm repositories already configured. Skipping."
+    return 1
+  fi
+  return 0
+}
+
+
+
+
 
 
 
@@ -102,6 +191,8 @@ function delete_default_admin_user {
 check_dependencies
 
 wait_for_nexus
+
+echo "<<< Setting new user start"
 
 if_new_credentials_work_stop_configuration
 
@@ -111,6 +202,14 @@ create_new_user_with_admin_privileges
 
 delete_default_admin_user
 
+echo "Setting new user end >>>."
+
+
+
+
+echo "<<< Setting up npm repositories..."
+if_npm_repos_exist_skip && create_npm_repositories
+echo "npm repositories done >>>."
 
 # ToDo: Create hosted Maven repository
 

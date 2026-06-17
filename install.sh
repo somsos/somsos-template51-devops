@@ -4,6 +4,15 @@ set -e
 
 source setup/install_functions.sh
 
+docker compose down nexus
+rm -rf setup/nexus/vol-data
+create_env_file_and_load_it
+set -x
+start_and_check_health_devops_service nexus
+echo "END"
+exit 0;
+
+
 check_dependencies
 check_repository_state
 

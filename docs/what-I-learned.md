@@ -36,3 +36,11 @@
 - Be careful with the the order of `ARG` and `FROM` in the dockerfile when is
    passed trought docker-compose.yml using `build.args`
    `docker_pitfalls#id{mcg385nvh502hrc}#`
+
+- In docker we have 2 runtimes, build-time and run-time, and in both we have to
+  declare what network use, *it happened me* that I set up with the builder
+  container and a nexus container, with this error `Name has no usable address`
+  because I could reach it on run-time but not in build-time, so I had to
+  add in my docker-compose.yml this property: `services.back.build.network: myNet`
+  so I could have access to this network on buildtime.
+

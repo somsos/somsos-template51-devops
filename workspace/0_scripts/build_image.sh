@@ -61,7 +61,7 @@ function build_image {
 
     if [[ "$3" == "back" ]]; then
         set -x
-        BACK_IMAGE=$IMAGE_BUILD_TAG docker compose -f $PATH_MDP/docker-compose.yml build back        
+        BACK_IMAGE=$IMAGE_BUILD_TAG docker compose -f $PATH_MDP/docker-compose.yml --progress plain build back
         docker tag $IMAGE_BUILD_TAG $BACK_IMAGE 
         set +x
     fi
@@ -69,7 +69,7 @@ function build_image {
     if [[ "$3" == "front" ]]; then
         set -x
         # docker compose -f $PATH_MDP/docker-compose.yml config front # for debugging
-        FRONT_IMAGE=$IMAGE_BUILD_TAG docker compose -f $PATH_MDP/docker-compose.yml build front
+        FRONT_IMAGE=$IMAGE_BUILD_TAG docker compose -f $PATH_MDP/docker-compose.yml --progress plain build front
         docker tag $IMAGE_BUILD_TAG $FRONT_IMAGE 
         set +x
     fi

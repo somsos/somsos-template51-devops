@@ -15,4 +15,4 @@ DEVOPS_REPO_DIR=$(get_repo_dir)
 echo "[INFO] DEVOPS_REPO_DIR: $DEVOPS_REPO_DIR"
 
 
-docker compose -f $DEVOPS_REPO_DIR/docker-compose.yml build db_utils
+docker compose -f $DEVOPS_REPO_DIR/docker-compose.yml --progress plain build db_utils
