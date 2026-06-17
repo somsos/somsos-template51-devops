@@ -30,7 +30,7 @@ RUN test -n "$MY_PASS" || (echo "ERROR: MY_PASS required." && exit 1)
 RUN test -n "$NEXUS_GW" || (echo "ERROR: NEXUS_GW required." && exit 1)
 
 # Generate .npmrc at build time with resolved values
-RUN NPM_TOKEN=$(echo -n "${MY_USER}:mario1p1p" | base64) && \
+RUN NPM_TOKEN=$(echo -n "${MY_USER}:${MY_PASS}" | base64) && \
     echo "registry=http://${NEXUS_GW}:8081/repository/npm-public/" > .npmrc && \
     echo "//${NEXUS_GW}:8081/repository/npm-public/:_auth=${NPM_TOKEN}" >> .npmrc && \
     echo "always-auth=true" >> .npmrc
@@ -38,7 +38,7 @@ RUN NPM_TOKEN=$(echo -n "${MY_USER}:mario1p1p" | base64) && \
 RUN --mount=type=cache,target=/root/.npm \
     npm install    
 
-#npm ci --prefer-offline # I think it's better for CI/CD
+#npm ci --prefer-offline # I think it's better for CI/CD, but still don't why
 
 
 

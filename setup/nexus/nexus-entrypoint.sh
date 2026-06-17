@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-set -x
+#set -x
 
 
 NEXUS_URL="http://nexus:8081"
@@ -21,8 +21,6 @@ function check_dependencies {
     echo "Error: NEW_NEXUS_PASS environment variable is not set."
     exit 1
   fi
-
-  NEW_NEXUS_PASS="mario1p1p"
 }
 
 function wait_for_nexus {
@@ -52,7 +50,34 @@ function if_old_credentials_do_not_work_exit_failing_conf {
 }
 
 
+function change_password_to_default_user {
+  echo "Setting admin password..."
+  CHANGE_PASS_URL="$NEXUS_API/$DEFAULT_USER/change-password"
+  CHANGE_PASS_RESPONSE=$(curl -s -o /tmp/response_change_pass.log -w '%{http_code}' -X PUT "$CHANGE_PASS_URL" \
+    -H "Content-Type: text/plain" \
+    -u "$DEFAULT_USER:$DEFAULT_PASS" \
+    -d "${NEW_NEXUS_PASS}"
+  )
+  if [ "$CHANGE_PASS_RESPONSE" != 204 ]; then
+    echo "error: unexpected change-password response \"$CHANGE_PASS_RESPONSE\"."
+    cat /tmp/response_change_pass.log
+    exit 1
+  fi
+  echo "Password changed to default user \"$DEFAULT_USER\"."
+}
+
+
 function create_new_user_with_admin_privileges {
+  if [ "$DEFAULT_USER" == "$NEW_NEXUS_USER" ]; then
+    if [ "$DEFAULT_PASS" == "$NEW_NEXUS_PASS" ]; then
+      echo "default and new credentials are the same, skipping creating new user."
+      return 0
+    fi
+    echo "username the same but different password, changing password"
+    change_password_to_default_user
+    return 0
+  fi
+
   CREATE_RESPONSE=$(curl -s -o /tmp/response_create.log -w '%{http_code}' \
     -X POST "$NEXUS_API" \
     -u "$DEFAULT_USER:$DEFAULT_PASS" \
@@ -192,30 +217,18 @@ check_dependencies
 
 wait_for_nexus
 
+
 echo "<<< Setting new user start"
-
 if_new_credentials_work_stop_configuration
-
 if_old_credentials_do_not_work_exit_failing_conf
-
 create_new_user_with_admin_privileges
-
 delete_default_admin_user
-
-echo "Setting new user end >>>."
-
+echo "Setting new user end >>>"
 
 
-
-echo "<<< Setting up npm repositories..."
+echo "<<< Setting up npm repositories start"
 if_npm_repos_exist_skip && create_npm_repositories
-echo "npm repositories done >>>."
-
-# ToDo: Create hosted Maven repository
-
-# ToDo: Create proxy repository for Maven Central
-
-# ToDo: Create group repository
+echo "npm repositories done end >>>"
 
 
 echo "[SUCCESS] Nexus configuration completed!"

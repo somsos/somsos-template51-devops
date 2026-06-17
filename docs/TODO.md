@@ -3,8 +3,12 @@
 ## Doing (First one is the current task)
 
 - [ ] offline mode using nexus.
-  - [ ] Create a pre-configurated compressed file with maven and npm dependencies
-        already downloaded
+  - [ ] Create a pre-configurated compressed file with 
+    - [ ] Pre-initialized
+    - [ ] Default credentials
+    - [ ] maven dependencies
+    - [ ] npm dependencies
+    - [ ] Create .tar file and save it in ./dep_data/`pre_initialized_nexus_mvn_npm.tar.xz`
   - [ ] Use install.sh to copy the downloaded dependencies if exists `tar -czf nexus-blobs.tar.gz setup/nexus/vol-data/`
   - [ ] Check that it can be created the new user with the full-compressed file
 

@@ -497,6 +497,7 @@ function install_nexus {
     # uncompress setup/nexus/nexus-pre-initialized.tar.xz to setup/nexus/vol-data
     NEXUS_VOL_DIR="./setup/nexus/vol-data"
     PRE_INITIALIZED_TAR="./setup/nexus/nexus-pre-initialized.tar.xz"
+    PRE_INITIALIZED_AND_DOWNLOADED_DEPS_TAR="./dep_data/pre_initialized_nexus_mvn_npm.tar.xz"
     BACK_XML_TEMPLATE="setup/nexus/mvn-settings-template.xml"
 
     if [ ! -f "$PRE_INITIALIZED_TAR" ]; then
@@ -520,9 +521,16 @@ function install_nexus {
     fi
     
     if [ ! -n "$(ls -A $NEXUS_VOL_DIR | grep .md -v)" ]; then
-        tar -xf $PRE_INITIALIZED_TAR -C $NEXUS_VOL_DIR
-        rm -f $NEXUS_VOL_DIR/credentials.txt
-        echo "[INFO] Nexus pre-initialized data extracted to $NEXUS_VOL_DIR directory."
+        if [ -f "$PRE_INITIALIZED_AND_DOWNLOADED_DEPS_TAR" ]; then
+            echo "[INFO] Installing nexus with pre-initialized and maven and npm dependencies pre-downloaded."
+            tar -xf $PRE_INITIALIZED_AND_DOWNLOADED_DEPS_TAR -C $NEXUS_VOL_DIR
+            echo "[INFO] Nexus pre-initialized and deps pre-downloaded data extracted to $NEXUS_VOL_DIR directory."
+        else 
+            echo "[INFO] Installing nexus with pre-initialized and maven and npm dependencies pre-downloaded."
+            tar -xf $PRE_INITIALIZED_TAR -C $NEXUS_VOL_DIR
+            rm -f $NEXUS_VOL_DIR/credentials.txt
+            echo "[INFO] Nexus pre-initialized data extracted to $NEXUS_VOL_DIR directory."
+        fi
     fi
 
     BACK_XML="app/back/mvn-settings.xml"
