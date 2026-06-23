@@ -1,4 +1,3 @@
-# syntax=docker/dockerfile:1.6
 ARG IMAGE_MVN
 ARG IMAGE_JAVA
 
@@ -10,10 +9,11 @@ ARG IMAGE_JAVA
 # Dependencies downloader
 FROM $IMAGE_MVN AS dep_downloader
 
-RUN apk add shadow
+# RUN apk add shadow # avoid this so we have less dependencies and necessities
 ARG USER_ID=1000
 ARG GROUP_ID=1000
-RUN groupadd -g ${GROUP_ID} user1 && useradd -u ${USER_ID} -g user1 -m user1
+RUN addgroup -g ${GROUP_ID} user1 && \
+    adduser -u ${USER_ID} -G user1 -D -h /home/user1 user1
 
 RUN mkdir /opt/template51
 WORKDIR /opt/template51
@@ -43,8 +43,8 @@ RUN chown -R user1:user1 /home/user1/.m2
 RUN chown -R user1:user1 /opt/template51
 USER user1
 
-RUN --mount=type=cache,target=/root/.m2 \
-    mvn -B -e org.apache.maven.plugins:maven-dependency-plugin:3.1.2:go-offline
+# I remove this line, because buildX is required and it's less portable: --mount=type=cache,target=/root/.m2 \
+RUN mvn -B -e org.apache.maven.plugins:maven-dependency-plugin:3.1.2:go-offline
   
 
 
@@ -55,10 +55,12 @@ RUN --mount=type=cache,target=/root/.m2 \
 # Builder
 FROM $IMAGE_MVN AS builder
 
-RUN apk add shadow
+# RUN apk add shadow # avoid this so we have less dependencies and necessities
 ARG USER_ID=1000
 ARG GROUP_ID=1000
-RUN groupadd -g ${GROUP_ID} user1 && useradd -u ${USER_ID} -g user1 -m user1
+RUN addgroup -g ${GROUP_ID} user1 && \
+    adduser -u ${USER_ID} -G user1 -D -h /home/user1 user1
+
 
 RUN mkdir /opt/template51
 WORKDIR /opt/template51
@@ -85,8 +87,8 @@ RUN chown -R user1:user1 /home/user1/.m2
 RUN chown -R user1:user1 /opt/template51
 USER user1
 
-RUN --mount=type=cache,target=/root/.m2 \
-    mvn -B -e clean install -DskipTests
+# I remove this line, because buildX is required and it's less portable: "--mount=type=cache,target=/root/.m2 \"
+RUN mvn -B -e clean install -DskipTests
 
 
 

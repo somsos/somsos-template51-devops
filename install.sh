@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-#set -x
+set -x
 
 source setup/install_functions.sh
 
@@ -10,6 +10,7 @@ check_repository_state
 
 create_env_file_and_load_it
 
+download_save_and_load_image $IMAGE_T51JENKINS "IMAGE_T51JENKINS"
 download_save_and_load_image $IMAGE_JENKINS "IMAGE_JENKINS"
 download_save_and_load_image $IMAGE_GITEA "IMAGE_GITEA"
 download_save_and_load_image $IMAGE_JAVA "IMAGE_JAVA"
@@ -17,10 +18,12 @@ download_save_and_load_image $IMAGE_NODE "IMAGE_NODE"
 download_save_and_load_image $IMAGE_NGINX "IMAGE_NGINX"
 download_save_and_load_image $IMAGE_HTTPD "IMAGE_HTTPD"
 download_save_and_load_image $DB_IMAGE "DB_IMAGE"
+download_save_and_load_image $IMAGE_T51DB_UTILS "IMAGE_T51DB_UTILS"
 download_save_and_load_image $DB_MIG_IMAGE "DB_MIG_IMAGE"
 download_save_and_load_image $IMAGE_REVERSE_PROXY "IMAGE_REVERSE_PROXY"
 download_save_and_load_image $IMAGE_ACME_COMPANION "IMAGE_ACME_COMPANION"
 download_save_and_load_image $IMAGE_REGISTRY "IMAGE_REGISTRY"
+download_save_and_load_image $IMAGE_MVN "IMAGE_MVN"
 download_save_and_load_image $IMAGE_NEXUS "IMAGE_NEXUS"
 download_save_and_load_image $IMAGE_CURL "IMAGE_CURL"
 

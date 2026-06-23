@@ -39,7 +39,18 @@ RUN test -n "$DOCKER_GID" || \
     (echo "ERROR: DOCKER_GID is required." && \
      echo "Run: docker compose build --build-arg DOCKER_GID=\$(getent group docker | cut -d: -f3) jenkins" && \
      exit 1)
-RUN groupadd -g $DOCKER_GID docker && usermod -aG docker jenkins
+
+# The GID might be repeated between the host and the container
+# If is repeated we reuse the GID
+# If not we create the group
+RUN EXISTING=$(getent group ${DOCKER_GID} | cut -d: -f1) && \
+    if [ -z "$EXISTING" ]; then \
+      groupadd -g ${DOCKER_GID} docker; \
+      EXISTING=docker; \
+    else \
+      echo "INFO: GID ${DOCKER_GID} already exists as '${EXISTING}', skipping groupadd."; \
+    fi && \
+    usermod -aG ${EXISTING} jenkins
 
 
 COPY ./jenkins-entrypoint.sh /usr/local/bin/jenkins-entrypoint.sh

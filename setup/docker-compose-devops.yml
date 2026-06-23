@@ -60,6 +60,7 @@ services:
   jenkins:
     profiles: ["devops", "all"]
     container_name: jenkins
+    pull_policy: never
     build:
       context: ./jenkins
       dockerfile: jenkins-with-docker.dockerfile

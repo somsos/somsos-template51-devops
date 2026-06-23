@@ -251,7 +251,7 @@ function create_env_file_and_load_it {
 
 
 
-    read -s -p "Enter the App password: " MY_PASS
+    read -s -p "Enter the App password (more than 8 letters): " MY_PASS
     if [[ -z "$MY_PASS" || ! "$MY_PASS" =~ ^[a-zA-Z0-9]{8,16}+$ ]]; then
         echo "[ERROR] App password is required and must be between 8 and 16 characters."
         exit 1
@@ -406,7 +406,7 @@ function create_ssh_keys {
     fi
     KEY_FILE="$KEY_DIR/ssh_key.priv"
     if [ -f $KEY_FILE ]; then
-        echo "[ERROR] SSH private key already exists at $KEY_FILE."
+        echo "[INFO] SSH private key already exists at $KEY_FILE."
         return
     fi
     ssh-keygen -t ed25519 -N '' -f  $KEY_FILE
@@ -573,7 +573,9 @@ function start_and_check_health_devops_service {
         return
     fi
 
-    docker compose up -d $SERVICE_NAME
+    # Addded "DOCKER_BUILDKIT=0" so BuildKit's registry metadata does not try to
+    # reach metadata, so the installation can work offline
+    DOCKER_BUILDKIT=0 docker compose up -d $SERVICE_NAME
 
     until curl -I --retry 5 --retry-max-time 30 $SERVICE_URL > /dev/null 2>&1; do
         echo "Waiting for $SERVICE_NAME to be up..."
@@ -635,19 +637,19 @@ function start_app_database_service_and_install_schema {
         fi
         sleep 3
     done
-    echo "[INFO] App Database is up and accepting connections on localhost port $DB_PORT."
+    echo "[INFO] Database service available on \"psql postgresql://$DB_USER:<DB_PASS>@localhost:5001/$DB_SCHEMA\" (schema NOT installed yet)."
 
     # "docker compose build  db_utils" not required because is required to be built (--build) at each running.
 
     LOGS_FILE="./app/db/schema_installation.log"
     echo "[INFO] Installing database schema started. Logs in $LOGS_FILE."
-    if ! docker compose run -q --rm --name temp db_utils deploy &> $LOGS_FILE; then
+    DOCKER_BUILDKIT=0 docker compose run -q --rm --name temp db_utils deploy &> $LOGS_FILE
+    if [ "$?" != 0 ]; then
         echo "[ERROR] Failed to install database schema. Please check the logs in $LOGS_FILE."
         exit 1
     fi
 
     echo "[INFO] Database schema installed successfully."
-    echo "[INFO] Database already available on \"psql postgresql://$DB_USER:<DB_PASS>@localhost:5001/$DB_SCHEMA\"."
 }
 
 function start_app_backend_service {
@@ -659,7 +661,7 @@ function start_app_backend_service {
         return
     fi
 
-    docker compose up -d --wait --wait-timeout 240 back
+    DOCKER_BUILDKIT=0 docker compose up -d --wait --wait-timeout 240 --pull never back
     
     until curl -I --retry 5 --retry-max-time 30 $BACK_URL > /dev/null 2>&1; do
         echo "[INFO] Waiting for App Backend to be up..."
@@ -678,7 +680,7 @@ function start_app_frontend_service {
         return
     fi
 
-    docker compose up -d --wait --wait-timeout 240 front
+    DOCKER_BUILDKIT=0 docker compose up -d --wait --wait-timeout 240 --pull never front
 
     until curl -I --retry 5 --retry-max-time 30 $FRONT_URL > /dev/null 2>&1; do
         echo "[INFO] Waiting for App Frontend to be up..."

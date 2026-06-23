@@ -2,28 +2,33 @@
 
 ## Doing (First one is the current task)
 
-- [ ] offline mode using nexus.
-  - [ ] Create a pre-configurated compressed file with 
-    - [ ] Pre-initialized
-    - [ ] Default credentials
-    - [ ] maven dependencies
-    - [ ] npm dependencies
-    - [ ] Create .tar file and save it in ./dep_data/`pre_initialized_nexus_mvn_npm.tar.xz`
-  - [ ] Use install.sh to copy the downloaded dependencies if exists `tar -czf nexus-blobs.tar.gz setup/nexus/vol-data/`
-  - [ ] Check that it can be created the new user with the full-compressed file
+- Check if I can create the custom-jenkins-image and create a .tar file to pull
+it in offline, because to build this image required of apt update/install, and
+for an offline setup this makes all more complex, but if i can have this as a
+pre-build so internet is nor required anymore.
 
+- [ ] Re-Check install.sh
+  - [ ] In my host using
+    - [ ] Use uninstall.md
+    - [ ] Use install.md
+    - [ ] database
+      - [ ] deploy
+      - [ ] rollback
+    - [ ] Back
+      - [ ] deploy 
+      - [ ] rollback
+    - [ ] Front
+      - [ ] deploy 
+      - [ ] rollback
+  - [ ] In ubuntu virtual machine
 
 - [ ] Create a state/backup folder which takes the one called latest to start up,
   - [ ] Restore Database
   - [ ] Restore Backend
   - [ ] Restore Frontend
 
-- [ ] Create a named volume for node_modules.
-
 - [ ] Decide how to test the UI code (Jest, Cypress, etc)
   - [ ] Run them on Jenkins
-
-- [ ] Add to installer `sudo pacman -S docker-buildx` abd 
 
 - [ ] Check documentation of https://help.sonatype.com/en/sonatype-product-overview.html
 
@@ -230,3 +235,13 @@ posible.
   - [X] Use install.sh the necesary npm repositories
   - [X] Add npm-nexus config to front.dockerfile
   - [X] Check that still builds in CLI and Jenkins
+- [X] offline mode using nexus.
+  - [ ] Create a pre-configurated compressed file with 
+    - [X] Pre-initialized
+    - [X] Default credentials
+    - [X] maven dependencies
+    - [X] npm dependencies
+    - [X] Create .tar file and save it in ./dep_data/`pre_initialized_nexus_mvn_npm.tar.xz`
+  - [X] Use install.sh to copy the downloaded dependencies if exists `tar -czf nexus-blobs.tar.gz setup/nexus/vol-data/`
+  - [X] Check that it can be created the new user with the full-compressed file
+- [X] Add to installer `sudo pacman -S docker-buildx`.

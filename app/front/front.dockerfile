@@ -1,5 +1,3 @@
-# syntax=docker/dockerfile:1.6
-
 #
 ##############################################################################
 #   INPUT FOR FROM SENTENCES
@@ -35,8 +33,8 @@ RUN NPM_TOKEN=$(echo -n "${MY_USER}:${MY_PASS}" | base64) && \
     echo "//${NEXUS_GW}:8081/repository/npm-public/:_auth=${NPM_TOKEN}" >> .npmrc && \
     echo "always-auth=true" >> .npmrc
 
-RUN --mount=type=cache,target=/root/.npm \
-    npm install    
+# I remove this line, because buildX is required and it's less portable: --mount=type=cache,target=/root/.npm \
+RUN npm install    
 
 #npm ci --prefer-offline # I think it's better for CI/CD, but still don't why
 
