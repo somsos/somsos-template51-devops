@@ -7,20 +7,46 @@ it in offline, because to build this image required of apt update/install, and
 for an offline setup this makes all more complex, but if i can have this as a
 pre-build so internet is nor required anymore.
 
-- [ ] Re-Check install.sh
-  - [ ] In my host using
-    - [ ] Use uninstall.md
-    - [ ] Use install.md
-    - [ ] database
+
+
+- [ ] Check why ./workspace/.env is empty
+
+- [ ] Check why db_utils is trying to re-build db_utils.dockerfile, and install a dependency from internet
+
+- [ ] Create an developer manual to set up his machine with the new environment server created
+  - [ ] Tell about download the .env file
+  - [ ] Mention about how to add a change in the pipelines
+  - [ ] If I can NOT pre-approve the JCasC pipelines, mention to approve them when jenkins starts for firsts time.
+  
+
+- [ ] Check why I got a different version of devops-project when I cloned from new Gitea instance in Virtual Machine
+
+- [ ] Add pre-approve to pipelines in JCasC or to the manual
+
+- [ ] Set jenkins as private again public users can see the logs and here there are sensible data.
+
+- [ ] Check if adding "user: "${MY_UID}:${DOCKER_GID}" to all services does
+      not affect the current, this might avoid permission errors.
+
+
+  - [ ] In ubuntu virtual machine
+    - [X] Clone repo
+    - [X] Copy dependencies
+    - [X] Use install.md
+    - [X] Use install.md again, just after finish
+    - [X] Link Virtual Machine and host and check services created
+    - [ ] Check jenkins pipeline for Database
+      - [ ] Clone, change and push
+      - [ ] check deploy
+      - [ ] rollback
+    - [ ] Check jenkins pipeline for Back
+      - [ ] Clone, change and push
       - [ ] deploy
       - [ ] rollback
-    - [ ] Back
-      - [ ] deploy 
+    - [ ] Check jenkins pipeline for Front
+      - [ ] Clone, change and push
+      - [ ] deploy
       - [ ] rollback
-    - [ ] Front
-      - [ ] deploy 
-      - [ ] rollback
-  - [ ] In ubuntu virtual machine
 
 - [ ] Create a state/backup folder which takes the one called latest to start up,
   - [ ] Restore Database
@@ -245,3 +271,14 @@ posible.
   - [X] Use install.sh to copy the downloaded dependencies if exists `tar -czf nexus-blobs.tar.gz setup/nexus/vol-data/`
   - [X] Check that it can be created the new user with the full-compressed file
 - [X] Add to installer `sudo pacman -S docker-buildx`.
+- [X] Re-Check install.sh In my host using uninstall.md
+  - [X] Use install.md
+  - [X] database
+    - [X] deploy
+    - [X] rollback
+  - [X] Back
+    - [X] deploy 
+    - [X] rollback
+  - [X] Front
+    - [X] deploy 
+    - [X] rollback

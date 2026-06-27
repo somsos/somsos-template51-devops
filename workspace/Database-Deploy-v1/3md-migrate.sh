@@ -23,3 +23,6 @@ echo "[INFO] DEVOPS_REPO_DIR: $DEVOPS_REPO_DIR"
 set -x
 docker compose -f $DEVOPS_REPO_DIR/docker-compose.yml run --rm --name temp_db_utils db_utils $1
 set +x
+
+source "../0_scripts/temp_env_file_functions.sh"
+remove_copied_env_file "$DEVOPS_REPO_DIR/.env"

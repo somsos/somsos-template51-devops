@@ -197,23 +197,15 @@ function create_env_file_and_load_it {
         exit 1
     fi
 
+    # CAUTION do not use UID or GID name variables because can be confused with
+    # the already defined by the system. I got the error "local: UID: readonly variable".
+    local UID_TEMP=$(id -u)
     local DOCKER_GID=$(getent group docker | cut -d: -f3)
     if [ -z "$DOCKER_GID" ]; then
         echo "[ERROR] Docker group not found. Please make sure Docker is installed and the docker group exists."
         exit 1
     fi
 
-    # CAUTION do not use UID or GID name variables because can be confused with
-    # the already defined by the system. I got the error "local: UID: readonly variable".
-    local UID_TEMP=$(id -u)
-    local GID_TEMP=$(id -g)
-    if [ "$UID_TEMP" -ne 0 ] && [ "$GID_TEMP" -ne 0 ]; then
-        DOCKER_GID=$GID_TEMP
-    fi
-    if [ "$UID_TEMP" == "" ] || [ "$GID_TEMP" == "" ]; then
-        echo "[ERROR] Failed to get current user UID and GID. Please make sure you have the necessary permissions and try again."
-        exit 1
-    fi
 
     read -p "Enter the environment (local, test, qa, stage, PROD): " MY_ENV
     if [[ -z "$MY_ENV" || ! "$MY_ENV" =~ ^(local|test|qa|stage|PROD)$ ]]; then
@@ -352,7 +344,6 @@ function create_env_file_and_load_it {
     sed -i "s/DB_PASS=■■■/DB_PASS=$DB_PASS/g" $NEW_ENV_FILE
     sed -i "s/DOCKER_GID=■■■/DOCKER_GID=$DOCKER_GID/g" $NEW_ENV_FILE
     sed -i "s/MY_UID=■■■/MY_UID=$UID_TEMP/g" $NEW_ENV_FILE
-    sed -i "s/MY_GID=■■■/MY_GID=$GID_TEMP/g" $NEW_ENV_FILE
 
     source $NEW_ENV_FILE
 }

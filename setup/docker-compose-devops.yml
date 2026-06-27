@@ -5,7 +5,7 @@ services:
     profiles: ["devops", "all"]
     container_name: gitea       # Careful changing it's used to clone the repo in jenkins
     image: ${IMAGE_GITEA}
-    user: "1000:1000"
+    user: "${MY_UID}:${DOCKER_GID}"
     environment:
       - VIRTUAL_HOST=gitea.${MY_DOMAIN}
       - VIRTUAL_PORT=3000
@@ -61,6 +61,7 @@ services:
     profiles: ["devops", "all"]
     container_name: jenkins
     pull_policy: never
+    user: "${MY_UID}:${DOCKER_GID}"
     build:
       context: ./jenkins
       dockerfile: jenkins-with-docker.dockerfile
@@ -208,7 +209,7 @@ services:
     
   nexus:
     profiles: ["devops", "all"]
-    user: "${MY_UID}:${MY_GID}"
+    user: "${MY_UID}:${DOCKER_GID}"
     image: ${IMAGE_NEXUS}
     container_name: nexus
     ports:

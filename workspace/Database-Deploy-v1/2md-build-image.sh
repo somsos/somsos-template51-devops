@@ -15,4 +15,8 @@ DEVOPS_REPO_DIR=$(get_repo_dir)
 echo "[INFO] DEVOPS_REPO_DIR: $DEVOPS_REPO_DIR"
 
 
+source "../0_scripts/temp_env_file_functions.sh"
+copy_env_file "$DEVOPS_REPO_DIR/.env" "keep_passwords"
+
+
 docker compose -f $DEVOPS_REPO_DIR/docker-compose.yml --progress plain build db_utils

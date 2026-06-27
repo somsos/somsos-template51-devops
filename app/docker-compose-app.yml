@@ -154,7 +154,7 @@ services:
     profiles: ["devops-util"]
     container_name: temp_back_tests
     image: back_utils:1
-    user: "${MY_UID}:${MY_GID}"
+    user: "${MY_UID}:${DOCKER_GID}"
     build:
       context: ./back
       dockerfile: back_utils.dockerfile
