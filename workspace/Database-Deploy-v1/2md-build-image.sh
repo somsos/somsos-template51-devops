@@ -19,4 +19,5 @@ source "../0_scripts/temp_env_file_functions.sh"
 copy_env_file "$DEVOPS_REPO_DIR/.env" "keep_passwords"
 
 
-docker compose -f $DEVOPS_REPO_DIR/docker-compose.yml --progress plain build db_utils
+DOCKER_BUILDKIT=0 docker compose -f $DEVOPS_REPO_DIR/docker-compose.yml --progress plain build db_utils
+

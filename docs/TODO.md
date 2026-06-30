@@ -8,10 +8,11 @@ for an offline setup this makes all more complex, but if i can have this as a
 pre-build so internet is nor required anymore.
 
 
+- [X] Check why db_utils is trying to re-build db_utils.dockerfile, and install a dependency from internet
+  - Remember you created a new project with a new domain an ssh config.
+  - [ ] Check on VR machine again
 
 - [ ] Check why ./workspace/.env is empty
-
-- [ ] Check why db_utils is trying to re-build db_utils.dockerfile, and install a dependency from internet
 
 - [ ] Create an developer manual to set up his machine with the new environment server created
   - [ ] Tell about download the .env file

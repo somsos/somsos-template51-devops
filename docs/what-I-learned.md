@@ -44,3 +44,12 @@
   add in my docker-compose.yml this property: `services.back.build.network: myNet`
   so I could have access to this network on buildtime.
 
+- To diagnose a nginx problem we can use `nginx -T | grep -A 30 "xxxx"`
+
+
+- `docker_pitfalls#{id:m6v72xl67}` Docker build and internet BuildKit always
+  tries to fetch the metadata/manifest of the base image, e.g. "alpine:1" so if
+  we want to build **offline**` we need to **deactivate BuildKit**, e.g. this
+  command `docker compose build <X>` will look in the claud but if the claud
+     have a problem it will fail vs `DOCKER_BUILDKIT=0 docker compose build <X>`
+

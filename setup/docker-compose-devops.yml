@@ -134,6 +134,7 @@ services:
     profiles: ["devops", "all"]
     image: ${IMAGE_REVERSE_PROXY}
     container_name: reverse-proxy
+    #user: "${MY_UID}:${DOCKER_GID}"
     ports:
       - "80:80"
       - "443:443"

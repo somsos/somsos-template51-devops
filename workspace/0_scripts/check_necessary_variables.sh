@@ -30,9 +30,9 @@ function check_necessary_variables {
         MY_DOMAIN=mariomv-local.org
         ENV_FILE="/home/mario/mine/t51/.env"
 
-        DB_MIG_REPO=ssh://git@localhost:222/${MY_USER}/${DB_MIG_NAME}.git
-        BACK_REPO=ssh://git@localhost:222/${MY_USER}/${BACK_NAME}.git
-        FRONT_REPO=ssh://git@localhost:222/${MY_USER}/${FRONT_NAME}.git
-        DEVOPS_REPO=ssh://git@localhost:222/${MY_USER}/${DEVOPS_NAME}.git
+        DB_MIG_REPO=ssh://git@gitea.tina-qa.com:222/${MY_USER}/${DB_MIG_NAME}.git
+        BACK_REPO=ssh://git@gitea.tina-qa.com:222/${MY_USER}/${BACK_NAME}.git
+        FRONT_REPO=ssh://git@gitea.tina-qa.com:222/${MY_USER}/${FRONT_NAME}.git
+        DEVOPS_REPO=ssh://git@gitea.tina-qa.com:222/${MY_USER}/${DEVOPS_NAME}.git
     fi
 }
