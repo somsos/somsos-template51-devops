@@ -2,15 +2,14 @@
 
 ## Doing (First one is the current task)
 
-- Check if I can create the custom-jenkins-image and create a .tar file to pull
-it in offline, because to build this image required of apt update/install, and
-for an offline setup this makes all more complex, but if i can have this as a
-pre-build so internet is nor required anymore.
+- [ ] check Database pipelines
+  - [ ] Deploy
+  - [ ] Backend
 
+- [ ] Fix "Rollback Frontend" jenkins pipeline, it's about re-use the deploy scripts.
 
-- [X] Check why db_utils is trying to re-build db_utils.dockerfile, and install a dependency from internet
-  - Remember you created a new project with a new domain an ssh config.
-  - [ ] Check on VR machine again
+- [ ] Fix "Database Rollback" Jenkins pipeline, it does the rollback correctly,
+      but forward steps fail, I think is the .env deletion.
 
 - [ ] Check why ./workspace/.env is empty
 
@@ -283,3 +282,10 @@ posible.
   - [X] Front
     - [X] deploy 
     - [X] rollback
+- [X] Check why db_utils is trying to re-build db_utils.dockerfile, and install
+  a dependency from internet
+  - [X] Check on VR machine again
+- [X] Check if I can create the custom-jenkins-image and create a .tar file to
+  pull it in offline, because to build this image required of apt update and
+  install, and for an offline setup this makes all more complex, but if i can
+  have this as a pre-build so internet is nor required anymore.

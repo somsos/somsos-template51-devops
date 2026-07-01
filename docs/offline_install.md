@@ -6,6 +6,16 @@
   - [Install and start project](#install-and-start-project)
   - [Link domains](#link-domains)
   - [Clone repositories](#clone-repositories)
+  - [Approve scrips](#approve-scrips)
+- [Database pipelines](#database-pipelines)
+  - [Deploy Database](#deploy-database)
+  - [Rollback Database](#rollback-database)
+  - [Frontend pipelines](#frontend-pipelines)
+    - [Deploy Frontend](#deploy-frontend)
+    - [Rollback Frontend](#rollback-frontend)
+  - [Backend pipelines](#backend-pipelines)
+    - [Deploy Backend](#deploy-backend)
+    - [Rollback Backed](#rollback-backed)
 
 
 
@@ -18,19 +28,21 @@
 
 
 ```shell
-ssh mario1@192.168.50.49
+ssh mario1@192.168.1.81
 sudo mkdir -p /p1 && sudo chown -R mario1:mario1 /p1 && cd /p1
 git clone https://github.com/somsos/somsos-template51-devops .
-    # scp -r -P22 /home/mario/mine/empty_t51 mario1@192.168.50.49:/p1
+    # scp -r -P22 /home/mario/mine/empty_t51 mario1@192.168.1.81:/p1
 
 #In a machine with the files already downloaded
-scp -r -P22 /home/mario/mine/t51/dep_data mario1@192.168.50.49:/p1
+scp -r -P22 /home/mario/mine/t51/dep_data mario1@192.168.1.81:/p1
 ```
 
 Install and config docker
 
 ```shell
 cd /p1/dep_data/docker_installer/
+
+# In this point change to a network without internet
 
 sudo dpkg -i ./containerd.io_2.2.4-1~ubuntu.24.04~noble_amd64.deb \
     ./docker-ce_29.5.3-1~ubuntu.24.04~noble_amd64.deb \
@@ -62,23 +74,23 @@ bash ./install.sh
 
 Copy and peste to `/etc/hosts`, for example
 ```yml
-192.168.50.49 dedo1-qa.com
-192.168.50.49 api.dedo1-qa.com
-192.168.50.49 gitea.dedo1-qa.com
-192.168.50.49 jenkins.dedo1-qa.com
-192.168.50.49 registry.dedo1-qa.com
-192.168.50.49 nexus.dedo1-qa.com
+192.168.1.81 jupo1-test.com
+192.168.1.81 api.jupo1-test.com
+192.168.1.81 gitea.jupo1-test.com
+192.168.1.81 jenkins.jupo1-test.com
+192.168.1.81 registry.jupo1-test.com
+192.168.1.81 nexus.jupo1-test.com
 ```
 
 Check created services
 ```yml
-"http://gitea.dedo1-qa.com":                                    Gitea
-"http://jenkins.dedo1-qa.com":                                  Jenkins
-"http://registry.dedo1-qa.com":                                 Registry
-"http://nexus.dedo1-qa.com":                                    Nexus
-"http://api.dedo1-qa.com/swagger-ui/index.html":                Backend
-"http://dedo1-qa.com":                                          Frontend
-"psql postgresql://dedo1:<DB_PASS>@localhost:5001/dedo1db":     Database
+"http://gitea.jupo1-test.com":                                    Gitea
+"http://jenkins.jupo1-test.com":                                  Jenkins
+"http://registry.jupo1-test.com":                                 Registry
+"http://nexus.jupo1-test.com":                                    Nexus
+"http://api.jupo1-test.com/swagger-ui/index.html":                Backend
+"http://jupo1-test.com":                                          Frontend
+"psql postgresql://jupo1:<DB_PASS>@192.168.1.81:5001/jupo1db":     Database
 ```
 
 ## Clone repositories
@@ -87,16 +99,16 @@ I'm using ssh public-private keys as auth process, so we need to copy the
 private key to the PC we want to clone from.
 
 ```shell
-# the domain can be different in this case it's "gitea.dedo1-qa.com"
-scp -r -P22 mario1@192.168.50.49:/p1/setup/secrets/ssh_key.priv ~/.ssh/dedo1.priv
+# the domain can be different in this case it's "gitea.jupo1-test.com"
+scp -r -P22 mario1@192.168.1.81:/p1/setup/secrets/ssh_key.priv ~/.ssh/jupo1.priv
 
 cat >> ~/.ssh/config <<EOF
 
-Host gitea.dedo1-qa.com
-    HostName gitea.dedo1-qa.com
+Host gitea.jupo1-test.com
+    HostName gitea.jupo1-test.com
     Port 222
     User git
-    IdentityFile ~/.ssh/dedo1.priv
+    IdentityFile ~/.ssh/jupo1.priv
 
 EOF
 ```
@@ -104,22 +116,178 @@ EOF
 We should be able to auth to the Gitea server
 
 ```shell
-ssh -T git@gitea.dedo1-qa.com
+ssh -T git@gitea.jupo1-test.com
 # OUTPUT: Hi there, XXXXX You've successfully authenticated ...
 ```
 
 Now we can clone the repositories
 
 ```shell
-git clone ssh://git@gitea.dedo1-qa.com:222/dedo1/t51devops.git /home/mario/mine/dedo1
+git clone ssh://git@gitea.jupo1-test.com:222/jupo1/t51devops.git /home/mario/mine/jupo1
 
-git clone ssh://git@gitea.dedo1-qa.com:222/dedo1/t51mig-db.git /home/mario/mine/dedo1/app/db/source
+git clone ssh://git@gitea.jupo1-test.com:222/jupo1/t51mig-db.git /home/mario/mine/jupo1/app/db/source
 
-git clone ssh://git@gitea.dedo1-qa.com:222/dedo1/t51back.git /home/mario/mine/dedo1/app/back/source
+git clone ssh://git@gitea.jupo1-test.com:222/jupo1/t51back.git /home/mario/mine/jupo1/app/back/source
 
-git clone ssh://git@gitea.dedo1-qa.com:222/dedo1/t51front.git /home/mario/mine/dedo1/app/front/source
+git clone ssh://git@gitea.jupo1-test.com:222/jupo1/t51front.git /home/mario/mine/jupo1/app/front/source
+```
+
+## Approve scrips
+
+http://jenkins.jupo1-test.com/manage/scriptApproval/
+
+
+
+# Database pipelines
+
+## Deploy Database
+
+In this case I have a change already prepared.
+
+```sh
+cd /home/mario/mine/jupo1/app/db/source
+
+psql postgresql://jupo1:jupo123p@jupo1-test.com:5001/jupo1db -c "\dt" | grep bad_design
+
+# EXPECTED OUTPUT (NOTICE THAT THERE IS NO TABLE CALLED "bad_design")
+#                  List of tables
+#  Schema |         Name          | Type  | Owner
+# --------+-----------------------+-------+-------
+#  public | databasechangelog     | table | jupo1
+#  public | databasechangeloglock | table | jupo1
+#  public | product_images        | table | jupo1
+#  public | products              | table | jupo1
+#  public | roles                 | table | jupo1
+#  public | users                 | table | jupo1
+#  public | users_picture         | table | jupo1
+#  public | users_roles           | table | jupo1
+
+mv ./docs/03-testTable.changelog.xml  ./changelogs
+
+git add . && git status | grep renamed
+# expected output
+#	renamed:    docs/03-testTable.changelog.xml -> changelogs/03-testTable.changelog.xml
+
+git commit -m "The first database change."
+
+# Get ready to notice the pipeline being triggered by the git push
+#   http://gitea.jupo1-test.com/jupo1/t51mig-db
+#   http://jenkins.jupo1-test.com/job/Database-Deploy-v1
+git push origin main
+
+psql postgresql://jupo1:jupo123p@jupo1-test.com:5001/jupo1db -c "\dt" | grep bad_design
+# EXPECTED OUTPUT
+# public | bad_design            | table | jupo1
+```
+
+## Rollback Database
+
+The rollback in database is a little more complex than back or front
+applications, because we need to run a sql script to get back to the original
+schema state without affected the data.
+
+
+
+
+
+
+
+## Frontend pipelines
+
+### Deploy Frontend
+
+We add a change in our frontend project
+
+```shell
+cd /home/mario/mine/jupo1/app/front/source
+
+cat > ./src/app/main/internals/view/pages/home/home.page.html <<EOF
+<div>
+  <ul>
+    <li>This is the change 1</li>
+  </ul>
+</div>
+EOF
+
+git status | grep modified
+>        modified:   src/app/main/internals/view/pages/home/home.page.html
+
+git add . && git commit -m "My change number 1"
+
+# Open Gitea and Jenkins in the browser, and prepare to notice the pipeline 
+# to be triggered on push
+#   http://gitea.jupo1-test.com/jupo1/t51front
+#   http://jenkins.jupo1-test.com/job/Frontend-Deploy-v1/
+git push origin main
+
+# The deploy Jenkins pipeline should have been triggered and the change deployed.
+```
+
+### Rollback Frontend
+
+```shell
+# 1. Go to http://jenkins.jupo1-test.com/job/Frontend-Rollback/
+# 2. Click on "Build Now"
+# 3. The last commit should have been deleted and the penultimate must 
+#     be deployed
 ```
 
 
+
+
+
+## Backend pipelines
+
+### Deploy Backend
+
+We add a change in our frontend project
+
+```shell
+cd /home/mario/mine/jupo1/app/back/source
+
+nano ./adapter/src/main/java/daj/adapter/AdapterApplication.java 
+# Edit this Line:
+# return Map.of("message", "One is the number of this change.");
+
+git status | grep modified
+>        modified:   src/app/main/internals/view/pages/home/home.page.html
+
+git add . && git commit -m "Change One"
+
+# Get ready to notice the pipeline being triggered by the git push
+#   http://gitea.jupo1-test.com/jupo1/t51back
+#   http://jenkins.jupo1-test.com/job/Backend-Deploy-v1/
+git push origin main
+
+# The deploy Jenkins pipeline should have been triggered and the change deployed.
+
+curl http://api.jupo1-test.com/test | json_pp
+# EXPECTED OUTPUT
+# {
+#    "message" : "One is the number of this change"
+# }
+```
+
+### Rollback Backed
+
+1. Go to http://gitea.jupo1-test.com/jupo1/t51back and notice what is the last commit
+
+2. Go to http://jenkins.jupo1-test.com/job/Backend-Rollback/
+
+3. Click on "Build Now"
+
+4. At the end of the pipeline execution we should see the last message that was before
+
+```shell
+# 
+curl http://api.jupo1-test.com/test | json_pp
+# EXPECTED OUTPUT
+# {
+#    "message" : "33-3 Some random change 3-33"
+# }
+```
+
+5. Return to http://gitea.jupo1-test.com/jupo1/t51back and the last commit
+   should have been deleted.
 
 
