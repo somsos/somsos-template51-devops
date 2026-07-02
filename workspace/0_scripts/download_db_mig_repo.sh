@@ -18,7 +18,7 @@ function download_db_mig_repo {
 
     rm -fr $2
     mkdir $2
-    git clone --quiet --depth=1 --single-branch --branch main "$1" "$2" \
+    git clone --quiet --depth=2 --single-branch --branch main "$1" "$2" \
     && echo "[INFO] DB-mig repo cloned"
     
     CURRENT_COMMIT_MESSAGE=$(get_commit_message $2)

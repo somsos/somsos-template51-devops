@@ -53,3 +53,8 @@
   command `docker compose build <X>` will look in the claud but if the claud
      have a problem it will fail vs `DOCKER_BUILDKIT=0 docker compose build <X>`
 
+
+- `/etc/group VS /etc/passwd` I had the wrong believe that `passwd` file had
+  also the groups info, but no, it's divided in two files and the `group` file
+  contains info about groups, e.g., `cat /etc/group | grep docker`.
+

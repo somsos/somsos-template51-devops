@@ -1,7 +1,9 @@
 #!/bin/bash
 set -e
-#set -x # show executed lines
+#set -x # show executed lines, careful there are passwords in this workflow.
+set +x
 
+# ######## introduction
 source "../0_scripts/get_environment.sh"
 ENV=$(get_environment)
 source "../0_scripts/check_necessary_variables.sh"
@@ -9,11 +11,24 @@ check_necessary_variables "$ENV"
 
 
 
-if [ -z "$DEVOPS_WORKDIR" ]; then
-  echo "[ERROR] Variable DEVOPS_WORKDIR not found, The path to the devops workdir is required."
+# ######## Validate dependencies
+if [ -z "$WORKSPACE" ]; then
+  echo "[ERROR] Variable WORKSPACE not found, The path to the devops workdir is required."
   exit 1
 fi
 
+if [ -z "$BUILD_NUMBER" ]; then
+  echo "[ERROR] Variable BUILD_NUMBER not found, The incremental number of builds is required."
+  exit 1
+fi
+
+if [ -z "$ENV_FILE" ]; then
+  echo "[ERROR] Variable ENV_FILE not found, The path to the environment file is required."
+  exit 1
+fi
+
+set +x
+source $ENV_FILE
 
 ## Connection Vars
 if [ -z "$DB_SCHEMA" ]; then
@@ -41,24 +56,12 @@ if [ -z "$DB_PASS" ]; then
   exit 1
 fi
 
-PATH_BACKUPS="/var/jenkins_home/workspace/Database-Backup"
 
-if [ -z "$PATH_BACKUPS" ]; then
-  echo "[ERROR] Variable PATH_BACKUPS not found, The path where the backups are saved is required."
-  exit 1
-fi
+echo "CONNECTION_VARS=--username=$DB_USER --password=DB_PASS --url=jdbc:postgresql://db:5432/$DB_SCHEMA"
 
-if [ -z "$BACKUP_NAME" ]; then
-  echo "[ERROR] Variable BACKUP_NAME not found, The file name of the backup to restore is required."
-  exit 1
-fi
+
+PATH_BACKUPS="$WORKSPACE/../Database-Backup"
 
 
 
-
-
-echo "CONNECTION_VARS=--username=$DB_USER --password=DB_PASS --url=jdbc:postgresql://$DB_SERVER:5432/$DB_SCHEMA"
-
-
-
-PGPASSWORD=${DB_PASS} psql -h ${DB_SERVER} -U ${DB_USER} -d ${DB_SCHEMA} < $PATH_BACKUPS/${BACKUP_NAME}
+PGPASSWORD=${DB_PASS} psql -h db -U ${DB_USER} -d ${DB_SCHEMA} < $PATH_BACKUPS/${BACKUP_NAME}

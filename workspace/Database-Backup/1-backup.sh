@@ -1,14 +1,13 @@
 #!/bin/bash
 set -e
-#set -x # show executed lines
-
+#set -x # show executed lines, careful there are passwords in this workflow.
+set +x
 
 # ######## introduction
 source "../0_scripts/get_environment.sh"
 ENV=$(get_environment)
 source "../0_scripts/check_necessary_variables.sh"
 check_necessary_variables "$ENV"
-
 
 
 
@@ -22,6 +21,14 @@ if [ -z "$BUILD_NUMBER" ]; then
   echo "[ERROR] Variable BUILD_NUMBER not found, The incremental number of builds is required."
   exit 1
 fi
+
+if [ -z "$ENV_FILE" ]; then
+  echo "[ERROR] Variable ENV_FILE not found, The path to the environment file is required."
+  exit 1
+fi
+
+set +x
+source $ENV_FILE
 
 ## Connection Vars
 if [ -z "$DB_SCHEMA" ]; then
@@ -50,12 +57,12 @@ if [ -z "$DB_PASS" ]; then
 fi
 
 
-echo "CONNECTION_VARS=--username=$DB_USER --password=DB_PASS --url=jdbc:postgresql://$DB_SERVER:5432/$DB_SCHEMA"
+echo "CONNECTION_VARS=--username=$DB_USER --password=DB_PASS --url=jdbc:postgresql://db:5432/$DB_SCHEMA"
 
 
 mkdir -p $WORKSPACE
 
 NOW_DATE="$(date +'%Y-%m-%d_%H-%M-%S')"
-BACKUP_FILE="$WORKDIR_REPO/backup_$(echo $BUILD_NUMBER)_$(echo $NOW_DATE).sql"
-PGPASSWORD=$DB_PASS pg_dump -h ${DB_SERVER} -U ${DB_USER} -d ${DB_SCHEMA} -F p > $(echo $BACKUP_FILE) 
+BACKUP_FILE="$WORKSPACE/backup_$(echo $BUILD_NUMBER)_$(echo $NOW_DATE).sql"
+PGPASSWORD=$DB_PASS pg_dump -h db -U ${DB_USER} -d ${DB_SCHEMA} -F p > $(echo $BACKUP_FILE) 
 

@@ -35,10 +35,7 @@ RUN rm -rf /var/lib/apt/lists/*
 
 # CAREFUL: GID must match host's docker group GID (in my case 999)
 ARG DOCKER_GID
-RUN test -n "$DOCKER_GID" || \
-    (echo "ERROR: DOCKER_GID is required." && \
-     echo "Run: docker compose build --build-arg DOCKER_GID=\$(getent group docker | cut -d: -f3) jenkins" && \
-     exit 1)
+RUN test -n "$DOCKER_GID" || (echo "ERROR: DOCKER_GID is required." && exit 1)
 
 # The GID might be repeated between the host and the container
 # If is repeated we reuse the GID

@@ -13,12 +13,6 @@ jobs:
                 }
                 stages {
                    
-                  stage('Guard Rail') {
-                     steps {
-                         input message: 'Are you sure you want to continue?', ok: 'Yes, proceed!'
-                     }
-                  }
-
                   stage('Backup') {
                     steps {
                       sh \'\'\'

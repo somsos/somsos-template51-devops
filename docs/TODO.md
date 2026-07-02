@@ -2,12 +2,6 @@
 
 ## Doing (First one is the current task)
 
-- [ ] check Database pipelines
-  - [ ] Deploy
-  - [ ] Backend
-
-- [ ] Fix "Rollback Frontend" jenkins pipeline, it's about re-use the deploy scripts.
-
 - [ ] Fix "Database Rollback" Jenkins pipeline, it does the rollback correctly,
       but forward steps fail, I think is the .env deletion.
 
@@ -289,3 +283,8 @@ posible.
   pull it in offline, because to build this image required of apt update and
   install, and for an offline setup this makes all more complex, but if i can
   have this as a pre-build so internet is nor required anymore.
+- [X] Check Database pipelines
+  - [X] Deploy (All ok)
+  - [X] Fix "Rollback Frontend" (It was a line out of place)
+  - [X] Backup
+  - [X] Restore

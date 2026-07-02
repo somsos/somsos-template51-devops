@@ -10,7 +10,7 @@ check_necessary_variables "$ENV"
 
 source "../0_scripts/get_repo_dir.sh"
 DEVOPS_REPO_DIR=$(get_repo_dir)
-DB_REPO_DIR=$(get_app_dir $DEVOPS_REPO_DIR "db") 
+DB_REPO_DIR=$(get_app_dir $DEVOPS_REPO_DIR "db-mig") 
 echo "[INFO] DEVOPS_REPO_DIR : $DEVOPS_REPO_DIR"
 echo "[INFO] FRONT_REPO_DIR  : $DB_REPO_DIR"
 
